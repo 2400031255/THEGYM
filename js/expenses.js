@@ -72,7 +72,7 @@ function renderExpenses() {
 
   const container = document.getElementById('expenses-list-container');
   if (!expenses.length) {
-    container.innerHTML = `<div class="card">${emptyState('💰', 'No expenses logged yet.')}</div>`;
+    container.innerHTML = `<div class="card">${emptyState('', 'No expenses logged yet.')}</div>`;
     return;
   }
 
@@ -85,7 +85,7 @@ function renderExpenses() {
         </div>
         <div style="text-align:right">
           <div class="expense-item-amount">${formatINR(exp.amount)}</div>
-          <button class="btn-icon" style="margin-top:4px" onclick="deleteExpense('${exp.id}')">🗑</button>
+          <button class="btn-icon" style="margin-top:4px" onclick="deleteExpense('${exp.id}')">Delete</button>
         </div>
       </div>
       ${exp.splits ? buildSplitDetail(exp) : ''}
@@ -105,7 +105,7 @@ function buildSplitDetail(exp) {
           <span>${formatINR(s.amount)}</span>
           <button class="btn-icon" onclick="toggleSplitPaid('${exp.id}', ${i})"
             style="color:${s.paid ? 'var(--success)' : 'var(--warning)'}">
-            ${s.paid ? '✅ PAID' : '⏳ PENDING'}
+            ${s.paid ? 'PAID' : 'PENDING'}
           </button>
         </div>`).join('')}
     </div>`;

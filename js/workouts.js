@@ -108,7 +108,7 @@ document.getElementById('workout-form').addEventListener('submit', function(e) {
   exerciseCount = 0;
 
   if (newPRs.length) {
-    showToast(`🏆 NEW PR! ${newPRs.map(p => p.exercise).join(', ')}`, 'success');
+    showToast(`NEW PR! ${newPRs.map(p => p.exercise).join(', ')}`, 'success');
   } else {
     showToast('Workout saved!', 'success');
   }
@@ -150,14 +150,14 @@ function renderWorkouts() {
   const totalVol  = workouts.reduce((s, w) => s + (w.totalVolume || 0), 0);
 
   document.getElementById('workout-stats').innerHTML = `
-    <div class="stat-card"><div class="stat-value">${streak.current}🔥</div><div class="stat-label">Current Streak</div></div>
+    <div class="stat-card"><div class="stat-value">${streak.current}</div><div class="stat-label">Current Streak</div></div>
     <div class="stat-card"><div class="stat-value">${streak.longest}</div><div class="stat-label">Longest Streak</div></div>
     <div class="stat-card"><div class="stat-value">${thisMonth}</div><div class="stat-label">This Month</div></div>
     <div class="stat-card"><div class="stat-value">${thisYear}</div><div class="stat-label">This Year</div></div>`;
 
   const histEl = document.getElementById('workout-history-list');
   if (!workouts.length) {
-    histEl.innerHTML = emptyState('🏋️', 'No workouts logged yet.');
+    histEl.innerHTML = emptyState('', 'No workouts logged yet.');
   } else {
     histEl.innerHTML = workouts.map(w => `
       <div class="workout-item">
@@ -172,10 +172,10 @@ function renderWorkouts() {
           </div>
         </div>
         <div class="workout-item-meta">
-          ${w.duration ? `<span>⏱ ${w.duration} min</span>` : ''}
-          <span>📦 ${w.exercises.length} exercises</span>
-          ${w.totalVolume ? `<span>⚡ ${w.totalVolume.toLocaleString()} kg vol</span>` : ''}
-          ${w.prs && w.prs.length ? `<span class="pr-badge">🏆 ${w.prs.length} PR${w.prs.length > 1 ? 's' : ''}</span>` : ''}
+          ${w.duration ? `<span>${w.duration} min</span>` : ''}
+          <span>${w.exercises.length} exercises</span>
+          ${w.totalVolume ? `<span>${w.totalVolume.toLocaleString()} kg vol</span>` : ''}
+          ${w.prs && w.prs.length ? `<span class="pr-badge">PR &times;${w.prs.length}</span>` : ''}
         </div>
         <div style="margin-top:0.65rem">
           ${w.exercises.map(ex => `
@@ -192,7 +192,7 @@ function renderWorkouts() {
   const prEl = document.getElementById('pr-list');
   const prKeys = Object.keys(exercises);
   if (!prKeys.length) {
-    prEl.innerHTML = emptyState('🏆', 'No personal records yet. Start logging workouts!');
+    prEl.innerHTML = emptyState('', 'No personal records yet. Start logging workouts!');
   } else {
     prEl.innerHTML = prKeys.map(k => {
       const pr = exercises[k];
@@ -202,7 +202,7 @@ function renderWorkouts() {
             <div class="expense-item-desc" style="text-transform:capitalize">${k}</div>
             <div class="expense-item-meta">Updated ${formatDateTime(pr.updatedAt)}</div>
           </div>
-          <div class="pr-badge">🏆 ${pr.bestWeight}kg × ${pr.bestReps}</div>
+          <div class="pr-badge">PR — ${pr.bestWeight}kg &times; ${pr.bestReps}</div>
         </div>`;
     }).join('');
   }

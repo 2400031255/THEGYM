@@ -48,8 +48,8 @@ function renderMembership() {
   const history = document.getElementById('membership-history');
 
   if (!memberships.length) {
-    display.innerHTML = `<div class="card">${emptyState('💳', 'No membership added yet.')}</div>`;
-    history.innerHTML = emptyState('📋', 'No history yet.');
+    display.innerHTML = `<div class="card">${emptyState('', 'No membership added yet.')}</div>`;
+    history.innerHTML = emptyState('', 'No history yet.');
     return;
   }
 
@@ -91,7 +91,7 @@ function renderMembership() {
           <span class="arrow">→</span>
           <span>${formatDateDisplay(active.endDate)}</span>
         </div>
-        <div class="membership-days ${daysClass}">${days < 0 ? '🔴' : days <= 7 ? '⚠️' : '✅'} ${daysText}</div>
+        <div class="membership-days ${daysClass}">${daysText}</div>
         <div class="membership-days-label">${days >= 0 ? 'Remaining' : ''}</div>
         <div class="progress-bar-wrap">
           <div class="progress-bar-fill ${barClass}" style="width:${barWidth}%"></div>
@@ -99,8 +99,8 @@ function renderMembership() {
         <div style="font-size:0.75rem;color:var(--text-muted);margin-top:0.25rem">${progress}% elapsed</div>
         ${active.notes ? `<div style="margin-top:0.75rem;font-size:0.8rem;color:var(--text-muted)">${active.notes}</div>` : ''}
         <div style="margin-top:1rem;display:flex;gap:0.5rem;justify-content:center">
-          <button class="btn-secondary" onclick="editMembership('${active.id}')">✏️ Edit</button>
-          <button class="btn-ghost" onclick="deleteMembership('${active.id}')">🗑 Delete</button>
+          <button class="btn-secondary" onclick="editMembership('${active.id}')">Edit</button>
+          <button class="btn-ghost" onclick="deleteMembership('${active.id}')">Delete</button>
         </div>
       </div>
     </div>`;
@@ -108,7 +108,7 @@ function renderMembership() {
   // History (all except active)
   const past = memberships.slice(1);
   if (!past.length) {
-    history.innerHTML = emptyState('📋', 'No previous memberships.');
+    history.innerHTML = emptyState('', 'No previous memberships.');
     return;
   }
   history.innerHTML = past.map(m => {
@@ -123,7 +123,7 @@ function renderMembership() {
           <div class="expense-item-amount">${formatINR(m.fee)}</div>
           <div style="text-align:right;margin-top:4px"><span class="tag ${d < 0 ? 'tag-red' : 'tag-green'}">${d < 0 ? 'EXPIRED' : 'ACTIVE'}</span></div>
         </div>
-        <button class="btn-icon" onclick="deleteMembership('${m.id}')">🗑</button>
+        <button class="btn-icon" onclick="deleteMembership('${m.id}')">Delete</button>
       </div>`;
   }).join('');
 }

@@ -45,7 +45,7 @@ function renderSupplements() {
   const supplements = getData('supplements');
   const grid = document.getElementById('supplements-grid');
   if (!supplements.length) {
-    grid.innerHTML = `<div class="card">${emptyState('🥤', 'No supplements added yet. Click "+ Add Supplement" to start.')}</div>`;
+    grid.innerHTML = `<div class="card">${emptyState('', 'No supplements added yet. Click "+ Add Supplement" to start.')}</div>`;
     return;
   }
   grid.innerHTML = `<div class="supplements-grid">${supplements.map(s => buildSuppCard(s)).join('')}</div>`;
@@ -65,8 +65,8 @@ function buildSuppCard(supp) {
   const scoopLabel    = !canScoop
     ? 'Not enough for a full serving'
     : takenToday
-    ? '✅ Taken Today'
-    : `🥄 TAKE TODAY'S ${supp.name.toUpperCase()} SCOOP`;
+    ? 'TAKEN TODAY'
+    : `TAKE TODAY'S ${supp.name.toUpperCase()} SCOOP`;
 
   return `
     <div class="supplement-card" id="supp-card-${supp.id}">
@@ -128,8 +128,8 @@ function buildSuppCard(supp) {
         </div>` : ''}
 
       <div class="supp-card-actions" style="margin-top:0.75rem">
-        <button class="btn-icon" onclick="editSupplement('${supp.id}')">✏️ Edit</button>
-        <button class="btn-icon" onclick="deleteSupplement('${supp.id}')">🗑 Delete</button>
+        <button class="btn-icon" onclick="editSupplement('${supp.id}')">Edit</button>
+        <button class="btn-icon" onclick="deleteSupplement('${supp.id}')">Delete</button>
         ${supp.price ? `<span style="margin-left:auto;font-size:0.78rem;color:var(--text-muted)">${formatINR(supp.price)}</span>` : ''}
       </div>
     </div>`;

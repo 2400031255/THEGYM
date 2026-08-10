@@ -112,11 +112,11 @@ function generateNotifications() {
   const activeMembership = data.membership.find(m => calculateMembershipDays(m.endDate) >= 0);
   if (activeMembership) {
     const days = calculateMembershipDays(activeMembership.endDate);
-    if (days === 0) notifs.push({ icon: '🔴', text: `Your gym membership expires TODAY!`, type: 'error' });
-    else if (days <= 5) notifs.push({ icon: '⚠️', text: `Gym membership expires in ${days} day${days !== 1 ? 's' : ''}.`, type: 'warning' });
-    else if (days <= 10) notifs.push({ icon: '💳', text: `Gym membership expires in ${days} days.`, type: 'info' });
+    if (days === 0) notifs.push({ icon: '!', text: `Your gym membership expires TODAY!`, type: 'error' });
+    else if (days <= 5) notifs.push({ icon: '!', text: `Gym membership expires in ${days} day${days !== 1 ? 's' : ''}.`, type: 'warning' });
+    else if (days <= 10) notifs.push({ icon: 'i', text: `Gym membership expires in ${days} days.`, type: 'info' });
   } else if (data.membership.length > 0) {
-    notifs.push({ icon: '🔴', text: 'Your gym membership has expired. Renew now!', type: 'error' });
+    notifs.push({ icon: '!', text: 'Your gym membership has expired. Renew now!', type: 'error' });
   }
 
   // Supplement alerts
@@ -124,20 +124,20 @@ function generateNotifications() {
     const remaining = calculateSupplementRemaining(supp.id);
     const status = getSupplementStatus(remaining, supp.servingSize);
     if (status.label === 'FINISHED') {
-      notifs.push({ icon: '❌', text: `${supp.name} is finished. Time to restock!`, type: 'error' });
+      notifs.push({ icon: 'x', text: `${supp.name} is finished. Time to restock!`, type: 'error' });
     } else if (status.label === 'LAST SERVING') {
-      notifs.push({ icon: '🔴', text: `${supp.name} — only last serving remaining!`, type: 'error' });
+      notifs.push({ icon: '!', text: `${supp.name} — only last serving remaining!`, type: 'error' });
     } else if (status.label === 'VERY LOW') {
-      notifs.push({ icon: '🟠', text: `${supp.name} is very low (${remaining.toFixed(1)} ${supp.unit} left).`, type: 'warning' });
+      notifs.push({ icon: '!', text: `${supp.name} is very low (${remaining.toFixed(1)} ${supp.unit} left).`, type: 'warning' });
     } else if (status.label === 'LOW') {
-      notifs.push({ icon: '🟡', text: `${supp.name} is running low (${remaining.toFixed(1)} ${supp.unit} left).`, type: 'warning' });
+      notifs.push({ icon: '~', text: `${supp.name} is running low (${remaining.toFixed(1)} ${supp.unit} left).`, type: 'warning' });
     }
   });
 
   // Workout streak
   const streak = calculateWorkoutStreak();
   if (streak.current >= 3) {
-    notifs.push({ icon: '🔥', text: `You're on a ${streak.current}-day workout streak. Keep it up!`, type: 'success' });
+    notifs.push({ icon: '+', text: `You're on a ${streak.current}-day workout streak. Keep it up!`, type: 'success' });
   }
 
   // Pending expenses
@@ -145,7 +145,7 @@ function generateNotifications() {
     if (exp.splits) {
       exp.splits.forEach(s => {
         if (!s.paid) {
-          notifs.push({ icon: '💰', text: `${s.name} has ₹${s.amount} pending for "${exp.description}".`, type: 'warning' });
+          notifs.push({ icon: '$', text: `${s.name} has ₹${s.amount} pending for "${exp.description}".`, type: 'warning' });
         }
       });
     }
@@ -162,7 +162,7 @@ function updateNotifBadge() {
 
 /* ---- EMPTY STATE ---- */
 function emptyState(icon, msg) {
-  return `<div class="empty-state"><div class="empty-state-icon">${icon}</div>${msg}</div>`;
+  return `<div class="empty-state">${icon ? `<div class="empty-state-icon">${icon}</div>` : ''}<div>${msg}</div></div>`;
 }
 
 /* ---- FORMAT CURRENCY ---- */

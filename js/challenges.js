@@ -42,7 +42,7 @@ function renderChallenges() {
   const challenges = getData('challenges');
   const grid = document.getElementById('challenges-grid');
   if (!challenges.length) {
-    grid.innerHTML = `<div class="card">${emptyState('🏆', 'No challenges yet. Create one!')}</div>`;
+    grid.innerHTML = `<div class="card">${emptyState('', 'No challenges yet. Create one!')}</div>`;
     return;
   }
 
@@ -56,7 +56,7 @@ function renderChallenges() {
     return `
       <div class="challenge-card">
         <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.5rem">
-          <div class="challenge-name">${done ? '🏆 ' : ''}${c.name}</div>
+          <div class="challenge-name">${done ? '[DONE] ' : ''}${c.name}</div>
           <span class="tag ${done ? 'tag-green' : expired ? 'tag-red' : ''}">${done ? 'DONE' : expired ? 'ENDED' : 'ACTIVE'}</span>
         </div>
         ${c.desc ? `<div class="challenge-desc">${c.desc}</div>` : ''}
@@ -73,7 +73,7 @@ function renderChallenges() {
             style="flex:1;font-size:0.82rem;padding:0.45rem 0.65rem" value="${current}" />
           <button class="btn-secondary" style="padding:0.45rem 0.75rem;font-size:0.78rem"
             onclick="updateChallengeProgress('${c.id}')">Update</button>
-          <button class="btn-icon" onclick="deleteChallenge('${c.id}')">🗑</button>
+          <button class="btn-icon" onclick="deleteChallenge('${c.id}')">Delete</button>
         </div>
       </div>`;
   }).join('')}</div>`;
@@ -128,7 +128,7 @@ document.getElementById('friend-form').addEventListener('submit', function(e) {
   e.preventDefault();
   const record = {
     name:     document.getElementById('ff-name').value.trim(),
-    avatar:   document.getElementById('ff-avatar').value.trim() || '💪',
+    avatar:   document.getElementById('ff-avatar').value.trim() || 'GR',
     workouts: parseInt(document.getElementById('ff-workouts').value) || 0,
     streak:   parseInt(document.getElementById('ff-streak').value)   || 0,
     points:   parseInt(document.getElementById('ff-points').value)   || 0
@@ -150,14 +150,14 @@ function renderFriends() {
   const myPoints   = myWorkouts * 5 + myStreak * 2;
 
   const all = [
-    { id: 'me', name: profile.name || 'Me', avatar: profile.avatar || '🐀', workouts: myWorkouts, streak: myStreak, points: myPoints },
+    { id: 'me', name: profile.name || 'Me', avatar: profile.avatar || 'GR', workouts: myWorkouts, streak: myStreak, points: myPoints },
     ...friends
   ].sort((a, b) => b.points - a.points);
 
-  const rankEmojis = ['🥇', '🥈', '🥉'];
+  const rankLabels = ['1ST', '2ND', '3RD'];
   document.getElementById('leaderboard-list').innerHTML = all.map((f, i) => `
     <div class="leaderboard-item">
-      <div class="lb-rank">${rankEmojis[i] || (i + 1)}</div>
+      <div class="lb-rank">${rankLabels[i] || (i + 1)}</div>
       <div class="lb-avatar">${f.avatar}</div>
       <div class="lb-name">${f.name}${f.id === 'me' ? ' <span class="tag tag-red">YOU</span>' : ''}</div>
       <div class="lb-points">${f.points} pts</div>
@@ -165,7 +165,7 @@ function renderFriends() {
 
   const grid = document.getElementById('friends-grid');
   if (!friends.length) {
-    grid.innerHTML = `<div class="card">${emptyState('👥', 'No friends added yet.')}</div>`;
+    grid.innerHTML = `<div class="card">${emptyState('', 'No friends added yet.')}</div>`;
     return;
   }
   grid.innerHTML = `<div class="friends-grid">${friends.map(f => `
@@ -174,12 +174,12 @@ function renderFriends() {
       <div class="friend-name">${f.name}</div>
       <div class="friend-stats">
         <div class="friend-stat"><div class="friend-stat-val">${f.workouts}</div><div class="friend-stat-key">Workouts</div></div>
-        <div class="friend-stat"><div class="friend-stat-val">${f.streak}🔥</div><div class="friend-stat-key">Streak</div></div>
+        <div class="friend-stat"><div class="friend-stat-val">${f.streak}</div><div class="friend-stat-key">Streak</div></div>
         <div class="friend-stat"><div class="friend-stat-val">${f.points}</div><div class="friend-stat-key">Points</div></div>
       </div>
       <div style="display:flex;gap:0.5rem;justify-content:center">
-        <button class="btn-icon" onclick="editFriend('${f.id}')">✏️ Edit</button>
-        <button class="btn-icon" onclick="deleteFriend('${f.id}')">🗑</button>
+        <button class="btn-icon" onclick="editFriend('${f.id}')">Edit</button>
+        <button class="btn-icon" onclick="deleteFriend('${f.id}')">Delete</button>
       </div>
     </div>`).join('')}</div>`;
 }
@@ -214,7 +214,7 @@ function renderNotifications() {
   const notifs = generateNotifications();
   const el = document.getElementById('notifications-list');
   if (!notifs.length) {
-    el.innerHTML = `<div class="card">${emptyState('🔔', 'No notifications right now. You\'re all good!')}</div>`;
+    el.innerHTML = `<div class="card">${emptyState('', 'No notifications right now. All clear!')}</div>`;
     return;
   }
   el.innerHTML = `<div class="card">${notifs.map(n => `
@@ -226,5 +226,5 @@ function renderNotifications() {
 
 document.getElementById('btn-clear-notifs').addEventListener('click', () => {
   document.getElementById('notifications-list').innerHTML =
-    `<div class="card">${emptyState('🔔', 'No notifications.')}</div>`;
+    `<div class="card">${emptyState('', 'No notifications.')}</div>`;
 });

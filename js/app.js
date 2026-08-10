@@ -26,7 +26,7 @@ function renderDashboard() {
   const monthlyWo   = workouts.filter(w => w.date.startsWith(thisMonth)).length;
 
   document.getElementById('dash-stats').innerHTML = `
-    <div class="stat-card"><div class="stat-value">${streak.current}🔥</div><div class="stat-label">Streak</div></div>
+    <div class="stat-card"><div class="stat-value">${streak.current}</div><div class="stat-label">Streak</div></div>
     <div class="stat-card"><div class="stat-value">${monthlyWo}</div><div class="stat-label">Workouts / Month</div></div>
     <div class="stat-card"><div class="stat-value">${supplements.length}</div><div class="stat-label">Supplements</div></div>
     <div class="stat-card"><div class="stat-value" style="font-size:1.2rem">${formatINR(monthlyExp)}</div><div class="stat-label">Spent / Month</div></div>`;
@@ -37,7 +37,7 @@ function renderDashboard() {
   // Streak card
   document.getElementById('dash-streak-content').innerHTML = `
     <div class="big-number">${streak.current}</div>
-    <div class="big-label">DAY STREAK 🔥</div>
+    <div class="big-label">DAY STREAK</div>
     <div style="margin-top:0.75rem;font-size:0.78rem;color:var(--text-muted)">Longest: ${streak.longest} days</div>`;
 
   // Supplements overview
@@ -58,10 +58,10 @@ function renderDashMembership() {
   const m    = memberships[0];
   const days = calculateMembershipDays(m.endDate);
   let daysClass = 'good', daysText = '';
-  if (days < 0)      { daysClass = 'expired'; daysText = '🔴 EXPIRED'; }
-  else if (days === 0) { daysClass = 'warning'; daysText = '⚠️ EXPIRES TODAY'; }
-  else if (days <= 7)  { daysClass = 'warning'; daysText = `⚠️ ${days} DAYS LEFT`; }
-  else                 { daysClass = 'good';    daysText = `✅ ${days} DAYS LEFT`; }
+  if (days < 0)      { daysClass = 'expired'; daysText = 'EXPIRED'; }
+  else if (days === 0) { daysClass = 'warning'; daysText = 'EXPIRES TODAY'; }
+  else if (days <= 7)  { daysClass = 'warning'; daysText = `${days} DAYS LEFT`; }
+  else                 { daysClass = 'good';    daysText = `${days} DAYS LEFT`; }
 
   const progress = calculateMembershipProgress(m.startDate, m.endDate);
   const barClass = days < 0 ? 'danger' : days <= 7 ? 'warning' : 'success';
@@ -115,7 +115,7 @@ function renderDashNotifications() {
   }
   el.innerHTML = notifs.slice(0, 5).map(n => `
     <div class="notif-item" style="padding:0.6rem 0">
-      <div class="notif-icon">${n.icon}</div>
+      <div class="notif-icon notif-type-${n.type}">${n.icon}</div>
       <div class="notif-text">${n.text}</div>
     </div>`).join('');
 }
@@ -220,6 +220,27 @@ function switchAuthTab(tab) {
   document.getElementById('signup-error').textContent = '';
 }
 
+function togglePw(inputId, btn) {
+  const inp = document.getElementById(inputId);
+  if (!inp) return;
+  const isHidden = inp.type === 'password';
+  inp.type = isHidden ? 'text' : 'password';
+  btn.textContent = isHidden ? 'HIDE' : 'SHOW';
+}
+
+function handleForgot() {
+  const user = document.getElementById('login-user').value.trim();
+  const users = getUsers();
+  if (!user) { document.getElementById('login-error').textContent = 'Enter your username first.'; return; }
+  if (!users[user]) { document.getElementById('login-error').textContent = 'Username not found.'; return; }
+  document.getElementById('login-error').style.color = '#22c55e';
+  document.getElementById('login-error').textContent = 'Hint: passwords are stored locally. Check your notes!';
+  setTimeout(() => {
+    const el = document.getElementById('login-error');
+    if (el) { el.style.color = ''; el.textContent = ''; }
+  }, 4000);
+}
+
 function getUsers() {
   try { return JSON.parse(localStorage.getItem('gymrats_users') || '{}'); } catch { return {}; }
 }
@@ -232,15 +253,23 @@ function handleLogin() {
   const user = document.getElementById('login-user').value.trim();
   const pass = document.getElementById('login-pass').value;
   const err  = document.getElementById('login-error');
+  err.style.color = '';
   if (!user || !pass) { err.textContent = 'Please fill in all fields.'; return; }
   const users = getUsers();
   if (!users[user]) { err.textContent = 'Username not found. Sign up first.'; return; }
   if (users[user].password !== btoa(pass)) { err.textContent = 'Incorrect password.'; return; }
+  // Remember me
+  if (document.getElementById('login-remember')?.checked) {
+    localStorage.setItem('gymrats_remember', user);
+  }
   setSession(user);
-  // restore this user's profile name
   const data = loadData();
   if (!data.profile.name) { data.profile.name = users[user].name || user; saveData(data); }
-  launchApp();
+  // Loading animation on button
+  const btn = document.getElementById('btn-login');
+  btn.classList.add('loading');
+  btn.textContent = 'LOADING...';
+  setTimeout(launchApp, 600);
 }
 
 function handleSignup() {
@@ -249,6 +278,7 @@ function handleSignup() {
   const pass    = document.getElementById('signup-pass').value;
   const confirm = document.getElementById('signup-confirm').value;
   const err     = document.getElementById('signup-error');
+  err.style.color = '';
   if (!name || !user || !pass || !confirm) { err.textContent = 'Please fill in all fields.'; return; }
   if (pass.length < 4) { err.textContent = 'Password must be at least 4 characters.'; return; }
   if (pass !== confirm) { err.textContent = 'Passwords do not match.'; return; }
@@ -258,26 +288,411 @@ function handleSignup() {
   users[user] = { name, password: btoa(pass) };
   saveUsers(users);
   setSession(user);
-  // save name to profile
   const data = loadData();
   data.profile.name = name;
-  data.profile.avatar = '💪';
+  data.profile.avatar = 'GR';
   saveData(data);
-  launchApp();
+  const btn = document.getElementById('btn-signup');
+  btn.classList.add('loading');
+  btn.textContent = 'CREATING...';
+  setTimeout(launchApp, 600);
 }
 
 function launchApp() {
-  document.getElementById('auth-screen').style.display = 'none';
-  init();
+  const screen = document.getElementById('auth-screen');
+  screen.style.transition = 'opacity 0.5s ease';
+  screen.style.opacity = '0';
+  setTimeout(() => {
+    screen.style.display = 'none';
+    init();
+  }, 500);
 }
 
-// Enter key support on auth inputs
+// Enter key support
 ['login-user','login-pass'].forEach(id => {
   document.getElementById(id)?.addEventListener('keydown', e => { if (e.key === 'Enter') handleLogin(); });
 });
 ['signup-name','signup-user','signup-pass','signup-confirm'].forEach(id => {
   document.getElementById(id)?.addEventListener('keydown', e => { if (e.key === 'Enter') handleSignup(); });
 });
+
+// Pre-fill remembered username
+const remembered = localStorage.getItem('gymrats_remember');
+if (remembered) {
+  const el = document.getElementById('login-user');
+  if (el) { el.value = remembered; }
+  const cb = document.getElementById('login-remember');
+  if (cb) cb.checked = true;
+}
+
+/* ============================================
+   CANVAS BODYBUILDER ANIMATION
+   ============================================ */
+
+(function initAuthCanvas() {
+  const canvas = document.getElementById('auth-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let W, H, raf;
+  let t = 0;
+
+  // Particles
+  const PARTICLE_COUNT = 60;
+  const particles = [];
+
+  function resize() {
+    W = canvas.width  = canvas.offsetWidth;
+    H = canvas.height = canvas.offsetHeight;
+  }
+
+  function initParticles() {
+    particles.length = 0;
+    for (let i = 0; i < PARTICLE_COUNT; i++) {
+      particles.push({
+        x: Math.random() * W,
+        y: Math.random() * H,
+        r: Math.random() * 1.8 + 0.3,
+        vx: (Math.random() - 0.5) * 0.3,
+        vy: -(Math.random() * 0.4 + 0.1),
+        alpha: Math.random() * 0.5 + 0.1,
+        life: Math.random()
+      });
+    }
+  }
+
+  function drawBackground() {
+    // Deep black base
+    ctx.fillStyle = '#020202';
+    ctx.fillRect(0, 0, W, H);
+
+    // Animated red floor glow
+    const glowY = H * 0.75 + Math.sin(t * 0.008) * 20;
+    const grd = ctx.createRadialGradient(W * 0.5, glowY, 0, W * 0.5, glowY, W * 0.7);
+    grd.addColorStop(0, 'rgba(224,28,28,0.18)');
+    grd.addColorStop(0.5, 'rgba(180,10,10,0.06)');
+    grd.addColorStop(1, 'transparent');
+    ctx.fillStyle = grd;
+    ctx.fillRect(0, 0, W, H);
+
+    // Top vignette
+    const topGrd = ctx.createLinearGradient(0, 0, 0, H * 0.4);
+    topGrd.addColorStop(0, 'rgba(2,2,2,0.7)');
+    topGrd.addColorStop(1, 'transparent');
+    ctx.fillStyle = topGrd;
+    ctx.fillRect(0, 0, W, H);
+  }
+
+  function drawGrid() {
+    // Perspective floor grid
+    ctx.save();
+    ctx.globalAlpha = 0.07 + Math.sin(t * 0.01) * 0.02;
+    ctx.strokeStyle = '#e01c1c';
+    ctx.lineWidth = 0.5;
+    const horizon = H * 0.62;
+    const vp = { x: W * 0.5, y: horizon };
+    const cols = 14;
+    for (let i = -cols; i <= cols; i++) {
+      const bx = W * 0.5 + i * (W / cols);
+      ctx.beginPath();
+      ctx.moveTo(vp.x, vp.y);
+      ctx.lineTo(bx, H + 20);
+      ctx.stroke();
+    }
+    const rows = 10;
+    for (let j = 0; j <= rows; j++) {
+      const prog = j / rows;
+      const y = horizon + (H - horizon + 20) * (prog * prog);
+      const halfW = (W * 0.5 + 60) * prog;
+      ctx.beginPath();
+      ctx.moveTo(vp.x - halfW, y);
+      ctx.lineTo(vp.x + halfW, y);
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  function drawBodybuilder() {
+    const cx = W * 0.5;
+    const cy = H * 0.5;
+    const scale = Math.min(W, H) / 520;
+
+    // Breathing: subtle scale pulse
+    const breathe = 1 + Math.sin(t * 0.025) * 0.012;
+    // Subtle sway
+    const sway = Math.sin(t * 0.018) * 3;
+
+    ctx.save();
+    ctx.translate(cx + sway, cy);
+    ctx.scale(scale * breathe, scale * breathe);
+
+    // --- RIM LIGHT (back glow) ---
+    const rimAlpha = 0.55 + Math.sin(t * 0.02) * 0.15;
+    const rimGrd = ctx.createRadialGradient(0, -60, 20, 0, -60, 200);
+    rimGrd.addColorStop(0, `rgba(224,28,28,${rimAlpha})`);
+    rimGrd.addColorStop(0.4, `rgba(180,10,10,${rimAlpha * 0.3})`);
+    rimGrd.addColorStop(1, 'transparent');
+    ctx.fillStyle = rimGrd;
+    ctx.beginPath();
+    ctx.ellipse(0, -60, 160, 220, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Shadow on floor
+    ctx.save();
+    ctx.globalAlpha = 0.35;
+    const shadowGrd = ctx.createRadialGradient(0, 200, 0, 0, 200, 120);
+    shadowGrd.addColorStop(0, 'rgba(0,0,0,0.8)');
+    shadowGrd.addColorStop(1, 'transparent');
+    ctx.fillStyle = shadowGrd;
+    ctx.beginPath();
+    ctx.ellipse(0, 200, 100, 20, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+
+    // ---- FIGURE DRAWING ----
+    const bodyColor = '#1a1a1a';
+    const muscleColor = '#2a2a2a';
+    const rimColor = `rgba(224,28,28,${0.7 + Math.sin(t * 0.02) * 0.2})`;
+    const rimW = 2.5;
+
+    function rimStroke(color, width) {
+      ctx.strokeStyle = color;
+      ctx.lineWidth = width;
+      ctx.stroke();
+    }
+
+    // LEGS
+    // Left leg
+    ctx.beginPath();
+    ctx.moveTo(-28, 80);
+    ctx.bezierCurveTo(-45, 120, -50, 160, -42, 200);
+    ctx.bezierCurveTo(-38, 210, -20, 212, -18, 200);
+    ctx.bezierCurveTo(-16, 160, -18, 120, -10, 80);
+    ctx.closePath();
+    ctx.fillStyle = muscleColor;
+    ctx.fill();
+    rimStroke(rimColor, rimW);
+
+    // Right leg
+    ctx.beginPath();
+    ctx.moveTo(28, 80);
+    ctx.bezierCurveTo(45, 120, 50, 160, 42, 200);
+    ctx.bezierCurveTo(38, 210, 20, 212, 18, 200);
+    ctx.bezierCurveTo(16, 160, 18, 120, 10, 80);
+    ctx.closePath();
+    ctx.fillStyle = muscleColor;
+    ctx.fill();
+    rimStroke(rimColor, rimW);
+
+    // TORSO
+    ctx.beginPath();
+    ctx.moveTo(-55, -40);
+    ctx.bezierCurveTo(-65, 0, -60, 50, -30, 80);
+    ctx.lineTo(30, 80);
+    ctx.bezierCurveTo(60, 50, 65, 0, 55, -40);
+    ctx.bezierCurveTo(40, -60, -40, -60, -55, -40);
+    ctx.closePath();
+    ctx.fillStyle = bodyColor;
+    ctx.fill();
+    rimStroke(rimColor, rimW);
+
+    // Chest definition
+    ctx.beginPath();
+    ctx.moveTo(-40, -30);
+    ctx.bezierCurveTo(-50, -10, -45, 10, -20, 20);
+    ctx.bezierCurveTo(-5, 25, 5, 25, 20, 20);
+    ctx.bezierCurveTo(45, 10, 50, -10, 40, -30);
+    ctx.strokeStyle = `rgba(224,28,28,${0.25 + Math.sin(t * 0.02) * 0.08})`;
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    // Abs lines
+    for (let i = 0; i < 3; i++) {
+      const ay = 10 + i * 22;
+      ctx.beginPath();
+      ctx.moveTo(-18, ay);
+      ctx.lineTo(18, ay);
+      ctx.strokeStyle = `rgba(224,28,28,${0.2 - i * 0.04})`;
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    }
+    ctx.beginPath();
+    ctx.moveTo(0, 10);
+    ctx.lineTo(0, 75);
+    ctx.strokeStyle = 'rgba(224,28,28,0.15)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+
+    // LEFT ARM (raised pose)
+    const armAngle = Math.sin(t * 0.018) * 0.06;
+    ctx.save();
+    ctx.translate(-55, -30);
+    ctx.rotate(-0.3 + armAngle);
+    // Upper arm
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.bezierCurveTo(-25, 10, -35, 40, -30, 70);
+    ctx.bezierCurveTo(-25, 80, -5, 80, 0, 70);
+    ctx.bezierCurveTo(5, 40, 5, 10, 0, 0);
+    ctx.closePath();
+    ctx.fillStyle = muscleColor;
+    ctx.fill();
+    rimStroke(rimColor, rimW);
+    // Bicep peak
+    ctx.beginPath();
+    ctx.moveTo(-20, 20);
+    ctx.bezierCurveTo(-30, 30, -32, 50, -20, 55);
+    ctx.strokeStyle = `rgba(224,28,28,${0.3 + Math.sin(t * 0.02) * 0.1})`;
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+    // Forearm
+    ctx.translate(-28, 72);
+    ctx.rotate(0.4);
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.bezierCurveTo(-15, 5, -18, 35, -12, 60);
+    ctx.bezierCurveTo(-8, 68, 8, 68, 10, 60);
+    ctx.bezierCurveTo(14, 35, 12, 5, 0, 0);
+    ctx.closePath();
+    ctx.fillStyle = muscleColor;
+    ctx.fill();
+    rimStroke(rimColor, rimW);
+    ctx.restore();
+
+    // RIGHT ARM
+    ctx.save();
+    ctx.translate(55, -30);
+    ctx.rotate(0.3 - armAngle);
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.bezierCurveTo(25, 10, 35, 40, 30, 70);
+    ctx.bezierCurveTo(25, 80, 5, 80, 0, 70);
+    ctx.bezierCurveTo(-5, 40, -5, 10, 0, 0);
+    ctx.closePath();
+    ctx.fillStyle = muscleColor;
+    ctx.fill();
+    rimStroke(rimColor, rimW);
+    ctx.beginPath();
+    ctx.moveTo(20, 20);
+    ctx.bezierCurveTo(30, 30, 32, 50, 20, 55);
+    ctx.strokeStyle = `rgba(224,28,28,${0.3 + Math.sin(t * 0.02) * 0.1})`;
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+    ctx.translate(28, 72);
+    ctx.rotate(-0.4);
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.bezierCurveTo(15, 5, 18, 35, 12, 60);
+    ctx.bezierCurveTo(8, 68, -8, 68, -10, 60);
+    ctx.bezierCurveTo(-14, 35, -12, 5, 0, 0);
+    ctx.closePath();
+    ctx.fillStyle = muscleColor;
+    ctx.fill();
+    rimStroke(rimColor, rimW);
+    ctx.restore();
+
+    // NECK
+    ctx.beginPath();
+    ctx.moveTo(-14, -60);
+    ctx.bezierCurveTo(-16, -50, -16, -44, -14, -40);
+    ctx.lineTo(14, -40);
+    ctx.bezierCurveTo(16, -44, 16, -50, 14, -60);
+    ctx.closePath();
+    ctx.fillStyle = bodyColor;
+    ctx.fill();
+    rimStroke(rimColor, 1.5);
+
+    // HEAD
+    const headBob = Math.sin(t * 0.025) * 2;
+    ctx.beginPath();
+    ctx.ellipse(0, -90 + headBob, 28, 32, 0, 0, Math.PI * 2);
+    ctx.fillStyle = bodyColor;
+    ctx.fill();
+    rimStroke(rimColor, rimW);
+
+    // SHOULDERS
+    [-1, 1].forEach(side => {
+      ctx.beginPath();
+      ctx.ellipse(side * 58, -38, 18, 14, side * 0.3, 0, Math.PI * 2);
+      ctx.fillStyle = muscleColor;
+      ctx.fill();
+      rimStroke(rimColor, rimW);
+    });
+
+    ctx.restore();
+  }
+
+  function drawParticles() {
+    particles.forEach(p => {
+      p.x += p.vx;
+      p.y += p.vy;
+      p.life += 0.003;
+      if (p.y < -10 || p.life > 1) {
+        p.x = Math.random() * W;
+        p.y = H + 10;
+        p.life = 0;
+        p.alpha = Math.random() * 0.4 + 0.1;
+      }
+      const fade = Math.sin(p.life * Math.PI);
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(224,28,28,${p.alpha * fade})`;
+      ctx.fill();
+    });
+  }
+
+  function drawScanlines() {
+    ctx.save();
+    ctx.globalAlpha = 0.025;
+    for (let y = 0; y < H; y += 3) {
+      ctx.fillStyle = '#000';
+      ctx.fillRect(0, y, W, 1);
+    }
+    ctx.restore();
+  }
+
+  function drawVignette() {
+    const vgrd = ctx.createRadialGradient(W/2, H/2, H*0.3, W/2, H/2, H*0.85);
+    vgrd.addColorStop(0, 'transparent');
+    vgrd.addColorStop(1, 'rgba(0,0,0,0.55)');
+    ctx.fillStyle = vgrd;
+    ctx.fillRect(0, 0, W, H);
+  }
+
+  function loop() {
+    t++;
+    drawBackground();
+    drawGrid();
+    drawBodybuilder();
+    drawParticles();
+    drawScanlines();
+    drawVignette();
+    raf = requestAnimationFrame(loop);
+  }
+
+  function start() {
+    resize();
+    initParticles();
+    loop();
+  }
+
+  window.addEventListener('resize', () => {
+    resize();
+    initParticles();
+  });
+
+  // Stop animation when auth screen is hidden
+  const observer = new MutationObserver(() => {
+    const screen = document.getElementById('auth-screen');
+    if (screen && screen.style.display === 'none') {
+      cancelAnimationFrame(raf);
+      observer.disconnect();
+    }
+  });
+  const authScreen = document.getElementById('auth-screen');
+  if (authScreen) observer.observe(authScreen, { attributes: true, attributeFilter: ['style'] });
+
+  start();
+})();
 
 // Boot — check session
 if (getSession()) {

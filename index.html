@@ -5,84 +5,336 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
   <title>THE GYM RATS</title>
   <style>
-    /* AUTH SCREEN */
+    /* =============================================
+       AUTH SCREEN — CINEMATIC GYM LOGIN
+       ============================================= */
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
     #auth-screen {
       position: fixed; inset: 0;
-      background: #050505;
-      display: flex; align-items: center; justify-content: center;
-      z-index: 999; padding: 1.5rem;
+      background: #020202;
+      display: flex;
+      z-index: 999;
+      overflow: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     }
-    .auth-box {
-      background: #0f0f0f;
-      border: 1px solid #222;
-      border-radius: 16px;
-      padding: 2.5rem 2rem;
-      width: 100%; max-width: 400px;
-      box-shadow: 0 8px 40px rgba(0,0,0,0.7);
+
+    /* ---- CANVAS SIDE ---- */
+    #auth-canvas-wrap {
+      position: relative;
+      flex: 1;
+      min-height: 100vh;
+      overflow: hidden;
     }
-    .auth-logo {
-      text-align: center; margin-bottom: 2rem;
+    #auth-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%; height: 100%;
     }
-    .auth-logo-icon { font-size: 2.8rem; display: block; margin-bottom: 0.5rem; }
-    .auth-logo-title {
+    .auth-canvas-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to right, transparent 60%, #020202 100%),
+                  linear-gradient(to top, #020202 0%, transparent 30%);
+      pointer-events: none;
+    }
+    .auth-brand-over {
+      position: absolute;
+      top: 2.5rem; left: 2.5rem;
+      z-index: 2;
+      animation: authFadeUp 1s ease 0.3s both;
+    }
+    .auth-brand-over-title {
+      font-size: 1.5rem; font-weight: 900;
+      letter-spacing: 0.18em;
+      color: #e01c1c;
+      text-shadow: 0 0 30px rgba(224,28,28,0.6);
+    }
+    .auth-brand-over-sub {
+      font-size: 0.7rem; letter-spacing: 0.12em;
+      color: rgba(255,255,255,0.35);
+      margin-top: 4px;
+      text-transform: uppercase;
+    }
+    .auth-hero-text {
+      position: absolute;
+      bottom: 3rem; left: 2.5rem;
+      z-index: 2;
+      animation: authFadeUp 1s ease 0.6s both;
+    }
+    .auth-hero-h1 {
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      font-weight: 900;
+      line-height: 1.05;
+      letter-spacing: 0.04em;
+      color: #fff;
+      text-shadow: 0 2px 40px rgba(0,0,0,0.8);
+    }
+    .auth-hero-h1 span { color: #e01c1c; }
+    .auth-hero-p {
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.4);
+      margin-top: 0.6rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .auth-stats-row {
+      display: flex; gap: 2rem;
+      margin-top: 1.5rem;
+    }
+    .auth-stat-item { text-align: left; }
+    .auth-stat-val {
       font-size: 1.4rem; font-weight: 900;
-      letter-spacing: 0.14em; color: #e01c1c;
+      color: #e01c1c;
+      line-height: 1;
     }
-    .auth-logo-sub {
-      font-size: 0.72rem; color: #555;
-      letter-spacing: 0.06em; margin-top: 4px;
+    .auth-stat-key {
+      font-size: 0.62rem; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+      margin-top: 3px;
     }
+
+    /* ---- FORM SIDE ---- */
+    #auth-form-side {
+      width: 420px;
+      min-width: 380px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 2.5rem;
+      position: relative;
+      z-index: 3;
+      background: linear-gradient(135deg,
+        rgba(10,10,10,0.98) 0%,
+        rgba(15,15,15,0.95) 100%);
+      border-left: 1px solid rgba(224,28,28,0.12);
+      animation: authSlideIn 0.8s cubic-bezier(0.16,1,0.3,1) 0.2s both;
+    }
+    .auth-form-inner { width: 100%; }
+
+    /* Logo inside form */
+    .auth-form-logo {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .auth-form-logo-icon {
+      width: 56px; height: 56px;
+      background: rgba(224,28,28,0.12);
+      border: 1px solid rgba(224,28,28,0.3);
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.6rem;
+      margin: 0 auto 0.75rem;
+      box-shadow: 0 0 20px rgba(224,28,28,0.2);
+    }
+    .auth-form-logo-title {
+      font-size: 1.1rem; font-weight: 900;
+      letter-spacing: 0.16em; color: #fff;
+    }
+    .auth-form-logo-sub {
+      font-size: 0.68rem; color: rgba(255,255,255,0.3);
+      letter-spacing: 0.08em; margin-top: 4px;
+    }
+
+    /* Tabs */
     .auth-tabs {
-      display: flex; gap: 0;
-      background: #1e1e1e; border-radius: 8px;
-      padding: 4px; margin-bottom: 1.75rem;
+      display: flex;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 10px;
+      padding: 4px;
+      margin-bottom: 1.75rem;
+      gap: 4px;
     }
     .auth-tab {
       flex: 1; padding: 0.6rem;
-      text-align: center; font-size: 0.85rem;
-      font-weight: 700; letter-spacing: 0.06em;
-      border-radius: 6px; cursor: pointer;
-      color: #555; background: none; border: none;
+      text-align: center; font-size: 0.78rem;
+      font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase;
+      border-radius: 7px; cursor: pointer;
+      color: rgba(255,255,255,0.3);
+      background: none; border: none;
       transition: background 0.2s, color 0.2s;
       font-family: inherit;
     }
-    .auth-tab.active { background: #e01c1c; color: #fff; }
+    .auth-tab.active {
+      background: #e01c1c;
+      color: #fff;
+      box-shadow: 0 2px 12px rgba(224,28,28,0.4);
+    }
+
+    /* Forms */
     .auth-form { display: none; }
-    .auth-form.active { display: block; }
-    .auth-group { margin-bottom: 1rem; }
+    .auth-form.active { display: block; animation: authFadeUp 0.3s ease; }
+
+    .auth-group { margin-bottom: 1rem; position: relative; }
     .auth-group label {
-      display: block; font-size: 0.72rem;
-      font-weight: 700; letter-spacing: 0.1em;
-      text-transform: uppercase; color: #a0a0a0;
-      margin-bottom: 0.4rem;
+      display: block; font-size: 0.68rem;
+      font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 0.45rem;
     }
+    .auth-input-wrap { position: relative; }
     .auth-group input {
-      width: 100%; background: #1e1e1e;
-      border: 1px solid #2a2a2a; border-radius: 8px;
-      padding: 0.75rem 1rem; color: #fff;
-      font-size: 0.95rem; font-family: inherit;
-      transition: border-color 0.2s;
+      width: 100%;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      padding: 0.8rem 1rem;
+      color: #fff;
+      font-size: 0.92rem; font-family: inherit;
+      transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
     }
-    .auth-group input:focus { outline: none; border-color: #e01c1c; }
-    .auth-group input::placeholder { color: #444; }
+    .auth-group input:focus {
+      outline: none;
+      border-color: rgba(224,28,28,0.6);
+      background: rgba(224,28,28,0.04);
+      box-shadow: 0 0 0 3px rgba(224,28,28,0.1);
+    }
+    .auth-group input::placeholder { color: rgba(255,255,255,0.18); }
+    .auth-pw-toggle {
+      position: absolute; right: 0.85rem; top: 50%;
+      transform: translateY(-50%);
+      background: none; border: none;
+      color: rgba(255,255,255,0.3);
+      cursor: pointer; font-size: 1rem;
+      padding: 0.2rem;
+      transition: color 0.2s;
+    }
+    .auth-pw-toggle:hover { color: rgba(255,255,255,0.7); }
+
+    /* Remember + Forgot row */
+    .auth-row {
+      display: flex; justify-content: space-between;
+      align-items: center; margin-bottom: 1.25rem;
+    }
+    .auth-remember {
+      display: flex; align-items: center; gap: 0.5rem;
+      font-size: 0.78rem; color: rgba(255,255,255,0.35);
+      cursor: pointer;
+    }
+    .auth-remember input[type=checkbox] {
+      width: 15px; height: 15px;
+      accent-color: #e01c1c;
+    }
+    .auth-forgot {
+      font-size: 0.75rem; color: rgba(224,28,28,0.7);
+      cursor: pointer; background: none; border: none;
+      font-family: inherit;
+      transition: color 0.2s;
+    }
+    .auth-forgot:hover { color: #e01c1c; }
+
+    /* Submit button */
     .auth-btn {
-      width: 100%; background: #e01c1c;
+      width: 100%;
+      background: linear-gradient(135deg, #e01c1c 0%, #b01010 100%);
       color: #fff; font-weight: 800;
-      font-size: 0.9rem; letter-spacing: 0.08em;
-      padding: 0.85rem; border-radius: 8px;
+      font-size: 0.88rem; letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.9rem; border-radius: 10px;
       border: none; cursor: pointer;
-      margin-top: 0.5rem; font-family: inherit;
-      transition: background 0.2s;
+      font-family: inherit;
+      position: relative; overflow: hidden;
+      transition: transform 0.15s, box-shadow 0.2s;
+      box-shadow: 0 4px 20px rgba(224,28,28,0.35);
     }
-    .auth-btn:hover { background: #b01414; }
+    .auth-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 28px rgba(224,28,28,0.5);
+    }
+    .auth-btn:active { transform: translateY(0); }
+    .auth-btn-shine {
+      position: absolute; top: 0; left: -100%;
+      width: 60%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+      animation: btnShine 3s ease infinite;
+    }
+    .auth-btn.loading {
+      pointer-events: none;
+      opacity: 0.8;
+    }
+    .auth-btn.loading::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: rgba(0,0,0,0.2);
+      border-radius: 10px;
+    }
+
+    /* Error */
     .auth-error {
-      color: #e01c1c; font-size: 0.8rem;
-      margin-top: 0.5rem; text-align: center;
-      min-height: 1.2rem;
+      color: #e01c1c; font-size: 0.78rem;
+      margin-bottom: 0.75rem;
+      min-height: 1rem;
+      display: flex; align-items: center; gap: 0.4rem;
     }
+    .auth-error:not(:empty)::before { content: '⚠'; }
+
+    /* Divider */
+    .auth-divider {
+      display: flex; align-items: center; gap: 0.75rem;
+      margin: 1.25rem 0;
+    }
+    .auth-divider::before, .auth-divider::after {
+      content: ''; flex: 1;
+      height: 1px; background: rgba(255,255,255,0.07);
+    }
+    .auth-divider span {
+      font-size: 0.68rem; color: rgba(255,255,255,0.2);
+      letter-spacing: 0.08em; text-transform: uppercase;
+    }
+
     .auth-note {
-      text-align: center; font-size: 0.72rem;
-      color: #444; margin-top: 1.25rem;
+      text-align: center; font-size: 0.68rem;
+      color: rgba(255,255,255,0.2);
+      margin-top: 1.25rem; line-height: 1.6;
+    }
+
+    /* ---- KEYFRAMES ---- */
+    @keyframes authFadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes authSlideIn {
+      from { opacity: 0; transform: translateX(40px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes btnShine {
+      0%   { left: -100%; }
+      30%  { left: 120%; }
+      100% { left: 120%; }
+    }
+
+    /* ---- MOBILE ---- */
+    @media (max-width: 768px) {
+      #auth-screen { flex-direction: column; }
+      #auth-canvas-wrap {
+        flex: none;
+        height: 42vh;
+        min-height: 220px;
+      }
+      .auth-canvas-overlay {
+        background: linear-gradient(to bottom, transparent 40%, #020202 100%);
+      }
+      .auth-brand-over { top: 1.25rem; left: 1.25rem; }
+      .auth-brand-over-title { font-size: 1.1rem; }
+      .auth-hero-text { bottom: 1.5rem; left: 1.25rem; }
+      .auth-hero-h1 { font-size: 1.6rem; }
+      .auth-stats-row { gap: 1.25rem; }
+      .auth-stat-val { font-size: 1.1rem; }
+      #auth-form-side {
+        width: 100%; min-width: unset;
+        border-left: none;
+        border-top: 1px solid rgba(224,28,28,0.12);
+        padding: 1.5rem 1.25rem;
+        animation: authFadeUp 0.6s ease 0.1s both;
+        overflow-y: auto;
+        flex: 1;
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
     }
   </style>
   <link rel="stylesheet" href="./css/style.css" />
@@ -93,65 +345,135 @@
 
 <!-- AUTH SCREEN -->
 <div id="auth-screen">
-  <div class="auth-box">
-    <div class="auth-logo">
-      <span class="auth-logo-icon">💪</span>
-      <div class="auth-logo-title">THE GYM RATS</div>
-      <div class="auth-logo-sub">Train Together. Track Everything. Get Stronger.</div>
+
+  <!-- LEFT: CANVAS ANIMATION -->
+  <div id="auth-canvas-wrap">
+    <canvas id="auth-canvas"></canvas>
+    <div class="auth-canvas-overlay"></div>
+    <div class="auth-brand-over">
+      <div class="auth-brand-over-title">THE GYM RATS</div>
+      <div class="auth-brand-over-sub">Your Private Fitness Command Center</div>
     </div>
-    <div class="auth-tabs">
-      <button class="auth-tab active" id="tab-login" onclick="switchAuthTab('login')">LOGIN</button>
-      <button class="auth-tab" id="tab-signup" onclick="switchAuthTab('signup')">SIGN UP</button>
-    </div>
-    <!-- LOGIN -->
-    <div class="auth-form active" id="form-login">
-      <div class="auth-group"><label>Username</label><input type="text" id="login-user" placeholder="Enter your username" autocomplete="username" /></div>
-      <div class="auth-group"><label>Password</label><input type="password" id="login-pass" placeholder="Enter your password" autocomplete="current-password" /></div>
-      <div class="auth-error" id="login-error"></div>
-      <button class="auth-btn" onclick="handleLogin()">LOGIN →</button>
-      <div class="auth-note">Data is stored locally on this device.</div>
-    </div>
-    <!-- SIGNUP -->
-    <div class="auth-form" id="form-signup">
-      <div class="auth-group"><label>Full Name</label><input type="text" id="signup-name" placeholder="e.g. Nikhil" /></div>
-      <div class="auth-group"><label>Username</label><input type="text" id="signup-user" placeholder="Choose a username" autocomplete="username" /></div>
-      <div class="auth-group"><label>Password</label><input type="password" id="signup-pass" placeholder="Create a password" autocomplete="new-password" /></div>
-      <div class="auth-group"><label>Confirm Password</label><input type="password" id="signup-confirm" placeholder="Repeat password" autocomplete="new-password" /></div>
-      <div class="auth-error" id="signup-error"></div>
-      <button class="auth-btn" onclick="handleSignup()">CREATE ACCOUNT →</button>
-      <div class="auth-note">Your account is saved on this device only.</div>
+    <div class="auth-hero-text">
+      <div class="auth-hero-h1">TRAIN TOGETHER.<br><span>GET STRONGER.</span></div>
+      <div class="auth-hero-p">Track workouts &middot; Supplements &middot; Membership &middot; Expenses</div>
+      <div class="auth-stats-row">
+        <div class="auth-stat-item"><div class="auth-stat-val">100%</div><div class="auth-stat-key">Frontend</div></div>
+        <div class="auth-stat-item"><div class="auth-stat-val">0</div><div class="auth-stat-key">Servers</div></div>
+        <div class="auth-stat-item"><div class="auth-stat-val">&infin;</div><div class="auth-stat-key">Gains</div></div>
+      </div>
     </div>
   </div>
+
+  <!-- RIGHT: FORM -->
+  <div id="auth-form-side">
+    <div class="auth-form-inner">
+
+      <div class="auth-form-logo">
+        <div class="auth-form-logo-icon">GR</div>
+        <div class="auth-form-logo-title">THE GYM RATS</div>
+        <div class="auth-form-logo-sub">Train Together. Get Stronger.</div>
+      </div>
+
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="tab-login" onclick="switchAuthTab('login')">LOGIN</button>
+        <button class="auth-tab" id="tab-signup" onclick="switchAuthTab('signup')">SIGN UP</button>
+      </div>
+
+      <!-- LOGIN FORM -->
+      <div class="auth-form active" id="form-login">
+        <div class="auth-group">
+          <label>Username</label>
+          <div class="auth-input-wrap">
+            <input type="text" id="login-user" placeholder="Enter your username" autocomplete="username" />
+          </div>
+        </div>
+        <div class="auth-group">
+          <label>Password</label>
+          <div class="auth-input-wrap">
+            <input type="password" id="login-pass" placeholder="Enter your password" autocomplete="current-password" />
+            <button class="auth-pw-toggle" type="button" onclick="togglePw('login-pass',this)">&#9679;</button>
+          </div>
+        </div>
+        <div class="auth-row">
+          <label class="auth-remember">
+            <input type="checkbox" id="login-remember" /> Remember me
+          </label>
+          <button class="auth-forgot" type="button" onclick="handleForgot()">Forgot password?</button>
+        </div>
+        <div class="auth-error" id="login-error"></div>
+        <button class="auth-btn" id="btn-login" onclick="handleLogin()">
+          <span class="auth-btn-shine"></span>
+          LOGIN &rarr;
+        </button>
+        <div class="auth-note">Data is stored locally on this device only.<br>No server. No tracking.</div>
+      </div>
+
+      <!-- SIGNUP FORM -->
+      <div class="auth-form" id="form-signup">
+        <div class="auth-group">
+          <label>Full Name</label>
+          <input type="text" id="signup-name" placeholder="e.g. Nikhil" autocomplete="name" />
+        </div>
+        <div class="auth-group">
+          <label>Username</label>
+          <input type="text" id="signup-user" placeholder="Choose a username" autocomplete="username" />
+        </div>
+        <div class="auth-group">
+          <label>Password</label>
+          <div class="auth-input-wrap">
+            <input type="password" id="signup-pass" placeholder="Min. 4 characters" autocomplete="new-password" />
+            <button class="auth-pw-toggle" type="button" onclick="togglePw('signup-pass',this)">&#9679;</button>
+          </div>
+        </div>
+        <div class="auth-group">
+          <label>Confirm Password</label>
+          <div class="auth-input-wrap">
+            <input type="password" id="signup-confirm" placeholder="Repeat password" autocomplete="new-password" />
+            <button class="auth-pw-toggle" type="button" onclick="togglePw('signup-confirm',this)">&#9679;</button>
+          </div>
+        </div>
+        <div class="auth-error" id="signup-error"></div>
+        <button class="auth-btn" id="btn-signup" onclick="handleSignup()">
+          <span class="auth-btn-shine"></span>
+          CREATE ACCOUNT &rarr;
+        </button>
+        <div class="auth-note">Your account is saved on this device only.</div>
+      </div>
+
+    </div>
+  </div>
+
 </div>
 
 <!-- SIDEBAR -->
 <aside class="sidebar" id="sidebar">
   <div class="sidebar-brand">
-    <span class="brand-icon">💪</span>
+    <span class="brand-icon">GR</span>
     <div>
       <div class="brand-title">THE GYM RATS</div>
       <div class="brand-sub">Train. Track. Dominate.</div>
     </div>
   </div>
   <nav class="sidebar-nav">
-    <a class="nav-item active" data-page="dashboard"><span class="nav-icon">🏠</span><span>Dashboard</span></a>
-    <a class="nav-item" data-page="workouts"><span class="nav-icon">🏋️</span><span>Workouts</span></a>
-    <a class="nav-item" data-page="supplements"><span class="nav-icon">🥤</span><span>Supplements</span></a>
-    <a class="nav-item" data-page="membership"><span class="nav-icon">💳</span><span>Membership</span></a>
-    <a class="nav-item" data-page="expenses"><span class="nav-icon">💰</span><span>Expenses</span></a>
-    <a class="nav-item" data-page="progress"><span class="nav-icon">📈</span><span>Progress</span></a>
-    <a class="nav-item" data-page="challenges"><span class="nav-icon">🏆</span><span>Challenges</span></a>
-    <a class="nav-item" data-page="friends"><span class="nav-icon">👥</span><span>Friends</span></a>
-    <a class="nav-item" data-page="notifications"><span class="nav-icon">🔔</span><span id="notif-badge-nav">Notifications</span></a>
-    <a class="nav-item" data-page="settings"><span class="nav-icon">⚙️</span><span>Settings</span></a>
+    <a class="nav-item active" data-page="dashboard"><span class="nav-icon nav-svg">&#9632;</span><span>Dashboard</span></a>
+    <a class="nav-item" data-page="workouts"><span class="nav-icon nav-svg">&#9651;</span><span>Workouts</span></a>
+    <a class="nav-item" data-page="supplements"><span class="nav-icon nav-svg">&#9670;</span><span>Supplements</span></a>
+    <a class="nav-item" data-page="membership"><span class="nav-icon nav-svg">&#9633;</span><span>Membership</span></a>
+    <a class="nav-item" data-page="expenses"><span class="nav-icon nav-svg">&#9650;</span><span>Expenses</span></a>
+    <a class="nav-item" data-page="progress"><span class="nav-icon nav-svg">&#9656;</span><span>Progress</span></a>
+    <a class="nav-item" data-page="challenges"><span class="nav-icon nav-svg">&#9733;</span><span>Challenges</span></a>
+    <a class="nav-item" data-page="friends"><span class="nav-icon nav-svg">&#9671;</span><span>Friends</span></a>
+    <a class="nav-item" data-page="notifications"><span class="nav-icon nav-svg">&#9711;</span><span id="notif-badge-nav">Notifications</span></a>
+    <a class="nav-item" data-page="settings"><span class="nav-icon nav-svg">&#9881;</span><span>Settings</span></a>
   </nav>
 </aside>
 
 <!-- MOBILE HEADER -->
 <header class="mobile-header">
-  <button class="hamburger" id="hamburger">☰</button>
+  <button class="hamburger" id="hamburger">&#9776;</button>
   <div class="mobile-brand">THE GYM RATS</div>
-  <button class="notif-btn" data-page="notifications">🔔<span class="notif-dot" id="notif-dot" style="display:none"></span></button>
+  <button class="notif-btn" data-page="notifications">&#9711;<span class="notif-dot" id="notif-dot" style="display:none"></span></button>
 </header>
 
 <!-- OVERLAY -->
@@ -180,12 +502,12 @@
     <div class="card">
       <div class="card-label">QUICK ACTIONS</div>
       <div class="quick-actions">
-        <button class="qa-btn" data-page="workouts" data-action="new">🏋️ ADD WORKOUT</button>
-        <button class="qa-btn" id="qa-scoop">🥄 TAKE SCOOP</button>
-        <button class="qa-btn" data-page="membership" data-action="new">💳 ADD MEMBERSHIP</button>
-        <button class="qa-btn" data-page="supplements" data-action="new">🥤 ADD SUPPLEMENT</button>
-        <button class="qa-btn" data-page="expenses" data-action="new">💰 ADD EXPENSE</button>
-        <button class="qa-btn" data-page="progress" data-action="new">📈 LOG PROGRESS</button>
+        <button class="qa-btn" data-page="workouts" data-action="new">+ ADD WORKOUT</button>
+        <button class="qa-btn" id="qa-scoop">+ TAKE SCOOP</button>
+        <button class="qa-btn" data-page="membership" data-action="new">+ ADD MEMBERSHIP</button>
+        <button class="qa-btn" data-page="supplements" data-action="new">+ ADD SUPPLEMENT</button>
+        <button class="qa-btn" data-page="expenses" data-action="new">+ ADD EXPENSE</button>
+        <button class="qa-btn" data-page="progress" data-action="new">+ LOG PROGRESS</button>
       </div>
     </div>
 
@@ -238,7 +560,7 @@
       <div id="workout-history-list"></div>
     </div>
     <div class="card">
-      <div class="card-label">🏆 PERSONAL RECORDS</div>
+      <div class="card-label">PERSONAL RECORDS</div>
       <div id="pr-list"></div>
     </div>
   </section>
@@ -449,7 +771,7 @@
       <form id="friend-form">
         <div class="form-row">
           <div class="form-group"><label>Name</label><input type="text" id="ff-name" placeholder="e.g. Rahul" required /></div>
-          <div class="form-group"><label>Emoji Avatar</label><input type="text" id="ff-avatar" placeholder="💪" maxlength="2" /></div>
+          <div class="form-group"><label>Avatar Initial</label><input type="text" id="ff-avatar" placeholder="R" maxlength="2" /></div>
         </div>
         <div class="form-row">
           <div class="form-group"><label>Workouts This Month</label><input type="number" id="ff-workouts" placeholder="0" min="0" /></div>
@@ -463,7 +785,7 @@
       </form>
     </div>
     <div class="card">
-      <div class="card-label">🏆 MONTHLY LEADERBOARD</div>
+      <div class="card-label">MONTHLY LEADERBOARD</div>
       <div id="leaderboard-list"></div>
     </div>
     <div id="friends-grid"></div>
@@ -483,7 +805,7 @@
       <form id="profile-form">
         <div class="form-row">
           <div class="form-group"><label>Your Name</label><input type="text" id="profile-name" placeholder="e.g. Nikhil" /></div>
-          <div class="form-group"><label>Emoji Avatar</label><input type="text" id="profile-avatar" placeholder="💪" maxlength="2" /></div>
+          <div class="form-group"><label>Avatar Initial</label><input type="text" id="profile-avatar" placeholder="N" maxlength="2" /></div>
         </div>
         <div class="form-group"><label>Fitness Goal</label>
           <select id="profile-goal">
@@ -499,18 +821,18 @@
         <div>
           <div class="settings-action-title">Export Data</div>
           <div class="settings-action-desc">Download all your data as a JSON backup file.</div>
-          <button class="btn-secondary" id="btn-export">⬇ Export JSON</button>
+          <button class="btn-secondary" id="btn-export">Export JSON</button>
         </div>
         <div>
           <div class="settings-action-title">Import Data</div>
           <div class="settings-action-desc">Restore from a previously exported JSON file.</div>
-          <button class="btn-secondary" id="btn-import-trigger">⬆ Import JSON</button>
+          <button class="btn-secondary" id="btn-import-trigger">Import JSON</button>
           <input type="file" id="btn-import" accept=".json" style="display:none" />
         </div>
         <div>
           <div class="settings-action-title">Clear All Data</div>
           <div class="settings-action-desc">Permanently delete all app data. Cannot be undone.</div>
-          <button class="btn-danger" id="btn-clear-data">🗑 Clear All Data</button>
+          <button class="btn-danger" id="btn-clear-data">Clear All Data</button>
         </div>
       </div>
     </div>
@@ -520,7 +842,7 @@
         <div>
           <div class="settings-action-title">Logout</div>
           <div class="settings-action-desc">Sign out of your account on this device.</div>
-          <button class="btn-danger" id="btn-logout">🚪 Logout</button>
+          <button class="btn-danger" id="btn-logout">Logout</button>
         </div>
       </div>
     </div>
@@ -538,11 +860,11 @@
 
 <!-- MOBILE BOTTOM NAV -->
 <nav class="bottom-nav">
-  <a class="bnav-item active" data-page="dashboard"><span>🏠</span><span>Home</span></a>
-  <a class="bnav-item" data-page="workouts"><span>🏋️</span><span>Workouts</span></a>
-  <a class="bnav-item" data-page="supplements"><span>🥤</span><span>Supps</span></a>
-  <a class="bnav-item" data-page="expenses"><span>💰</span><span>Expenses</span></a>
-  <a class="bnav-item" data-page="progress"><span>📈</span><span>Progress</span></a>
+  <a class="bnav-item active" data-page="dashboard"><span>&#9632;</span><span>Home</span></a>
+  <a class="bnav-item" data-page="workouts"><span>&#9651;</span><span>Workouts</span></a>
+  <a class="bnav-item" data-page="supplements"><span>&#9670;</span><span>Supps</span></a>
+  <a class="bnav-item" data-page="expenses"><span>&#9650;</span><span>Expenses</span></a>
+  <a class="bnav-item" data-page="progress"><span>&#9656;</span><span>Progress</span></a>
 </nav>
 
 <!-- MODAL -->
