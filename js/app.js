@@ -299,13 +299,18 @@ function handleSignup() {
 }
 
 function launchApp() {
+  // Close auth modal
+  const overlay = document.getElementById('auth-modal-overlay');
+  if (overlay) overlay.classList.remove('open');
+  // Fade out hero screen
   const screen = document.getElementById('auth-screen');
-  screen.style.transition = 'opacity 0.5s ease';
-  screen.style.opacity = '0';
-  setTimeout(() => {
-    screen.style.display = 'none';
+  if (screen) {
+    screen.style.transition = 'opacity 0.5s ease';
+    screen.style.opacity = '0';
+    setTimeout(() => { screen.style.display = 'none'; init(); }, 500);
+  } else {
     init();
-  }, 500);
+  }
 }
 
 // Enter key support
@@ -697,6 +702,5 @@ if (remembered) {
 // Boot — check session
 if (getSession()) {
   launchApp();
-} else {
-  // show auth screen (already visible by default)
 }
+// else: hero screen is visible, user clicks LOGIN to open modal

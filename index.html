@@ -5,135 +5,194 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
   <title>THE GYM RATS</title>
   <style>
-    /* =============================================
-       AUTH SCREEN — CINEMATIC GYM LOGIN
-       ============================================= */
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
+    /* =============================================
+       HERO LANDING SCREEN
+       ============================================= */
     #auth-screen {
       position: fixed; inset: 0;
-      background: #020202;
-      display: flex;
       z-index: 999;
-      overflow: hidden;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    }
-
-    /* ---- CANVAS SIDE ---- */
-    #auth-canvas-wrap {
-      position: relative;
-      flex: 1;
-      min-height: 100vh;
       overflow: hidden;
     }
-    #auth-canvas {
-      position: absolute;
-      inset: 0;
-      width: 100%; height: 100%;
-    }
-    .auth-canvas-overlay {
+
+    /* Full-screen hero image */
+    #hero-bg {
       position: absolute; inset: 0;
-      background: linear-gradient(to right, transparent 60%, #020202 100%),
-                  linear-gradient(to top, #020202 0%, transparent 30%);
-      pointer-events: none;
-    }
-    .auth-brand-over {
-      position: absolute;
-      top: 2.5rem; left: 2.5rem;
-      z-index: 2;
-      animation: authFadeUp 1s ease 0.3s both;
-    }
-    .auth-brand-over-title {
-      font-size: 1.5rem; font-weight: 900;
-      letter-spacing: 0.18em;
-      color: #e01c1c;
-      text-shadow: 0 0 30px rgba(224,28,28,0.6);
-    }
-    .auth-brand-over-sub {
-      font-size: 0.7rem; letter-spacing: 0.12em;
-      color: rgba(255,255,255,0.35);
-      margin-top: 4px;
-      text-transform: uppercase;
-    }
-    .auth-hero-text {
-      position: absolute;
-      bottom: 3rem; left: 2.5rem;
-      z-index: 2;
-      animation: authFadeUp 1s ease 0.6s both;
-    }
-    .auth-hero-h1 {
-      font-size: clamp(2rem, 4vw, 3.2rem);
-      font-weight: 900;
-      line-height: 1.05;
-      letter-spacing: 0.04em;
-      color: #fff;
-      text-shadow: 0 2px 40px rgba(0,0,0,0.8);
-    }
-    .auth-hero-h1 span { color: #e01c1c; }
-    .auth-hero-p {
-      font-size: 0.85rem;
-      color: rgba(255,255,255,0.4);
-      margin-top: 0.6rem;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-    }
-    .auth-stats-row {
-      display: flex; gap: 2rem;
-      margin-top: 1.5rem;
-    }
-    .auth-stat-item { text-align: left; }
-    .auth-stat-val {
-      font-size: 1.4rem; font-weight: 900;
-      color: #e01c1c;
-      line-height: 1;
-    }
-    .auth-stat-key {
-      font-size: 0.62rem; font-weight: 700;
-      letter-spacing: 0.1em; text-transform: uppercase;
-      color: rgba(255,255,255,0.3);
-      margin-top: 3px;
+      background: url('./assets/images/hero-bg.png') center center / cover no-repeat;
     }
 
-    /* ---- FORM SIDE ---- */
-    #auth-form-side {
-      width: 420px;
-      min-width: 380px;
-      display: flex;
+    /* Dark overlay so text is readable */
+    #hero-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(2,2,2,0.45) 0%,
+        rgba(2,2,2,0.25) 40%,
+        rgba(2,2,2,0.70) 75%,
+        rgba(2,2,2,0.92) 100%
+      );
+    }
+
+    /* Top-left brand */
+    #hero-brand {
+      position: absolute;
+      top: 2.2rem; left: 2.5rem;
+      z-index: 2;
+      animation: fadeUp 0.9s ease 0.2s both;
+    }
+    #hero-brand-name {
+      font-size: 1.35rem;
+      font-weight: 900;
+      letter-spacing: 0.22em;
+      color: #e01c1c;
+      text-shadow: 0 0 28px rgba(224,28,28,0.7);
+      text-transform: uppercase;
+    }
+    #hero-brand-line {
+      width: 36px; height: 2px;
+      background: #e01c1c;
+      margin-top: 6px;
+      box-shadow: 0 0 8px rgba(224,28,28,0.6);
+    }
+
+    /* Bottom hero text */
+    #hero-content {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: 3rem 2.5rem;
+      z-index: 2;
+      animation: fadeUp 0.9s ease 0.4s both;
+    }
+    #hero-tagline {
+      font-size: clamp(2.4rem, 5.5vw, 4rem);
+      font-weight: 900;
+      line-height: 1.0;
+      letter-spacing: 0.03em;
+      color: #ffffff;
+      text-transform: uppercase;
+      text-shadow: 0 4px 40px rgba(0,0,0,0.9);
+    }
+    #hero-tagline span {
+      color: #e01c1c;
+      text-shadow: 0 0 30px rgba(224,28,28,0.5);
+    }
+    #hero-sub {
+      margin-top: 0.75rem;
+      font-size: 0.82rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.45);
+    }
+    #hero-sub span {
+      color: rgba(224,28,28,0.7);
+      margin: 0 0.4rem;
+    }
+
+    /* LOGIN button on hero */
+    #hero-login-btn {
+      margin-top: 2rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.9rem 2.4rem;
+      background: #e01c1c;
+      color: #fff;
+      font-size: 0.88rem;
+      font-weight: 800;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+      position: relative;
+      overflow: hidden;
+      transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+      box-shadow: 0 4px 24px rgba(224,28,28,0.45);
+      clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 100%, 12px 100%);
+    }
+    #hero-login-btn:hover {
+      background: #c81818;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(224,28,28,0.6);
+    }
+    #hero-login-btn:active { transform: translateY(0); }
+    #hero-login-btn::before {
+      content: '';
+      position: absolute; top: 0; left: -80%;
+      width: 50%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.18), transparent);
+      animation: shine 3s ease infinite;
+    }
+
+    /* =============================================
+       AUTH MODAL OVERLAY (opens on LOGIN click)
+       ============================================= */
+    #auth-modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.75);
+      backdrop-filter: blur(6px);
+      z-index: 1000;
+      display: none;
       align-items: center;
       justify-content: center;
-      padding: 2rem 2.5rem;
-      position: relative;
-      z-index: 3;
-      background: linear-gradient(135deg,
-        rgba(10,10,10,0.98) 0%,
-        rgba(15,15,15,0.95) 100%);
-      border-left: 1px solid rgba(224,28,28,0.12);
-      animation: authSlideIn 0.8s cubic-bezier(0.16,1,0.3,1) 0.2s both;
+      padding: 1rem;
+      animation: overlayIn 0.25s ease;
     }
-    .auth-form-inner { width: 100%; }
+    #auth-modal-overlay.open { display: flex; }
 
-    /* Logo inside form */
-    .auth-form-logo {
-      text-align: center;
-      margin-bottom: 2rem;
+    #auth-modal {
+      width: 100%;
+      max-width: 420px;
+      background: rgba(10,10,10,0.97);
+      border: 1px solid rgba(224,28,28,0.18);
+      border-radius: 16px;
+      padding: 2.25rem 2rem;
+      position: relative;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.8), 0 0 0 1px rgba(224,28,28,0.08);
+      animation: modalIn 0.35s cubic-bezier(0.16,1,0.3,1);
+      max-height: 90vh;
+      overflow-y: auto;
     }
-    .auth-form-logo-icon {
-      width: 56px; height: 56px;
+
+    /* Close button */
+    #auth-modal-close {
+      position: absolute; top: 1rem; right: 1rem;
+      width: 30px; height: 30px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 50%;
+      color: rgba(255,255,255,0.5);
+      font-size: 1rem; line-height: 1;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s, color 0.2s;
+    }
+    #auth-modal-close:hover { background: rgba(224,28,28,0.2); color: #fff; }
+
+    /* Modal logo */
+    .aml-logo { text-align: center; margin-bottom: 1.75rem; }
+    .aml-logo-icon {
+      width: 52px; height: 52px;
       background: rgba(224,28,28,0.12);
       border: 1px solid rgba(224,28,28,0.3);
-      border-radius: 14px;
+      border-radius: 12px;
       display: flex; align-items: center; justify-content: center;
-      font-size: 1.6rem;
-      margin: 0 auto 0.75rem;
+      font-size: 1rem; font-weight: 900;
+      letter-spacing: 0.05em;
+      color: #e01c1c;
+      margin: 0 auto 0.65rem;
       box-shadow: 0 0 20px rgba(224,28,28,0.2);
     }
-    .auth-form-logo-title {
-      font-size: 1.1rem; font-weight: 900;
-      letter-spacing: 0.16em; color: #fff;
+    .aml-logo-title {
+      font-size: 1rem; font-weight: 900;
+      letter-spacing: 0.18em; color: #fff;
+      text-transform: uppercase;
     }
-    .auth-form-logo-sub {
-      font-size: 0.68rem; color: rgba(255,255,255,0.3);
-      letter-spacing: 0.08em; margin-top: 4px;
+    .aml-logo-sub {
+      font-size: 0.65rem; color: rgba(255,255,255,0.28);
+      letter-spacing: 0.08em; margin-top: 3px;
     }
 
     /* Tabs */
@@ -142,13 +201,12 @@
       background: rgba(255,255,255,0.04);
       border: 1px solid rgba(255,255,255,0.07);
       border-radius: 10px;
-      padding: 4px;
-      margin-bottom: 1.75rem;
-      gap: 4px;
+      padding: 4px; gap: 4px;
+      margin-bottom: 1.6rem;
     }
     .auth-tab {
-      flex: 1; padding: 0.6rem;
-      text-align: center; font-size: 0.78rem;
+      flex: 1; padding: 0.58rem;
+      text-align: center; font-size: 0.75rem;
       font-weight: 700; letter-spacing: 0.1em;
       text-transform: uppercase;
       border-radius: 7px; cursor: pointer;
@@ -158,82 +216,85 @@
       font-family: inherit;
     }
     .auth-tab.active {
-      background: #e01c1c;
-      color: #fff;
+      background: #e01c1c; color: #fff;
       box-shadow: 0 2px 12px rgba(224,28,28,0.4);
     }
 
-    /* Forms */
+    /* Form panels */
     .auth-form { display: none; }
-    .auth-form.active { display: block; animation: authFadeUp 0.3s ease; }
+    .auth-form.active { display: block; animation: fadeUp 0.25s ease; }
 
-    .auth-group { margin-bottom: 1rem; position: relative; }
+    .auth-group { margin-bottom: 0.95rem; }
     .auth-group label {
-      display: block; font-size: 0.68rem;
+      display: block; font-size: 0.65rem;
       font-weight: 700; letter-spacing: 0.12em;
       text-transform: uppercase;
-      color: rgba(255,255,255,0.4);
-      margin-bottom: 0.45rem;
+      color: rgba(255,255,255,0.38);
+      margin-bottom: 0.4rem;
     }
     .auth-input-wrap { position: relative; }
     .auth-group input {
       width: 100%;
       background: rgba(255,255,255,0.04);
       border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 10px;
-      padding: 0.8rem 1rem;
+      border-radius: 9px;
+      padding: 0.78rem 1rem;
       color: #fff;
-      font-size: 0.92rem; font-family: inherit;
+      font-size: 0.9rem; font-family: inherit;
       transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
     }
     .auth-group input:focus {
       outline: none;
-      border-color: rgba(224,28,28,0.6);
+      border-color: rgba(224,28,28,0.55);
       background: rgba(224,28,28,0.04);
       box-shadow: 0 0 0 3px rgba(224,28,28,0.1);
     }
-    .auth-group input::placeholder { color: rgba(255,255,255,0.18); }
+    .auth-group input::placeholder { color: rgba(255,255,255,0.16); }
+
     .auth-pw-toggle {
-      position: absolute; right: 0.85rem; top: 50%;
+      position: absolute; right: 0.8rem; top: 50%;
       transform: translateY(-50%);
       background: none; border: none;
-      color: rgba(255,255,255,0.3);
-      cursor: pointer; font-size: 1rem;
-      padding: 0.2rem;
+      color: rgba(255,255,255,0.28);
+      cursor: pointer; font-size: 0.72rem;
+      font-weight: 700; letter-spacing: 0.06em;
+      padding: 0.2rem; font-family: inherit;
       transition: color 0.2s;
     }
     .auth-pw-toggle:hover { color: rgba(255,255,255,0.7); }
 
-    /* Remember + Forgot row */
     .auth-row {
       display: flex; justify-content: space-between;
-      align-items: center; margin-bottom: 1.25rem;
+      align-items: center; margin-bottom: 1.1rem;
     }
     .auth-remember {
-      display: flex; align-items: center; gap: 0.5rem;
-      font-size: 0.78rem; color: rgba(255,255,255,0.35);
+      display: flex; align-items: center; gap: 0.45rem;
+      font-size: 0.75rem; color: rgba(255,255,255,0.32);
       cursor: pointer;
     }
     .auth-remember input[type=checkbox] {
-      width: 15px; height: 15px;
-      accent-color: #e01c1c;
+      width: 14px; height: 14px; accent-color: #e01c1c;
     }
     .auth-forgot {
-      font-size: 0.75rem; color: rgba(224,28,28,0.7);
+      font-size: 0.72rem; color: rgba(224,28,28,0.65);
       cursor: pointer; background: none; border: none;
-      font-family: inherit;
-      transition: color 0.2s;
+      font-family: inherit; transition: color 0.2s;
     }
     .auth-forgot:hover { color: #e01c1c; }
 
-    /* Submit button */
+    .auth-error {
+      color: #e01c1c; font-size: 0.75rem;
+      margin-bottom: 0.7rem; min-height: 1rem;
+    }
+
+    /* Submit button inside modal */
     .auth-btn {
       width: 100%;
       background: linear-gradient(135deg, #e01c1c 0%, #b01010 100%);
       color: #fff; font-weight: 800;
-      font-size: 0.88rem; letter-spacing: 0.1em;
+      font-size: 0.85rem; letter-spacing: 0.12em;
       text-transform: uppercase;
-      padding: 0.9rem; border-radius: 10px;
+      padding: 0.88rem; border-radius: 9px;
       border: none; cursor: pointer;
       font-family: inherit;
       position: relative; overflow: hidden;
@@ -249,89 +310,41 @@
       position: absolute; top: 0; left: -100%;
       width: 60%; height: 100%;
       background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
-      animation: btnShine 3s ease infinite;
+      animation: shine 3s ease infinite;
     }
-    .auth-btn.loading {
-      pointer-events: none;
-      opacity: 0.8;
-    }
-    .auth-btn.loading::after {
-      content: '';
-      position: absolute; inset: 0;
-      background: rgba(0,0,0,0.2);
-      border-radius: 10px;
-    }
-
-    /* Error */
-    .auth-error {
-      color: #e01c1c; font-size: 0.78rem;
-      margin-bottom: 0.75rem;
-      min-height: 1rem;
-      display: flex; align-items: center; gap: 0.4rem;
-    }
-    .auth-error:not(:empty)::before { content: '⚠'; }
-
-    /* Divider */
-    .auth-divider {
-      display: flex; align-items: center; gap: 0.75rem;
-      margin: 1.25rem 0;
-    }
-    .auth-divider::before, .auth-divider::after {
-      content: ''; flex: 1;
-      height: 1px; background: rgba(255,255,255,0.07);
-    }
-    .auth-divider span {
-      font-size: 0.68rem; color: rgba(255,255,255,0.2);
-      letter-spacing: 0.08em; text-transform: uppercase;
-    }
+    .auth-btn.loading { pointer-events: none; opacity: 0.8; }
 
     .auth-note {
-      text-align: center; font-size: 0.68rem;
-      color: rgba(255,255,255,0.2);
-      margin-top: 1.25rem; line-height: 1.6;
+      text-align: center; font-size: 0.65rem;
+      color: rgba(255,255,255,0.18);
+      margin-top: 1.1rem; line-height: 1.6;
     }
 
     /* ---- KEYFRAMES ---- */
-    @keyframes authFadeUp {
-      from { opacity: 0; transform: translateY(16px); }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); }
       to   { opacity: 1; transform: translateY(0); }
     }
-    @keyframes authSlideIn {
-      from { opacity: 0; transform: translateX(40px); }
-      to   { opacity: 1; transform: translateX(0); }
+    @keyframes overlayIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
     }
-    @keyframes btnShine {
+    @keyframes modalIn {
+      from { opacity: 0; transform: translateY(30px) scale(0.97); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    @keyframes shine {
       0%   { left: -100%; }
       30%  { left: 120%; }
       100% { left: 120%; }
     }
 
     /* ---- MOBILE ---- */
-    @media (max-width: 768px) {
-      #auth-screen { flex-direction: column; }
-      #auth-canvas-wrap {
-        flex: none;
-        height: 42vh;
-        min-height: 220px;
-      }
-      .auth-canvas-overlay {
-        background: linear-gradient(to bottom, transparent 40%, #020202 100%);
-      }
-      .auth-brand-over { top: 1.25rem; left: 1.25rem; }
-      .auth-brand-over-title { font-size: 1.1rem; }
-      .auth-hero-text { bottom: 1.5rem; left: 1.25rem; }
-      .auth-hero-h1 { font-size: 1.6rem; }
-      .auth-stats-row { gap: 1.25rem; }
-      .auth-stat-val { font-size: 1.1rem; }
-      #auth-form-side {
-        width: 100%; min-width: unset;
-        border-left: none;
-        border-top: 1px solid rgba(224,28,28,0.12);
-        padding: 1.5rem 1.25rem;
-        animation: authFadeUp 0.6s ease 0.1s both;
-        overflow-y: auto;
-        flex: 1;
-      }
+    @media (max-width: 480px) {
+      #hero-content { padding: 2rem 1.25rem; }
+      #hero-tagline { font-size: 2rem; }
+      #hero-brand { top: 1.25rem; left: 1.25rem; }
+      #auth-modal { padding: 1.75rem 1.25rem; border-radius: 12px; }
     }
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { animation: none !important; transition: none !important; }
@@ -343,107 +356,113 @@
 </head>
 <body>
 
-<!-- AUTH SCREEN -->
+<!-- =============================================
+     HERO LANDING SCREEN
+     ============================================= -->
 <div id="auth-screen">
+  <div id="hero-bg"></div>
+  <div id="hero-overlay"></div>
 
-  <!-- LEFT: CANVAS ANIMATION -->
-  <div id="auth-canvas-wrap">
-    <canvas id="auth-canvas"></canvas>
-    <div class="auth-canvas-overlay"></div>
-    <div class="auth-brand-over">
-      <div class="auth-brand-over-title">THE GYM RATS</div>
-      <div class="auth-brand-over-sub">Your Private Fitness Command Center</div>
-    </div>
-    <div class="auth-hero-text">
-      <div class="auth-hero-h1">TRAIN TOGETHER.<br><span>GET STRONGER.</span></div>
-      <div class="auth-hero-p">Track workouts &middot; Supplements &middot; Membership &middot; Expenses</div>
-      <div class="auth-stats-row">
-        <div class="auth-stat-item"><div class="auth-stat-val">100%</div><div class="auth-stat-key">Frontend</div></div>
-        <div class="auth-stat-item"><div class="auth-stat-val">0</div><div class="auth-stat-key">Servers</div></div>
-        <div class="auth-stat-item"><div class="auth-stat-val">&infin;</div><div class="auth-stat-key">Gains</div></div>
-      </div>
-    </div>
+  <!-- Top-left brand -->
+  <div id="hero-brand">
+    <div id="hero-brand-name">THE GYM RATS</div>
+    <div id="hero-brand-line"></div>
   </div>
 
-  <!-- RIGHT: FORM -->
-  <div id="auth-form-side">
-    <div class="auth-form-inner">
-
-      <div class="auth-form-logo">
-        <div class="auth-form-logo-icon">GR</div>
-        <div class="auth-form-logo-title">THE GYM RATS</div>
-        <div class="auth-form-logo-sub">Train Together. Get Stronger.</div>
-      </div>
-
-      <div class="auth-tabs">
-        <button class="auth-tab active" id="tab-login" onclick="switchAuthTab('login')">LOGIN</button>
-        <button class="auth-tab" id="tab-signup" onclick="switchAuthTab('signup')">SIGN UP</button>
-      </div>
-
-      <!-- LOGIN FORM -->
-      <div class="auth-form active" id="form-login">
-        <div class="auth-group">
-          <label>Username</label>
-          <div class="auth-input-wrap">
-            <input type="text" id="login-user" placeholder="Enter your username" autocomplete="username" />
-          </div>
-        </div>
-        <div class="auth-group">
-          <label>Password</label>
-          <div class="auth-input-wrap">
-            <input type="password" id="login-pass" placeholder="Enter your password" autocomplete="current-password" />
-            <button class="auth-pw-toggle" type="button" onclick="togglePw('login-pass',this)">&#9679;</button>
-          </div>
-        </div>
-        <div class="auth-row">
-          <label class="auth-remember">
-            <input type="checkbox" id="login-remember" /> Remember me
-          </label>
-          <button class="auth-forgot" type="button" onclick="handleForgot()">Forgot password?</button>
-        </div>
-        <div class="auth-error" id="login-error"></div>
-        <button class="auth-btn" id="btn-login" onclick="handleLogin()">
-          <span class="auth-btn-shine"></span>
-          LOGIN &rarr;
-        </button>
-        <div class="auth-note">Data is stored locally on this device only.<br>No server. No tracking.</div>
-      </div>
-
-      <!-- SIGNUP FORM -->
-      <div class="auth-form" id="form-signup">
-        <div class="auth-group">
-          <label>Full Name</label>
-          <input type="text" id="signup-name" placeholder="e.g. Nikhil" autocomplete="name" />
-        </div>
-        <div class="auth-group">
-          <label>Username</label>
-          <input type="text" id="signup-user" placeholder="Choose a username" autocomplete="username" />
-        </div>
-        <div class="auth-group">
-          <label>Password</label>
-          <div class="auth-input-wrap">
-            <input type="password" id="signup-pass" placeholder="Min. 4 characters" autocomplete="new-password" />
-            <button class="auth-pw-toggle" type="button" onclick="togglePw('signup-pass',this)">&#9679;</button>
-          </div>
-        </div>
-        <div class="auth-group">
-          <label>Confirm Password</label>
-          <div class="auth-input-wrap">
-            <input type="password" id="signup-confirm" placeholder="Repeat password" autocomplete="new-password" />
-            <button class="auth-pw-toggle" type="button" onclick="togglePw('signup-confirm',this)">&#9679;</button>
-          </div>
-        </div>
-        <div class="auth-error" id="signup-error"></div>
-        <button class="auth-btn" id="btn-signup" onclick="handleSignup()">
-          <span class="auth-btn-shine"></span>
-          CREATE ACCOUNT &rarr;
-        </button>
-        <div class="auth-note">Your account is saved on this device only.</div>
-      </div>
-
+  <!-- Bottom content -->
+  <div id="hero-content">
+    <div id="hero-tagline">
+      TRAIN TOGETHER.<br><span>GET STRONGER.</span>
     </div>
+    <div id="hero-sub">
+      Workouts <span>&middot;</span> Supplements <span>&middot;</span> Membership <span>&middot;</span> Expenses
+    </div>
+    <button id="hero-login-btn" onclick="openAuthModal()">
+      LOGIN &nbsp;&rarr;
+    </button>
   </div>
+</div>
 
+<!-- =============================================
+     AUTH MODAL (opens on LOGIN click)
+     ============================================= -->
+<div id="auth-modal-overlay" onclick="handleOverlayClick(event)">
+  <div id="auth-modal">
+    <button id="auth-modal-close" onclick="closeAuthModal()" title="Close">&times;</button>
+
+    <div class="aml-logo">
+      <div class="aml-logo-icon">GR</div>
+      <div class="aml-logo-title">THE GYM RATS</div>
+      <div class="aml-logo-sub">Train Together. Get Stronger.</div>
+    </div>
+
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tab-login" onclick="switchAuthTab('login')">LOGIN</button>
+      <button class="auth-tab" id="tab-signup" onclick="switchAuthTab('signup')">SIGN UP</button>
+    </div>
+
+    <!-- LOGIN FORM -->
+    <div class="auth-form active" id="form-login">
+      <div class="auth-group">
+        <label>Username</label>
+        <div class="auth-input-wrap">
+          <input type="text" id="login-user" placeholder="Enter your username" autocomplete="username" />
+        </div>
+      </div>
+      <div class="auth-group">
+        <label>Password</label>
+        <div class="auth-input-wrap">
+          <input type="password" id="login-pass" placeholder="Enter your password" autocomplete="current-password" />
+          <button class="auth-pw-toggle" type="button" onclick="togglePw('login-pass',this)">SHOW</button>
+        </div>
+      </div>
+      <div class="auth-row">
+        <label class="auth-remember">
+          <input type="checkbox" id="login-remember" /> Remember me
+        </label>
+        <button class="auth-forgot" type="button" onclick="handleForgot()">Forgot password?</button>
+      </div>
+      <div class="auth-error" id="login-error"></div>
+      <button class="auth-btn" id="btn-login" onclick="handleLogin()">
+        <span class="auth-btn-shine"></span>
+        LOGIN &rarr;
+      </button>
+      <div class="auth-note">Data is stored locally on this device only. No server. No tracking.</div>
+    </div>
+
+    <!-- SIGNUP FORM -->
+    <div class="auth-form" id="form-signup">
+      <div class="auth-group">
+        <label>Full Name</label>
+        <input type="text" id="signup-name" placeholder="Your full name" autocomplete="name" />
+      </div>
+      <div class="auth-group">
+        <label>Username</label>
+        <input type="text" id="signup-user" placeholder="Choose a username" autocomplete="username" />
+      </div>
+      <div class="auth-group">
+        <label>Password</label>
+        <div class="auth-input-wrap">
+          <input type="password" id="signup-pass" placeholder="Min. 4 characters" autocomplete="new-password" />
+          <button class="auth-pw-toggle" type="button" onclick="togglePw('signup-pass',this)">SHOW</button>
+        </div>
+      </div>
+      <div class="auth-group">
+        <label>Confirm Password</label>
+        <div class="auth-input-wrap">
+          <input type="password" id="signup-confirm" placeholder="Repeat your password" autocomplete="new-password" />
+          <button class="auth-pw-toggle" type="button" onclick="togglePw('signup-confirm',this)">SHOW</button>
+        </div>
+      </div>
+      <div class="auth-error" id="signup-error"></div>
+      <button class="auth-btn" id="btn-signup" onclick="handleSignup()">
+        <span class="auth-btn-shine"></span>
+        CREATE ACCOUNT &rarr;
+      </button>
+      <div class="auth-note">Your account is saved on this device only.</div>
+    </div>
+
+  </div>
 </div>
 
 <!-- SIDEBAR -->
@@ -485,9 +504,7 @@
   <!-- ===== DASHBOARD ===== -->
   <section class="page active" id="page-dashboard">
     <div class="page-header"><h1>Dashboard</h1><span class="page-date" id="dash-date"></span></div>
-
     <div class="stats-grid" id="dash-stats"></div>
-
     <div class="dash-grid">
       <div class="card" id="dash-membership-card">
         <div class="card-label">GYM MEMBERSHIP</div>
@@ -498,7 +515,6 @@
         <div id="dash-streak-content"><div class="big-number">0</div><div class="big-label">DAY STREAK</div></div>
       </div>
     </div>
-
     <div class="card">
       <div class="card-label">QUICK ACTIONS</div>
       <div class="quick-actions">
@@ -510,12 +526,10 @@
         <button class="qa-btn" data-page="progress" data-action="new">+ LOG PROGRESS</button>
       </div>
     </div>
-
     <div class="card">
       <div class="card-label">SUPPLEMENT OVERVIEW</div>
       <div id="dash-supplements-content">No supplements added.</div>
     </div>
-
     <div class="card">
       <div class="card-label">NOTIFICATIONS</div>
       <div id="dash-notifications-content"></div>
@@ -597,7 +611,7 @@
         </div>
         <div class="form-row">
           <div class="form-group"><label>Purchase Date</label><input type="date" id="sf-date" /></div>
-          <div class="form-group"><label>Price (₹)</label><input type="number" id="sf-price" placeholder="1500" min="0" /></div>
+          <div class="form-group"><label>Price (&#8377;)</label><input type="number" id="sf-price" placeholder="1500" min="0" /></div>
         </div>
         <div class="form-group"><label>Notes</label><textarea id="sf-notes" rows="2"></textarea></div>
         <div class="form-actions">
@@ -631,7 +645,7 @@
           <div class="form-group"><label>End Date</label><input type="date" id="mf-end" required /></div>
         </div>
         <div class="form-row">
-          <div class="form-group"><label>Fee (₹)</label><input type="number" id="mf-fee" placeholder="1500" min="0" required /></div>
+          <div class="form-group"><label>Fee (&#8377;)</label><input type="number" id="mf-fee" placeholder="1500" min="0" required /></div>
           <div class="form-group"><label>Payment Method</label>
             <select id="mf-payment">
               <option>Cash</option><option>UPI</option><option>Card</option><option>Net Banking</option><option>Other</option>
@@ -671,7 +685,7 @@
           </div>
         </div>
         <div class="form-row">
-          <div class="form-group"><label>Amount (₹)</label><input type="number" id="ef-amount" placeholder="4800" min="0" required /></div>
+          <div class="form-group"><label>Amount (&#8377;)</label><input type="number" id="ef-amount" placeholder="4800" min="0" required /></div>
           <div class="form-group"><label>Date</label><input type="date" id="ef-date" required /></div>
         </div>
         <div class="form-group">
@@ -804,8 +818,8 @@
       <div class="card-label">PROFILE</div>
       <form id="profile-form">
         <div class="form-row">
-          <div class="form-group"><label>Your Name</label><input type="text" id="profile-name" placeholder="e.g. Nikhil" /></div>
-          <div class="form-group"><label>Avatar Initial</label><input type="text" id="profile-avatar" placeholder="N" maxlength="2" /></div>
+          <div class="form-group"><label>Your Name</label><input type="text" id="profile-name" placeholder="Your full name" /></div>
+          <div class="form-group"><label>Avatar Initial</label><input type="text" id="profile-avatar" placeholder="GR" maxlength="2" /></div>
         </div>
         <div class="form-group"><label>Fitness Goal</label>
           <select id="profile-goal">
@@ -851,7 +865,7 @@
       <div class="about-text">
         <div class="about-title">THE GYM RATS</div>
         <div class="about-sub">Train Together. Track Everything. Get Stronger.</div>
-        <div class="about-note">Frontend-only app · Data stored in your browser · v1.0</div>
+        <div class="about-note">Data stored in your browser &middot; v1.0</div>
       </div>
     </div>
   </section>
@@ -891,5 +905,30 @@
 <script src="./js/progress.js"></script>
 <script src="./js/challenges.js"></script>
 <script src="./js/app.js"></script>
+
+<script>
+  /* Auth modal open / close */
+  function openAuthModal() {
+    const overlay = document.getElementById('auth-modal-overlay');
+    overlay.classList.add('open');
+    setTimeout(() => {
+      const inp = document.getElementById('login-user');
+      if (inp) inp.focus();
+    }, 350);
+  }
+
+  function closeAuthModal() {
+    document.getElementById('auth-modal-overlay').classList.remove('open');
+  }
+
+  function handleOverlayClick(e) {
+    if (e.target === document.getElementById('auth-modal-overlay')) closeAuthModal();
+  }
+
+  /* Close modal on Escape key */
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeAuthModal();
+  });
+</script>
 </body>
 </html>
