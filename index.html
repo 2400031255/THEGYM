@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>THE GYM RATS</title>
+  <link rel="stylesheet" href="./css/style.css" />
+  <link rel="stylesheet" href="./css/responsive.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-brand">
+    <span class="brand-icon">🐀</span>
+    <div>
+      <div class="brand-title">THE GYM RATS</div>
+      <div class="brand-sub">Train. Track. Dominate.</div>
+    </div>
+  </div>
+  <nav class="sidebar-nav">
+    <a class="nav-item active" data-page="dashboard"><span class="nav-icon">🏠</span><span>Dashboard</span></a>
+    <a class="nav-item" data-page="workouts"><span class="nav-icon">🏋️</span><span>Workouts</span></a>
+    <a class="nav-item" data-page="supplements"><span class="nav-icon">🥤</span><span>Supplements</span></a>
+    <a class="nav-item" data-page="membership"><span class="nav-icon">💳</span><span>Membership</span></a>
+    <a class="nav-item" data-page="expenses"><span class="nav-icon">💰</span><span>Expenses</span></a>
+    <a class="nav-item" data-page="progress"><span class="nav-icon">📈</span><span>Progress</span></a>
+    <a class="nav-item" data-page="challenges"><span class="nav-icon">🏆</span><span>Challenges</span></a>
+    <a class="nav-item" data-page="friends"><span class="nav-icon">👥</span><span>Friends</span></a>
+    <a class="nav-item" data-page="notifications"><span class="nav-icon">🔔</span><span id="notif-badge-nav">Notifications</span></a>
+    <a class="nav-item" data-page="settings"><span class="nav-icon">⚙️</span><span>Settings</span></a>
+  </nav>
+</aside>
+
+<!-- MOBILE HEADER -->
+<header class="mobile-header">
+  <button class="hamburger" id="hamburger">☰</button>
+  <div class="mobile-brand">THE GYM RATS</div>
+  <button class="notif-btn" data-page="notifications">🔔<span class="notif-dot" id="notif-dot" style="display:none"></span></button>
+</header>
+
+<!-- OVERLAY -->
+<div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+<!-- MAIN CONTENT -->
+<main class="main-content" id="main-content">
+
+  <!-- ===== DASHBOARD ===== -->
+  <section class="page active" id="page-dashboard">
+    <div class="page-header"><h1>Dashboard</h1><span class="page-date" id="dash-date"></span></div>
+
+    <div class="stats-grid" id="dash-stats"></div>
+
+    <div class="dash-grid">
+      <div class="card" id="dash-membership-card">
+        <div class="card-label">GYM MEMBERSHIP</div>
+        <div id="dash-membership-content">No membership added.</div>
+      </div>
+      <div class="card" id="dash-streak-card">
+        <div class="card-label">WORKOUT STREAK</div>
+        <div id="dash-streak-content"><div class="big-number">0</div><div class="big-label">DAY STREAK</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">QUICK ACTIONS</div>
+      <div class="quick-actions">
+        <button class="qa-btn" data-page="workouts" data-action="new">🏋️ ADD WORKOUT</button>
+        <button class="qa-btn" id="qa-scoop">🥄 TAKE SCOOP</button>
+        <button class="qa-btn" data-page="membership" data-action="new">💳 ADD MEMBERSHIP</button>
+        <button class="qa-btn" data-page="supplements" data-action="new">🥤 ADD SUPPLEMENT</button>
+        <button class="qa-btn" data-page="expenses" data-action="new">💰 ADD EXPENSE</button>
+        <button class="qa-btn" data-page="progress" data-action="new">📈 LOG PROGRESS</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">SUPPLEMENT OVERVIEW</div>
+      <div id="dash-supplements-content">No supplements added.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">NOTIFICATIONS</div>
+      <div id="dash-notifications-content"></div>
+    </div>
+  </section>
+
+  <!-- ===== WORKOUTS ===== -->
+  <section class="page" id="page-workouts">
+    <div class="page-header">
+      <h1>Workouts</h1>
+      <button class="btn-primary" id="btn-new-workout">+ New Workout</button>
+    </div>
+    <div class="stats-grid" id="workout-stats"></div>
+    <div class="card" id="workout-form-card" style="display:none">
+      <div class="card-label">LOG WORKOUT</div>
+      <form id="workout-form">
+        <div class="form-row">
+          <div class="form-group"><label>Workout Name</label><input type="text" id="wf-name" placeholder="e.g. Chest Day" required /></div>
+          <div class="form-group"><label>Muscle Group</label>
+            <select id="wf-muscle">
+              <option>Chest</option><option>Back</option><option>Shoulders</option>
+              <option>Arms</option><option>Legs</option><option>Core</option><option>Full Body</option><option>Cardio</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Date</label><input type="date" id="wf-date" required /></div>
+          <div class="form-group"><label>Duration (min)</label><input type="number" id="wf-duration" placeholder="60" min="1" /></div>
+        </div>
+        <div class="form-group"><label>Notes</label><textarea id="wf-notes" rows="2" placeholder="How did it go?"></textarea></div>
+        <div class="card-label" style="margin-top:1rem">EXERCISES</div>
+        <div id="exercises-list"></div>
+        <button type="button" class="btn-secondary" id="btn-add-exercise">+ Add Exercise</button>
+        <div class="form-actions">
+          <button type="button" class="btn-ghost" id="btn-cancel-workout">Cancel</button>
+          <button type="submit" class="btn-primary">Save Workout</button>
+        </div>
+      </form>
+    </div>
+    <div class="card">
+      <div class="card-label">WORKOUT HISTORY</div>
+      <div id="workout-history-list"></div>
+    </div>
+    <div class="card">
+      <div class="card-label">🏆 PERSONAL RECORDS</div>
+      <div id="pr-list"></div>
+    </div>
+  </section>
+
+  <!-- ===== SUPPLEMENTS ===== -->
+  <section class="page" id="page-supplements">
+    <div class="page-header">
+      <h1>Supplements</h1>
+      <button class="btn-primary" id="btn-new-supplement">+ Add Supplement</button>
+    </div>
+    <div class="card" id="supplement-form-card" style="display:none">
+      <div class="card-label">ADD SUPPLEMENT</div>
+      <form id="supplement-form">
+        <div class="form-row">
+          <div class="form-group"><label>Name</label><input type="text" id="sf-name" placeholder="e.g. Creatine" required /></div>
+          <div class="form-group"><label>Brand</label><input type="text" id="sf-brand" placeholder="e.g. Optimum Nutrition" /></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Initial Quantity</label><input type="number" id="sf-qty" placeholder="500" min="0.1" step="0.1" required /></div>
+          <div class="form-group"><label>Unit</label>
+            <select id="sf-unit">
+              <option value="g">grams (g)</option>
+              <option value="kg">kilograms (kg)</option>
+              <option value="mg">milligrams (mg)</option>
+              <option value="tablets">tablets</option>
+              <option value="capsules">capsules</option>
+              <option value="servings">servings</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Serving Size</label><input type="number" id="sf-serving" placeholder="3" min="0.1" step="0.1" required /></div>
+          <div class="form-group"><label>Servings Per Day</label><input type="number" id="sf-spd" placeholder="1" min="0.5" step="0.5" required /></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Purchase Date</label><input type="date" id="sf-date" /></div>
+          <div class="form-group"><label>Price (₹)</label><input type="number" id="sf-price" placeholder="1500" min="0" /></div>
+        </div>
+        <div class="form-group"><label>Notes</label><textarea id="sf-notes" rows="2"></textarea></div>
+        <div class="form-actions">
+          <button type="button" class="btn-ghost" id="btn-cancel-supplement">Cancel</button>
+          <button type="submit" class="btn-primary">Save Supplement</button>
+        </div>
+      </form>
+    </div>
+    <div id="supplements-grid"></div>
+  </section>
+
+  <!-- ===== MEMBERSHIP ===== -->
+  <section class="page" id="page-membership">
+    <div class="page-header">
+      <h1>Membership</h1>
+      <button class="btn-primary" id="btn-new-membership">+ Add Membership</button>
+    </div>
+    <div class="card" id="membership-form-card" style="display:none">
+      <div class="card-label">GYM MEMBERSHIP DETAILS</div>
+      <form id="membership-form">
+        <div class="form-row">
+          <div class="form-group"><label>Gym Name</label><input type="text" id="mf-gym" placeholder="e.g. Gold's Gym" required /></div>
+          <div class="form-group"><label>Membership Type</label>
+            <select id="mf-type">
+              <option>Monthly</option><option>Quarterly</option><option>Half-Yearly</option><option>Annual</option><option>Custom</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Start Date</label><input type="date" id="mf-start" required /></div>
+          <div class="form-group"><label>End Date</label><input type="date" id="mf-end" required /></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Fee (₹)</label><input type="number" id="mf-fee" placeholder="1500" min="0" required /></div>
+          <div class="form-group"><label>Payment Method</label>
+            <select id="mf-payment">
+              <option>Cash</option><option>UPI</option><option>Card</option><option>Net Banking</option><option>Other</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group"><label>Notes</label><textarea id="mf-notes" rows="2"></textarea></div>
+        <div class="form-actions">
+          <button type="button" class="btn-ghost" id="btn-cancel-membership">Cancel</button>
+          <button type="submit" class="btn-primary">Save Membership</button>
+        </div>
+      </form>
+    </div>
+    <div id="membership-display"></div>
+    <div class="card" style="margin-top:1.5rem">
+      <div class="card-label">MEMBERSHIP HISTORY</div>
+      <div id="membership-history"></div>
+    </div>
+  </section>
+
+  <!-- ===== EXPENSES ===== -->
+  <section class="page" id="page-expenses">
+    <div class="page-header">
+      <h1>Expenses</h1>
+      <button class="btn-primary" id="btn-new-expense">+ Add Expense</button>
+    </div>
+    <div class="stats-grid" id="expense-stats"></div>
+    <div class="card" id="expense-form-card" style="display:none">
+      <div class="card-label">ADD EXPENSE</div>
+      <form id="expense-form">
+        <div class="form-row">
+          <div class="form-group"><label>Description</label><input type="text" id="ef-desc" placeholder="e.g. Creatine Purchase" required /></div>
+          <div class="form-group"><label>Category</label>
+            <select id="ef-cat">
+              <option>Gym Fee</option><option>Supplement</option><option>Equipment</option><option>Food</option><option>Other</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Amount (₹)</label><input type="number" id="ef-amount" placeholder="4800" min="0" required /></div>
+          <div class="form-group"><label>Date</label><input type="date" id="ef-date" required /></div>
+        </div>
+        <div class="form-group">
+          <label>Split With (select members)</label>
+          <div id="ef-split-members" class="split-members-grid"></div>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn-ghost" id="btn-cancel-expense">Cancel</button>
+          <button type="submit" class="btn-primary">Save Expense</button>
+        </div>
+      </form>
+    </div>
+    <div id="expenses-list-container"></div>
+  </section>
+
+  <!-- ===== PROGRESS ===== -->
+  <section class="page" id="page-progress">
+    <div class="page-header">
+      <h1>Progress</h1>
+      <button class="btn-primary" id="btn-new-progress">+ Log Progress</button>
+    </div>
+    <div class="card" id="progress-form-card" style="display:none">
+      <div class="card-label">LOG BODY METRICS</div>
+      <form id="progress-form">
+        <div class="form-group"><label>Date</label><input type="date" id="pf-date" required /></div>
+        <div class="form-row">
+          <div class="form-group"><label>Weight (kg)</label><input type="number" id="pf-weight" placeholder="75" step="0.1" /></div>
+          <div class="form-group"><label>Body Fat (%)</label><input type="number" id="pf-fat" placeholder="15" step="0.1" /></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Chest (cm)</label><input type="number" id="pf-chest" placeholder="95" step="0.1" /></div>
+          <div class="form-group"><label>Waist (cm)</label><input type="number" id="pf-waist" placeholder="80" step="0.1" /></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Arms (cm)</label><input type="number" id="pf-arms" placeholder="35" step="0.1" /></div>
+          <div class="form-group"><label>Legs (cm)</label><input type="number" id="pf-legs" placeholder="55" step="0.1" /></div>
+        </div>
+        <div class="form-group"><label>Notes</label><textarea id="pf-notes" rows="2"></textarea></div>
+        <div class="form-actions">
+          <button type="button" class="btn-ghost" id="btn-cancel-progress">Cancel</button>
+          <button type="submit" class="btn-primary">Save Progress</button>
+        </div>
+      </form>
+    </div>
+    <div class="charts-grid">
+      <div class="card"><div class="card-label">WEIGHT (kg)</div><canvas id="chart-weight"></canvas></div>
+      <div class="card"><div class="card-label">BODY MEASUREMENTS (cm)</div><canvas id="chart-measurements"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-label">PROGRESS LOG</div>
+      <div id="progress-log-list"></div>
+    </div>
+  </section>
+
+  <!-- ===== CHALLENGES ===== -->
+  <section class="page" id="page-challenges">
+    <div class="page-header">
+      <h1>Challenges</h1>
+      <button class="btn-primary" id="btn-new-challenge">+ New Challenge</button>
+    </div>
+    <div class="card" id="challenge-form-card" style="display:none">
+      <div class="card-label">CREATE CHALLENGE</div>
+      <form id="challenge-form">
+        <div class="form-row">
+          <div class="form-group"><label>Challenge Name</label><input type="text" id="cf-name" placeholder="e.g. 30 Day Consistency" required /></div>
+          <div class="form-group"><label>Type</label>
+            <select id="cf-type">
+              <option value="workouts">Workout Count</option>
+              <option value="streak">Streak Days</option>
+              <option value="weight">Weight Goal (kg)</option>
+              <option value="custom">Custom</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Goal</label><input type="number" id="cf-goal" placeholder="20" min="1" required /></div>
+          <div class="form-group"><label>End Date</label><input type="date" id="cf-end" required /></div>
+        </div>
+        <div class="form-group"><label>Description</label><textarea id="cf-desc" rows="2" placeholder="Challenge details..."></textarea></div>
+        <div class="form-actions">
+          <button type="button" class="btn-ghost" id="btn-cancel-challenge">Cancel</button>
+          <button type="submit" class="btn-primary">Create Challenge</button>
+        </div>
+      </form>
+    </div>
+    <div id="challenges-grid"></div>
+  </section>
+
+  <!-- ===== FRIENDS ===== -->
+  <section class="page" id="page-friends">
+    <div class="page-header">
+      <h1>Friends</h1>
+      <button class="btn-primary" id="btn-new-friend">+ Add Friend</button>
+    </div>
+    <div class="card" id="friend-form-card" style="display:none">
+      <div class="card-label">ADD FRIEND</div>
+      <form id="friend-form">
+        <div class="form-row">
+          <div class="form-group"><label>Name</label><input type="text" id="ff-name" placeholder="e.g. Rahul" required /></div>
+          <div class="form-group"><label>Emoji Avatar</label><input type="text" id="ff-avatar" placeholder="💪" maxlength="2" /></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Workouts This Month</label><input type="number" id="ff-workouts" placeholder="0" min="0" /></div>
+          <div class="form-group"><label>Current Streak</label><input type="number" id="ff-streak" placeholder="0" min="0" /></div>
+        </div>
+        <div class="form-group"><label>Challenge Points</label><input type="number" id="ff-points" placeholder="0" min="0" /></div>
+        <div class="form-actions">
+          <button type="button" class="btn-ghost" id="btn-cancel-friend">Cancel</button>
+          <button type="submit" class="btn-primary">Add Friend</button>
+        </div>
+      </form>
+    </div>
+    <div class="card">
+      <div class="card-label">🏆 MONTHLY LEADERBOARD</div>
+      <div id="leaderboard-list"></div>
+    </div>
+    <div id="friends-grid"></div>
+  </section>
+
+  <!-- ===== NOTIFICATIONS ===== -->
+  <section class="page" id="page-notifications">
+    <div class="page-header"><h1>Notifications</h1><button class="btn-ghost" id="btn-clear-notifs">Clear All</button></div>
+    <div id="notifications-list"></div>
+  </section>
+
+  <!-- ===== SETTINGS ===== -->
+  <section class="page" id="page-settings">
+    <div class="page-header"><h1>Settings</h1></div>
+    <div class="card">
+      <div class="card-label">PROFILE</div>
+      <form id="profile-form">
+        <div class="form-row">
+          <div class="form-group"><label>Your Name</label><input type="text" id="profile-name" placeholder="e.g. Nikhil" /></div>
+          <div class="form-group"><label>Emoji Avatar</label><input type="text" id="profile-avatar" placeholder="🐀" maxlength="2" /></div>
+        </div>
+        <div class="form-group"><label>Fitness Goal</label>
+          <select id="profile-goal">
+            <option>Muscle Gain</option><option>Fat Loss</option><option>Strength</option><option>Endurance</option><option>General Fitness</option>
+          </select>
+        </div>
+        <button type="submit" class="btn-primary">Save Profile</button>
+      </form>
+    </div>
+    <div class="card">
+      <div class="card-label">DATA MANAGEMENT</div>
+      <div class="settings-actions">
+        <div>
+          <div class="settings-action-title">Export Data</div>
+          <div class="settings-action-desc">Download all your data as a JSON backup file.</div>
+          <button class="btn-secondary" id="btn-export">⬇ Export JSON</button>
+        </div>
+        <div>
+          <div class="settings-action-title">Import Data</div>
+          <div class="settings-action-desc">Restore from a previously exported JSON file.</div>
+          <button class="btn-secondary" id="btn-import-trigger">⬆ Import JSON</button>
+          <input type="file" id="btn-import" accept=".json" style="display:none" />
+        </div>
+        <div>
+          <div class="settings-action-title">Clear All Data</div>
+          <div class="settings-action-desc">Permanently delete all app data. Cannot be undone.</div>
+          <button class="btn-danger" id="btn-clear-data">🗑 Clear All Data</button>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-label">ABOUT</div>
+      <div class="about-text">
+        <div class="about-title">THE GYM RATS</div>
+        <div class="about-sub">Train Together. Track Everything. Get Stronger.</div>
+        <div class="about-note">Frontend-only app · Data stored in your browser · v1.0</div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- MOBILE BOTTOM NAV -->
+<nav class="bottom-nav">
+  <a class="bnav-item active" data-page="dashboard"><span>🏠</span><span>Home</span></a>
+  <a class="bnav-item" data-page="workouts"><span>🏋️</span><span>Workouts</span></a>
+  <a class="bnav-item" data-page="supplements"><span>🥤</span><span>Supps</span></a>
+  <a class="bnav-item" data-page="expenses"><span>💰</span><span>Expenses</span></a>
+  <a class="bnav-item" data-page="progress"><span>📈</span><span>Progress</span></a>
+</nav>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal-overlay" style="display:none">
+  <div class="modal" id="modal">
+    <div class="modal-title" id="modal-title"></div>
+    <div class="modal-body" id="modal-body"></div>
+    <div class="modal-actions">
+      <button class="btn-ghost" id="modal-cancel">Cancel</button>
+      <button class="btn-primary" id="modal-confirm">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script src="./js/storage.js"></script>
+<script src="./js/utils.js"></script>
+<script src="./js/membership.js"></script>
+<script src="./js/supplements.js"></script>
+<script src="./js/workouts.js"></script>
+<script src="./js/expenses.js"></script>
+<script src="./js/progress.js"></script>
+<script src="./js/challenges.js"></script>
+<script src="./js/app.js"></script>
+</body>
+</html>
