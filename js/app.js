@@ -330,7 +330,7 @@ function handleLogin() {
   err.style.color = '';
   if (!user || !pass) { err.textContent = 'Please fill in all fields.'; return; }
   const users = getUsers();
-  if (!users[user]) { err.textContent = 'Username not found. Sign up first.'; return; }
+  if (!users[user]) { err.textContent = 'Username not found.'; return; }
   if (users[user].password !== btoa(pass)) { err.textContent = 'Incorrect password.'; return; }
 
   // MAINTENANCE MODE CHECK

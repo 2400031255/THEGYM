@@ -396,12 +396,9 @@
       <div class="aml-logo-sub">Train Together. Get Stronger.</div>
     </div>
 
-    <div class="auth-tabs">
-      <button class="auth-tab active" id="tab-login" onclick="switchAuthTab('login')">LOGIN</button>
-      <button class="auth-tab" id="tab-signup" onclick="switchAuthTab('signup')">SIGN UP</button>
-    </div>
+    <div class="auth-tabs" style="display:none"></div>
 
-    <!-- LOGIN FORM -->
+    <!-- LOGIN FORM (only form — no signup) -->
     <div class="auth-form active" id="form-login">
       <div class="auth-group">
         <label>Username</label>
@@ -430,8 +427,8 @@
       <div class="auth-note">Data is stored locally on this device only. No server. No tracking.</div>
     </div>
 
-    <!-- SIGNUP FORM -->
-    <div class="auth-form" id="form-signup">
+    <!-- SIGNUP FORM (hidden — accounts managed by creator) -->
+    <div class="auth-form" id="form-signup" style="display:none">
       <div class="auth-group">
         <label>Full Name</label>
         <input type="text" id="signup-name" placeholder="Your full name" autocomplete="name" />
