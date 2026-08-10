@@ -485,6 +485,7 @@
     <a class="nav-item" data-page="friends"><span class="nav-icon nav-svg">&#9671;</span><span>Friends</span></a>
     <a class="nav-item" data-page="notifications"><span class="nav-icon nav-svg">&#9711;</span><span id="notif-badge-nav">Notifications</span></a>
     <a class="nav-item" data-page="settings"><span class="nav-icon nav-svg">&#9881;</span><span>Settings</span></a>
+    <a class="nav-item" data-page="about"><span class="nav-icon nav-svg">&#9432;</span><span>About</span></a>
   </nav>
 </aside>
 
@@ -504,6 +505,7 @@
   <!-- ===== DASHBOARD ===== -->
   <section class="page active" id="page-dashboard">
     <div class="page-header"><h1>Dashboard</h1><span class="page-date" id="dash-date"></span></div>
+    <div class="dash-greeting" id="dash-greeting"></div>
     <div class="stats-grid" id="dash-stats"></div>
     <div class="dash-grid">
       <div class="card" id="dash-membership-card">
@@ -830,6 +832,35 @@
       </form>
     </div>
     <div class="card">
+      <div class="card-label">CHANGE PASSWORD</div>
+      <form id="pw-change-form" class="pw-change-form">
+        <div class="form-group">
+          <label>Current Password</label>
+          <div style="position:relative">
+            <input type="password" id="pw-current" placeholder="Enter current password" autocomplete="current-password" />
+            <button type="button" class="auth-pw-toggle" style="position:absolute;right:0.8rem;top:50%;transform:translateY(-50%);background:none;border:none;color:rgba(255,255,255,0.3);cursor:pointer;font-size:0.72rem;font-weight:700;font-family:inherit" onclick="togglePw('pw-current',this)">SHOW</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>New Password</label>
+          <div style="position:relative">
+            <input type="password" id="pw-new" placeholder="Min. 4 characters" autocomplete="new-password" oninput="updatePwStrength(this.value)" />
+            <button type="button" class="auth-pw-toggle" style="position:absolute;right:0.8rem;top:50%;transform:translateY(-50%);background:none;border:none;color:rgba(255,255,255,0.3);cursor:pointer;font-size:0.72rem;font-weight:700;font-family:inherit" onclick="togglePw('pw-new',this)">SHOW</button>
+          </div>
+          <div class="pw-strength-bar"><div class="pw-strength-fill" id="pw-strength-fill" style="width:0%"></div></div>
+        </div>
+        <div class="form-group">
+          <label>Confirm New Password</label>
+          <div style="position:relative">
+            <input type="password" id="pw-confirm" placeholder="Repeat new password" autocomplete="new-password" />
+            <button type="button" class="auth-pw-toggle" style="position:absolute;right:0.8rem;top:50%;transform:translateY(-50%);background:none;border:none;color:rgba(255,255,255,0.3);cursor:pointer;font-size:0.72rem;font-weight:700;font-family:inherit" onclick="togglePw('pw-confirm',this)">SHOW</button>
+          </div>
+        </div>
+        <div id="pw-change-error" style="color:#e01c1c;font-size:0.78rem;min-height:1rem;margin-bottom:0.5rem"></div>
+        <button type="submit" class="btn-primary">Update Password</button>
+      </form>
+    </div>
+    <div class="card">
       <div class="card-label">DATA MANAGEMENT</div>
       <div class="settings-actions">
         <div>
@@ -860,15 +891,83 @@
         </div>
       </div>
     </div>
-    <div class="card">
-      <div class="card-label">ABOUT</div>
-      <div class="about-text">
-        <div class="about-title">THE GYM RATS</div>
-        <div class="about-sub">Train Together. Track Everything. Get Stronger.</div>
-        <div class="about-note">Data stored in your browser &middot; v1.0</div>
+  </section>
+
+  <!-- ===== ABOUT ===== -->
+  <section class="page" id="page-about">
+    <div class="page-header"><h1>About</h1></div>
+    <div class="about-page-wrap">
+
+      <div class="about-hero-card">
+        <div class="about-logo-mark">GR</div>
+        <div class="about-app-name">THE GYM RATS</div>
+        <div class="about-app-tagline">Train Together &middot; Track Everything &middot; Get Stronger</div>
+        <span class="about-version-pill">Version 1.0</span>
       </div>
+
+      <div class="about-features-grid">
+        <div class="about-feature-item">
+          <div class="about-feature-icon">&#9651;</div>
+          <div class="about-feature-label">Workouts</div>
+        </div>
+        <div class="about-feature-item">
+          <div class="about-feature-icon">&#9670;</div>
+          <div class="about-feature-label">Supplements</div>
+        </div>
+        <div class="about-feature-item">
+          <div class="about-feature-icon">&#9633;</div>
+          <div class="about-feature-label">Membership</div>
+        </div>
+        <div class="about-feature-item">
+          <div class="about-feature-icon">&#9650;</div>
+          <div class="about-feature-label">Expenses</div>
+        </div>
+        <div class="about-feature-item">
+          <div class="about-feature-icon">&#9656;</div>
+          <div class="about-feature-label">Progress</div>
+        </div>
+        <div class="about-feature-item">
+          <div class="about-feature-icon">&#9733;</div>
+          <div class="about-feature-label">Challenges</div>
+        </div>
+      </div>
+
+      <div class="about-creator-card">
+        <div class="about-creator-avatar">NK</div>
+        <div class="about-creator-info">
+          <div class="about-creator-label">Designed &amp; Developed by</div>
+          <div class="about-creator-name">Nikhil Karthik <span class="creator-badge" style="font-size:0.62rem"><span class="creator-badge-star">&#9733;</span> CREATOR</span></div>
+          <div class="about-creator-desc">Built with passion for fitness and clean code. A personal fitness command center for tracking every rep, scoop, and rupee.</div>
+          <div class="about-tech-row">
+            <span class="about-tech-pill">HTML5</span>
+            <span class="about-tech-pill">CSS3</span>
+            <span class="about-tech-pill">Vanilla JS</span>
+            <span class="about-tech-pill">LocalStorage</span>
+            <span class="about-tech-pill">Chart.js</span>
+            <span class="about-tech-pill">GitHub Pages</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="text-align:center">
+        <div class="card-label">STORAGE &amp; PRIVACY</div>
+        <div style="font-size:0.82rem;color:var(--text-secondary);line-height:1.7">
+          All data is stored locally in your browser using LocalStorage.<br>
+          No servers. No tracking. No accounts sent anywhere.
+        </div>
+      </div>
+
     </div>
   </section>
+
+  <!-- ===== CREATOR CONTROLS ===== -->
+  <section class="page" id="page-creator-controls"></section>
+
+  <!-- ===== CREATOR USERS ===== -->
+  <section class="page" id="page-creator-users"></section>
+
+  <!-- ===== CREATOR MAINTENANCE ===== -->
+  <section class="page" id="page-creator-maintenance"></section>
 
 </main>
 
@@ -904,6 +1003,7 @@
 <script src="./js/expenses.js"></script>
 <script src="./js/progress.js"></script>
 <script src="./js/challenges.js"></script>
+<script src="./js/creator.js"></script>
 <script src="./js/app.js"></script>
 
 <script>

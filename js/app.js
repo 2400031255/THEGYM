@@ -5,6 +5,7 @@
 
 pageRenderers['dashboard'] = renderDashboard;
 pageRenderers['settings']  = renderSettings;
+pageRenderers['about']     = renderAbout;
 
 /* ============================================
    DASHBOARD
@@ -24,6 +25,26 @@ function renderDashboard() {
   const thisMonth   = now.toISOString().slice(0, 7);
   const monthlyExp  = expenses.filter(e => e.date.startsWith(thisMonth)).reduce((s, e) => s + e.amount, 0);
   const monthlyWo   = workouts.filter(w => w.date.startsWith(thisMonth)).length;
+
+  // Greeting with creator badge
+  const profile = getData('profile');
+  const userName = profile.name || getSession() || 'Athlete';
+  const greetEl = document.getElementById('dash-greeting');
+  if (greetEl) {
+    greetEl.innerHTML = `
+      <div class="dash-greeting-left">
+        <div class="dash-greeting-name">
+          Welcome back, ${userName}
+          ${isCreator() ? creatorBadgeHTML() : ''}
+        </div>
+        <div class="dash-greeting-sub">${now.toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</div>
+      </div>
+      ${getMaintenanceMode() && isCreator() ? '<span class="maintenance-active-badge">MAINTENANCE ACTIVE</span>' : ''}`;
+  }
+
+  // Date (keep for compatibility)
+  const dateEl = document.getElementById('dash-date');
+  if (dateEl) dateEl.textContent = now.toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
 
   document.getElementById('dash-stats').innerHTML = `
     <div class="stat-card"><div class="stat-value">${streak.current}</div><div class="stat-label">Streak</div></div>
@@ -127,15 +148,62 @@ function renderDashNotifications() {
 function renderSettings() {
   const profile = getData('profile');
   document.getElementById('profile-name').value   = profile.name   || '';
-  document.getElementById('profile-avatar').value = profile.avatar || '💪';
+  document.getElementById('profile-avatar').value = profile.avatar || 'GR';
   document.getElementById('profile-goal').value   = profile.goal   || 'Muscle Gain';
+  // Clear password fields
+  ['pw-current','pw-new','pw-confirm'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  const errEl = document.getElementById('pw-change-error');
+  if (errEl) errEl.textContent = '';
+  const fill = document.getElementById('pw-strength-fill');
+  if (fill) { fill.style.width = '0%'; fill.style.background = ''; }
 }
+
+function updatePwStrength(val) {
+  const fill = document.getElementById('pw-strength-fill');
+  if (!fill) return;
+  let score = 0;
+  if (val.length >= 4) score++;
+  if (val.length >= 8) score++;
+  if (/[A-Z]/.test(val)) score++;
+  if (/[0-9]/.test(val)) score++;
+  if (/[^A-Za-z0-9]/.test(val)) score++;
+  const pct = (score / 5) * 100;
+  const colors = ['#e01c1c','#f97316','#f59e0b','#22c55e','#22c55e'];
+  fill.style.width = pct + '%';
+  fill.style.background = colors[Math.max(0, score - 1)] || '#e01c1c';
+}
+
+document.getElementById('pw-change-form').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const current = document.getElementById('pw-current').value;
+  const newPw   = document.getElementById('pw-new').value;
+  const confirm = document.getElementById('pw-confirm').value;
+  const errEl   = document.getElementById('pw-change-error');
+  errEl.textContent = '';
+  const username = getSession();
+  const users = getUsers();
+  if (!users[username]) { errEl.textContent = 'Session error. Please log in again.'; return; }
+  if (users[username].password !== btoa(current)) { errEl.textContent = 'Current password is incorrect.'; return; }
+  if (newPw.length < 4) { errEl.textContent = 'New password must be at least 4 characters.'; return; }
+  if (newPw !== confirm) { errEl.textContent = 'Passwords do not match.'; return; }
+  users[username].password = btoa(newPw);
+  saveUsers(users);
+  showToast('Password updated successfully!', 'success');
+  this.reset();
+  const fill = document.getElementById('pw-strength-fill');
+  if (fill) { fill.style.width = '0%'; }
+});
+
+function renderAbout() { /* static page, no dynamic render needed */ }
 
 document.getElementById('profile-form').addEventListener('submit', function(e) {
   e.preventDefault();
   setData('profile', {
     name:   document.getElementById('profile-name').value.trim(),
-    avatar: document.getElementById('profile-avatar').value.trim() || '💪',
+    avatar: document.getElementById('profile-avatar').value.trim() || 'GR',
     goal:   document.getElementById('profile-goal').value
   });
   showToast('Profile saved!', 'success');
@@ -171,7 +239,7 @@ document.getElementById('btn-clear-data').addEventListener('click', () => {
   showModal(
     'Clear All Data',
     'This will permanently delete ALL your data including workouts, supplements, membership, and expenses. This cannot be undone.',
-    '🗑 Delete Everything',
+    'Delete Everything',
     () => {
       clearAllData();
       showToast('All data cleared.', 'success');
@@ -198,6 +266,12 @@ function init() {
     const el = document.getElementById(id);
     if (el) el.value = today;
   });
+
+  // Build creator sidebar if applicable
+  buildCreatorSidebar();
+
+  // Show maintenance bar if creator + maintenance on
+  updateMaintenanceBar();
 
   // Render dashboard
   renderDashboard();
@@ -258,6 +332,16 @@ function handleLogin() {
   const users = getUsers();
   if (!users[user]) { err.textContent = 'Username not found. Sign up first.'; return; }
   if (users[user].password !== btoa(pass)) { err.textContent = 'Incorrect password.'; return; }
+
+  // MAINTENANCE MODE CHECK
+  // NOTE: This is a frontend-only check. LocalStorage can be modified via DevTools.
+  // A real backend is required for production-grade access control.
+  if (getMaintenanceMode() && !isCreator(user)) {
+    err.style.color = '#f59e0b';
+    err.textContent = 'THE GYM RATS is currently under maintenance. Please try again later.';
+    return;
+  }
+
   // Remember me
   if (document.getElementById('login-remember')?.checked) {
     localStorage.setItem('gymrats_remember', user);
@@ -702,5 +786,7 @@ if (remembered) {
 // Boot — check session
 if (getSession()) {
   launchApp();
+} else {
+  // Show maintenance overlay on login screen if maintenance is ON
+  applyMaintenanceToLoginScreen();
 }
-// else: hero screen is visible, user clicks LOGIN to open modal

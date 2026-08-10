@@ -1105,3 +1105,583 @@ canvas { max-height: 220px; }
 .usage-log-date { color: var(--text-muted); }
 .usage-log-qty  { color: var(--accent); font-weight: 700; }
 .usage-log-rem  { color: var(--text-secondary); }
+
+/* ============================================
+   CREATOR BADGE — Metallic Gold
+   ============================================ */
+
+.creator-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.28rem 0.75rem;
+  background: linear-gradient(135deg, #1a1400 0%, #2a1f00 50%, #1a1400 100%);
+  border: 1px solid #b8860b;
+  border-radius: 99px;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #f5c842;
+  box-shadow: 0 0 10px rgba(245,200,66,0.2), inset 0 1px 0 rgba(255,220,100,0.15);
+  white-space: nowrap;
+  vertical-align: middle;
+}
+.creator-badge-star {
+  color: #f5c842;
+  font-size: 0.7rem;
+  text-shadow: 0 0 6px rgba(245,200,66,0.6);
+}
+
+/* ============================================
+   CREATOR IDENTITY CARD
+   ============================================ */
+
+.creator-identity-card {
+  background: linear-gradient(135deg, #0f0f0f 0%, #141200 100%);
+  border: 1px solid rgba(184,134,11,0.25);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.5), 0 0 0 1px rgba(245,200,66,0.06);
+}
+.creator-id-left {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+.creator-avatar-ring {
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #2a1f00, #1a1400);
+  border: 2px solid #b8860b;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem; font-weight: 900;
+  color: #f5c842;
+  box-shadow: 0 0 16px rgba(245,200,66,0.25);
+  flex-shrink: 0;
+}
+.creator-id-name {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 0.3rem;
+}
+.creator-id-role { margin-bottom: 0.25rem; }
+.creator-id-sub {
+  font-size: 0.72rem;
+  color: rgba(255,255,255,0.35);
+  letter-spacing: 0.06em;
+}
+
+/* ============================================
+   CREATOR NAV SECTION
+   ============================================ */
+
+.creator-nav-divider {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.85rem 0.85rem 0.4rem;
+  margin-top: 0.5rem;
+}
+.creator-nav-divider::before {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(184,134,11,0.25);
+}
+.creator-nav-divider span {
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  color: #b8860b;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.creator-nav-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(184,134,11,0.25);
+}
+.creator-nav-item {
+  color: rgba(245,200,66,0.6) !important;
+}
+.creator-nav-item:hover {
+  background: rgba(245,200,66,0.06) !important;
+  color: #f5c842 !important;
+}
+.creator-nav-item.active {
+  background: rgba(245,200,66,0.1) !important;
+  color: #f5c842 !important;
+}
+.creator-nav-item.active::before {
+  background: #f5c842 !important;
+}
+
+/* ============================================
+   CREATOR USER LIST
+   ============================================ */
+
+.creator-user-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.creator-user-row:last-child { border-bottom: none; }
+.creator-user-avatar {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: var(--bg-input);
+  border: 1px solid var(--border-light);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.9rem; font-weight: 800;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+.creator-user-info { flex: 1; }
+.creator-user-name {
+  font-size: 0.9rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+.creator-user-uname {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+.creator-user-role {
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  padding: 0.22rem 0.6rem;
+  border-radius: 99px;
+}
+.role-creator {
+  background: rgba(245,200,66,0.12);
+  color: #f5c842;
+  border: 1px solid rgba(184,134,11,0.4);
+}
+.role-user {
+  background: var(--bg-input);
+  color: var(--text-muted);
+  border: 1px solid var(--border-light);
+}
+
+/* ============================================
+   MAINTENANCE TOGGLE
+   ============================================ */
+
+.maintenance-toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+.maintenance-toggle-btn {
+  min-width: 72px;
+  padding: 0.55rem 1.25rem;
+  border-radius: 99px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  border: 2px solid;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+.maintenance-toggle-btn.off {
+  background: transparent;
+  color: var(--text-muted);
+  border-color: var(--border-light);
+}
+.maintenance-toggle-btn.off:hover {
+  border-color: #f59e0b;
+  color: #f59e0b;
+}
+.maintenance-toggle-btn.on {
+  background: rgba(245,158,11,0.15);
+  color: #f59e0b;
+  border-color: #f59e0b;
+  box-shadow: 0 0 12px rgba(245,158,11,0.2);
+}
+
+/* ============================================
+   MAINTENANCE BAR (creator top bar when ON)
+   ============================================ */
+
+.maintenance-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.55rem 1.5rem;
+  background: rgba(245,158,11,0.08);
+  border-bottom: 1px solid rgba(245,158,11,0.2);
+  font-size: 0.78rem;
+  position: sticky;
+  top: 0;
+  z-index: 90;
+}
+.maintenance-active-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.65rem;
+  background: rgba(245,158,11,0.15);
+  border: 1px solid rgba(245,158,11,0.35);
+  border-radius: 99px;
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: #f59e0b;
+}
+.maintenance-bar-off-btn {
+  padding: 0.3rem 0.85rem;
+  background: transparent;
+  border: 1px solid rgba(245,158,11,0.4);
+  border-radius: 6px;
+  color: #f59e0b;
+  font-size: 0.72rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.2s;
+}
+.maintenance-bar-off-btn:hover { background: rgba(245,158,11,0.1); }
+
+/* ============================================
+   MAINTENANCE LOGIN OVERLAY
+   ============================================ */
+
+.maintenance-login-overlay {
+  position: absolute; inset: 0;
+  background: rgba(2,2,2,0.88);
+  backdrop-filter: blur(4px);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+.mlo-box {
+  text-align: center;
+  max-width: 380px;
+  width: 100%;
+  padding: 2.5rem 2rem;
+  background: rgba(10,10,10,0.95);
+  border: 1px solid rgba(245,158,11,0.2);
+  border-radius: 16px;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.8);
+}
+.mlo-brand {
+  font-size: 1rem;
+  font-weight: 900;
+  letter-spacing: 0.22em;
+  color: #e01c1c;
+  text-shadow: 0 0 20px rgba(224,28,28,0.5);
+  margin-bottom: 1.5rem;
+}
+.mlo-icon {
+  font-size: 2.5rem;
+  color: #f59e0b;
+  margin-bottom: 0.75rem;
+  animation: spin 4s linear infinite;
+}
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+.mlo-title {
+  font-size: 1.1rem;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  color: #f59e0b;
+  margin-bottom: 1rem;
+}
+.mlo-text {
+  font-size: 0.82rem;
+  color: rgba(255,255,255,0.45);
+  line-height: 1.7;
+  margin-bottom: 1.25rem;
+}
+.mlo-badge {
+  display: inline-block;
+  padding: 0.3rem 1rem;
+  background: rgba(245,158,11,0.1);
+  border: 1px solid rgba(245,158,11,0.3);
+  border-radius: 99px;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: #f59e0b;
+  margin-bottom: 1.75rem;
+}
+.mlo-login-btn {
+  display: inline-block;
+  padding: 0.75rem 2rem;
+  background: linear-gradient(135deg, #e01c1c, #b01010);
+  color: #fff;
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: transform 0.15s, box-shadow 0.2s;
+  box-shadow: 0 4px 20px rgba(224,28,28,0.35);
+}
+.mlo-login-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 28px rgba(224,28,28,0.5); }
+
+/* ============================================
+   MAINTENANCE PREVIEW (in creator page)
+   ============================================ */
+
+.maintenance-preview {
+  text-align: center;
+  padding: 2rem 1.5rem;
+  background: rgba(245,158,11,0.04);
+  border: 1px dashed rgba(245,158,11,0.2);
+  border-radius: var(--radius);
+}
+.mp-title {
+  font-size: 0.85rem;
+  font-weight: 900;
+  letter-spacing: 0.2em;
+  color: #e01c1c;
+  margin-bottom: 1rem;
+}
+.mp-icon {
+  font-size: 2rem;
+  color: #f59e0b;
+  margin-bottom: 0.5rem;
+}
+.mp-heading {
+  font-size: 1rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  color: #f59e0b;
+  margin-bottom: 0.75rem;
+}
+.mp-text {
+  font-size: 0.8rem;
+  color: rgba(255,255,255,0.4);
+  line-height: 1.7;
+  margin-bottom: 1rem;
+}
+.mp-badge {
+  display: inline-block;
+  padding: 0.25rem 0.85rem;
+  background: rgba(245,158,11,0.1);
+  border: 1px solid rgba(245,158,11,0.3);
+  border-radius: 99px;
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: #f59e0b;
+}
+
+/* ============================================
+   ABOUT PAGE — Professional Redesign
+   ============================================ */
+
+.about-page-wrap {
+  max-width: 680px;
+  margin: 0 auto;
+}
+.about-hero-card {
+  background: linear-gradient(135deg, #0f0f0f 0%, #141414 100%);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 2.5rem 2rem;
+  text-align: center;
+  margin-bottom: 1.25rem;
+  position: relative;
+  overflow: hidden;
+}
+.about-hero-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #e01c1c, transparent);
+}
+.about-logo-mark {
+  width: 64px; height: 64px;
+  background: var(--accent);
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.2rem; font-weight: 900;
+  color: #fff;
+  margin: 0 auto 1.25rem;
+  box-shadow: 0 0 24px rgba(224,28,28,0.35);
+}
+.about-app-name {
+  font-size: 1.6rem;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  color: #fff;
+  margin-bottom: 0.4rem;
+}
+.about-app-tagline {
+  font-size: 0.82rem;
+  color: rgba(255,255,255,0.4);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+}
+.about-version-pill {
+  display: inline-block;
+  padding: 0.25rem 0.85rem;
+  background: var(--bg-input);
+  border: 1px solid var(--border-light);
+  border-radius: 99px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+}
+.about-features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+.about-feature-item {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem;
+  text-align: center;
+}
+.about-feature-icon {
+  font-size: 1.2rem;
+  color: var(--accent);
+  margin-bottom: 0.4rem;
+}
+.about-feature-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--text-secondary);
+}
+.about-creator-card {
+  background: linear-gradient(135deg, #0f0f0f 0%, #141200 100%);
+  border: 1px solid rgba(184,134,11,0.3);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 1.25rem;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 0 1px rgba(245,200,66,0.05), 0 8px 32px rgba(0,0,0,0.4);
+}
+.about-creator-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #b8860b, transparent);
+}
+.about-creator-avatar {
+  width: 60px; height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #2a1f00, #1a1400);
+  border: 2px solid #b8860b;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.2rem; font-weight: 900;
+  color: #f5c842;
+  box-shadow: 0 0 20px rgba(245,200,66,0.2);
+  flex-shrink: 0;
+}
+.about-creator-info { flex: 1; }
+.about-creator-label {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(245,200,66,0.5);
+  margin-bottom: 0.3rem;
+}
+.about-creator-name {
+  font-size: 1.15rem;
+  font-weight: 900;
+  color: #fff;
+  margin-bottom: 0.4rem;
+}
+.about-creator-desc {
+  font-size: 0.75rem;
+  color: rgba(255,255,255,0.35);
+  line-height: 1.5;
+}
+.about-tech-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+.about-tech-pill {
+  padding: 0.2rem 0.65rem;
+  background: var(--bg-input);
+  border: 1px solid var(--border-light);
+  border-radius: 99px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+}
+
+/* ============================================
+   SETTINGS — Password Change
+   ============================================ */
+
+.pw-change-form .form-group { margin-bottom: 0.85rem; }
+.pw-strength-bar {
+  height: 4px;
+  border-radius: 99px;
+  background: var(--bg-input);
+  margin-top: 0.4rem;
+  overflow: hidden;
+}
+.pw-strength-fill {
+  height: 100%;
+  border-radius: 99px;
+  transition: width 0.3s, background 0.3s;
+}
+
+/* ============================================
+   DASHBOARD GREETING
+   ============================================ */
+
+.dash-greeting {
+  margin-bottom: 1.5rem;
+  padding: 1.25rem 1.5rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+.dash-greeting-left {}
+.dash-greeting-name {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+.dash-greeting-sub {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-top: 0.2rem;
+}
