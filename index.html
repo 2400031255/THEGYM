@@ -892,49 +892,84 @@
 
   <!-- ===== ABOUT ===== -->
   <section class="page" id="page-about">
-    <div class="page-header"><h1>About</h1></div>
     <div class="about-page-wrap">
 
-      <div class="about-hero-card">
-        <div class="about-logo-mark">GR</div>
-        <div class="about-app-name">THE GYM RATS</div>
-        <div class="about-app-tagline">Train Together &middot; Track Everything &middot; Get Stronger</div>
-        <span class="about-version-pill">Version 1.0</span>
+      <!-- HERO CANVAS BANNER -->
+      <div class="about-canvas-wrap">
+        <canvas id="about-canvas"></canvas>
+        <div class="about-canvas-content">
+          <div class="about-canvas-logo">GR</div>
+          <div class="about-canvas-title">THE GYM RATS</div>
+          <div class="about-canvas-tagline">Train Together &middot; Track Everything &middot; Get Stronger</div>
+          <span class="about-version-pill">v 1.0</span>
+        </div>
       </div>
 
+      <!-- STATS ROW -->
+      <div class="about-stats-row">
+        <div class="about-stat-box">
+          <div class="about-stat-num" data-target="6">0</div>
+          <div class="about-stat-lbl">Core Modules</div>
+        </div>
+        <div class="about-stat-box">
+          <div class="about-stat-num" data-target="100">0</div>
+          <div class="about-stat-lbl">% Frontend</div>
+        </div>
+        <div class="about-stat-box">
+          <div class="about-stat-num" data-target="0">0</div>
+          <div class="about-stat-lbl">Servers</div>
+        </div>
+        <div class="about-stat-box">
+          <div class="about-stat-num" data-target="1">0</div>
+          <div class="about-stat-lbl">Creator</div>
+        </div>
+      </div>
+
+      <!-- FEATURES GRID -->
       <div class="about-features-grid">
-        <div class="about-feature-item">
+        <div class="about-feature-item" style="--i:0">
           <div class="about-feature-icon">&#9651;</div>
           <div class="about-feature-label">Workouts</div>
+          <div class="about-feature-desc">Log sessions, track PRs &amp; streaks</div>
         </div>
-        <div class="about-feature-item">
+        <div class="about-feature-item" style="--i:1">
           <div class="about-feature-icon">&#9670;</div>
           <div class="about-feature-label">Supplements</div>
+          <div class="about-feature-desc">Track inventory &amp; daily scoops</div>
         </div>
-        <div class="about-feature-item">
+        <div class="about-feature-item" style="--i:2">
           <div class="about-feature-icon">&#9633;</div>
           <div class="about-feature-label">Membership</div>
+          <div class="about-feature-desc">Monitor gym fees &amp; expiry</div>
         </div>
-        <div class="about-feature-item">
+        <div class="about-feature-item" style="--i:3">
           <div class="about-feature-icon">&#9650;</div>
           <div class="about-feature-label">Expenses</div>
+          <div class="about-feature-desc">Split costs with gym partners</div>
         </div>
-        <div class="about-feature-item">
+        <div class="about-feature-item" style="--i:4">
           <div class="about-feature-icon">&#9656;</div>
           <div class="about-feature-label">Progress</div>
+          <div class="about-feature-desc">Chart body metrics over time</div>
         </div>
-        <div class="about-feature-item">
+        <div class="about-feature-item" style="--i:5">
           <div class="about-feature-icon">&#9733;</div>
           <div class="about-feature-label">Challenges</div>
+          <div class="about-feature-desc">Compete with friends &amp; win</div>
         </div>
       </div>
 
+      <!-- CREATOR CARD -->
       <div class="about-creator-card">
+        <div class="about-creator-glow"></div>
         <div class="about-creator-avatar">NK</div>
         <div class="about-creator-info">
           <div class="about-creator-label">Designed &amp; Developed by</div>
-          <div class="about-creator-name">Nikhil Karthik <span class="creator-badge" style="font-size:0.62rem"><span class="creator-badge-star">&#9733;</span> CREATOR</span></div>
-          <div class="about-creator-desc">Built with passion for fitness and clean code. A personal fitness command center for tracking every rep, scoop, and rupee.</div>
+          <div class="about-creator-name">
+            Nikhil Karthik
+            <span class="creator-badge" style="font-size:0.62rem;vertical-align:middle"><span class="creator-badge-star">&#9733;</span> CREATOR</span>
+          </div>
+          <div class="about-creator-desc">Built with passion for fitness and clean code. A personal fitness command center for tracking every rep, every scoop, and every rupee.</div>
           <div class="about-tech-row">
             <span class="about-tech-pill">HTML5</span>
             <span class="about-tech-pill">CSS3</span>
@@ -946,11 +981,12 @@
         </div>
       </div>
 
-      <div class="card" style="text-align:center">
-        <div class="card-label">STORAGE &amp; PRIVACY</div>
-        <div style="font-size:0.82rem;color:var(--text-secondary);line-height:1.7">
-          All data is stored locally in your browser using LocalStorage.<br>
-          No servers. No tracking. No accounts sent anywhere.
+      <!-- PRIVACY CARD -->
+      <div class="about-privacy-card">
+        <div class="about-privacy-icon">&#9632;</div>
+        <div class="about-privacy-text">
+          <div class="about-privacy-title">Your Data. Your Device. Always.</div>
+          <div class="about-privacy-desc">All data is stored locally in your browser using LocalStorage. No servers, no tracking, no accounts sent anywhere. 100% private.</div>
         </div>
       </div>
 

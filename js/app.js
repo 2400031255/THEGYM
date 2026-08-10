@@ -197,7 +197,135 @@ document.getElementById('pw-change-form').addEventListener('submit', function(e)
   if (fill) { fill.style.width = '0%'; }
 });
 
-function renderAbout() { /* static page, no dynamic render needed */ }
+function renderAbout() {
+  // Animate stat counters
+  setTimeout(() => {
+    document.querySelectorAll('.about-stat-num').forEach(el => {
+      const target = parseInt(el.dataset.target);
+      if (isNaN(target)) return;
+      let current = 0;
+      const step = Math.max(1, Math.ceil(target / 40));
+      const timer = setInterval(() => {
+        current = Math.min(current + step, target);
+        el.textContent = current;
+        if (current >= target) clearInterval(timer);
+      }, 30);
+    });
+  }, 200);
+
+  // Canvas particle animation
+  const canvas = document.getElementById('about-canvas');
+  if (!canvas || canvas._initialized) return;
+  canvas._initialized = true;
+  const ctx = canvas.getContext('2d');
+  let W, H, raf, t = 0;
+  const pts = [];
+
+  function resize() {
+    W = canvas.width  = canvas.offsetWidth;
+    H = canvas.height = canvas.offsetHeight;
+  }
+
+  function initPts() {
+    pts.length = 0;
+    for (let i = 0; i < 55; i++) {
+      pts.push({
+        x: Math.random() * W, y: Math.random() * H,
+        r: Math.random() * 1.6 + 0.3,
+        vx: (Math.random() - 0.5) * 0.35,
+        vy: -(Math.random() * 0.3 + 0.05),
+        a: Math.random() * 0.5 + 0.1,
+        life: Math.random()
+      });
+    }
+  }
+
+  function draw() {
+    t++;
+    // Background
+    ctx.fillStyle = '#080808';
+    ctx.fillRect(0, 0, W, H);
+
+    // Red floor glow
+    const gy = H * 0.8 + Math.sin(t * 0.01) * 15;
+    const g = ctx.createRadialGradient(W/2, gy, 0, W/2, gy, W * 0.65);
+    g.addColorStop(0, 'rgba(224,28,28,0.22)');
+    g.addColorStop(0.5, 'rgba(180,10,10,0.07)');
+    g.addColorStop(1, 'transparent');
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, W, H);
+
+    // Perspective grid
+    ctx.save();
+    ctx.globalAlpha = 0.06 + Math.sin(t * 0.012) * 0.02;
+    ctx.strokeStyle = '#e01c1c';
+    ctx.lineWidth = 0.5;
+    const hz = H * 0.55;
+    const vp = W / 2;
+    for (let i = -10; i <= 10; i++) {
+      ctx.beginPath();
+      ctx.moveTo(vp, hz);
+      ctx.lineTo(vp + i * (W / 10), H + 10);
+      ctx.stroke();
+    }
+    for (let j = 0; j <= 8; j++) {
+      const p = j / 8;
+      const y = hz + (H - hz + 10) * (p * p);
+      const hw = (W / 2 + 40) * p;
+      ctx.beginPath();
+      ctx.moveTo(vp - hw, y);
+      ctx.lineTo(vp + hw, y);
+      ctx.stroke();
+    }
+    ctx.restore();
+
+    // Particles
+    pts.forEach(p => {
+      p.x += p.vx; p.y += p.vy; p.life += 0.004;
+      if (p.y < -5 || p.life > 1) {
+        p.x = Math.random() * W; p.y = H + 5;
+        p.life = 0; p.a = Math.random() * 0.4 + 0.1;
+      }
+      const fade = Math.sin(p.life * Math.PI);
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(224,28,28,${p.a * fade})`;
+      ctx.fill();
+    });
+
+    // Top vignette
+    const tv = ctx.createLinearGradient(0, 0, 0, H * 0.35);
+    tv.addColorStop(0, 'rgba(8,8,8,0.8)');
+    tv.addColorStop(1, 'transparent');
+    ctx.fillStyle = tv;
+    ctx.fillRect(0, 0, W, H);
+
+    // Scanlines
+    ctx.save();
+    ctx.globalAlpha = 0.02;
+    for (let y = 0; y < H; y += 3) { ctx.fillStyle = '#000'; ctx.fillRect(0, y, W, 1); }
+    ctx.restore();
+
+    raf = requestAnimationFrame(draw);
+  }
+
+  resize();
+  initPts();
+  draw();
+  window.addEventListener('resize', () => { resize(); initPts(); });
+
+  // Stop when page hidden
+  const obs = new MutationObserver(() => {
+    const pg = document.getElementById('page-about');
+    if (pg && !pg.classList.contains('active')) {
+      cancelAnimationFrame(raf);
+      canvas._initialized = false;
+      obs.disconnect();
+    }
+  });
+  const pg = document.getElementById('page-about');
+  if (pg) obs.observe(pg, { attributes: true, attributeFilter: ['class'] });
+}
 
 document.getElementById('profile-form').addEventListener('submit', function(e) {
   e.preventDefault();
@@ -783,10 +911,17 @@ if (remembered) {
   start();
 })();
 
-// Boot — check session
+// Boot — seed creator account, then check session
+(function seedCreator() {
+  const users = getUsers();
+  if (!users['nikhil']) {
+    users['nikhil'] = { name: 'Nikhil Karthik', password: btoa('nikhil123') };
+    saveUsers(users);
+  }
+})();
+
 if (getSession()) {
   launchApp();
 } else {
-  // Show maintenance overlay on login screen if maintenance is ON
   applyMaintenanceToLoginScreen();
 }

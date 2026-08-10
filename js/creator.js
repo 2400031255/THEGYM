@@ -16,15 +16,7 @@
    ============================================================ */
 
 const CREATOR_USERNAME = 'nikhil';
-
-/* ---- Seed creator account on first load ---- */
-(function seedCreator() {
-  const users = JSON.parse(localStorage.getItem('gymrats_users') || '{}');
-  if (!users['nikhil']) {
-    users['nikhil'] = { name: 'Nikhil Karthik', password: btoa('nikhil123') };
-    localStorage.setItem('gymrats_users', JSON.stringify(users));
-  }
-})();
+/* seedCreator() is called from app.js boot after all helpers are defined */
 
 /* ---- Maintenance helpers ---- */
 function getMaintenanceMode() {
