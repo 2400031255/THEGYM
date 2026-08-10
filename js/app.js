@@ -127,7 +127,7 @@ function renderDashNotifications() {
 function renderSettings() {
   const profile = getData('profile');
   document.getElementById('profile-name').value   = profile.name   || '';
-  document.getElementById('profile-avatar').value = profile.avatar || '🐀';
+  document.getElementById('profile-avatar').value = profile.avatar || '💪';
   document.getElementById('profile-goal').value   = profile.goal   || 'Muscle Gain';
 }
 
@@ -135,7 +135,7 @@ document.getElementById('profile-form').addEventListener('submit', function(e) {
   e.preventDefault();
   setData('profile', {
     name:   document.getElementById('profile-name').value.trim(),
-    avatar: document.getElementById('profile-avatar').value.trim() || '🐀',
+    avatar: document.getElementById('profile-avatar').value.trim() || '💪',
     goal:   document.getElementById('profile-goal').value
   });
   showToast('Profile saved!', 'success');
@@ -180,6 +180,13 @@ document.getElementById('btn-clear-data').addEventListener('click', () => {
   );
 });
 
+document.getElementById('btn-logout').addEventListener('click', () => {
+  showModal('Logout', 'Are you sure you want to logout?', 'Logout', () => {
+    clearSession();
+    location.reload();
+  });
+});
+
 /* ============================================
    APP INIT
    ============================================ */
@@ -200,5 +207,81 @@ function init() {
   navigateTo('dashboard');
 }
 
-// Start app
-init();
+/* ============================================
+   AUTH — Login / Signup
+   ============================================ */
+
+function switchAuthTab(tab) {
+  document.getElementById('form-login').classList.toggle('active', tab === 'login');
+  document.getElementById('form-signup').classList.toggle('active', tab === 'signup');
+  document.getElementById('tab-login').classList.toggle('active', tab === 'login');
+  document.getElementById('tab-signup').classList.toggle('active', tab === 'signup');
+  document.getElementById('login-error').textContent = '';
+  document.getElementById('signup-error').textContent = '';
+}
+
+function getUsers() {
+  try { return JSON.parse(localStorage.getItem('gymrats_users') || '{}'); } catch { return {}; }
+}
+function saveUsers(u) { localStorage.setItem('gymrats_users', JSON.stringify(u)); }
+function getSession() { return localStorage.getItem('gymrats_session'); }
+function setSession(u) { localStorage.setItem('gymrats_session', u); }
+function clearSession() { localStorage.removeItem('gymrats_session'); }
+
+function handleLogin() {
+  const user = document.getElementById('login-user').value.trim();
+  const pass = document.getElementById('login-pass').value;
+  const err  = document.getElementById('login-error');
+  if (!user || !pass) { err.textContent = 'Please fill in all fields.'; return; }
+  const users = getUsers();
+  if (!users[user]) { err.textContent = 'Username not found. Sign up first.'; return; }
+  if (users[user].password !== btoa(pass)) { err.textContent = 'Incorrect password.'; return; }
+  setSession(user);
+  // restore this user's profile name
+  const data = loadData();
+  if (!data.profile.name) { data.profile.name = users[user].name || user; saveData(data); }
+  launchApp();
+}
+
+function handleSignup() {
+  const name    = document.getElementById('signup-name').value.trim();
+  const user    = document.getElementById('signup-user').value.trim();
+  const pass    = document.getElementById('signup-pass').value;
+  const confirm = document.getElementById('signup-confirm').value;
+  const err     = document.getElementById('signup-error');
+  if (!name || !user || !pass || !confirm) { err.textContent = 'Please fill in all fields.'; return; }
+  if (pass.length < 4) { err.textContent = 'Password must be at least 4 characters.'; return; }
+  if (pass !== confirm) { err.textContent = 'Passwords do not match.'; return; }
+  if (!/^[a-zA-Z0-9_]+$/.test(user)) { err.textContent = 'Username: letters, numbers, _ only.'; return; }
+  const users = getUsers();
+  if (users[user]) { err.textContent = 'Username already taken.'; return; }
+  users[user] = { name, password: btoa(pass) };
+  saveUsers(users);
+  setSession(user);
+  // save name to profile
+  const data = loadData();
+  data.profile.name = name;
+  data.profile.avatar = '💪';
+  saveData(data);
+  launchApp();
+}
+
+function launchApp() {
+  document.getElementById('auth-screen').style.display = 'none';
+  init();
+}
+
+// Enter key support on auth inputs
+['login-user','login-pass'].forEach(id => {
+  document.getElementById(id)?.addEventListener('keydown', e => { if (e.key === 'Enter') handleLogin(); });
+});
+['signup-name','signup-user','signup-pass','signup-confirm'].forEach(id => {
+  document.getElementById(id)?.addEventListener('keydown', e => { if (e.key === 'Enter') handleSignup(); });
+});
+
+// Boot — check session
+if (getSession()) {
+  launchApp();
+} else {
+  // show auth screen (already visible by default)
+}

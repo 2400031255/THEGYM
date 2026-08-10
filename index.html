@@ -4,16 +4,130 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
   <title>THE GYM RATS</title>
+  <style>
+    /* AUTH SCREEN */
+    #auth-screen {
+      position: fixed; inset: 0;
+      background: #050505;
+      display: flex; align-items: center; justify-content: center;
+      z-index: 999; padding: 1.5rem;
+    }
+    .auth-box {
+      background: #0f0f0f;
+      border: 1px solid #222;
+      border-radius: 16px;
+      padding: 2.5rem 2rem;
+      width: 100%; max-width: 400px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.7);
+    }
+    .auth-logo {
+      text-align: center; margin-bottom: 2rem;
+    }
+    .auth-logo-icon { font-size: 2.8rem; display: block; margin-bottom: 0.5rem; }
+    .auth-logo-title {
+      font-size: 1.4rem; font-weight: 900;
+      letter-spacing: 0.14em; color: #e01c1c;
+    }
+    .auth-logo-sub {
+      font-size: 0.72rem; color: #555;
+      letter-spacing: 0.06em; margin-top: 4px;
+    }
+    .auth-tabs {
+      display: flex; gap: 0;
+      background: #1e1e1e; border-radius: 8px;
+      padding: 4px; margin-bottom: 1.75rem;
+    }
+    .auth-tab {
+      flex: 1; padding: 0.6rem;
+      text-align: center; font-size: 0.85rem;
+      font-weight: 700; letter-spacing: 0.06em;
+      border-radius: 6px; cursor: pointer;
+      color: #555; background: none; border: none;
+      transition: background 0.2s, color 0.2s;
+      font-family: inherit;
+    }
+    .auth-tab.active { background: #e01c1c; color: #fff; }
+    .auth-form { display: none; }
+    .auth-form.active { display: block; }
+    .auth-group { margin-bottom: 1rem; }
+    .auth-group label {
+      display: block; font-size: 0.72rem;
+      font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; color: #a0a0a0;
+      margin-bottom: 0.4rem;
+    }
+    .auth-group input {
+      width: 100%; background: #1e1e1e;
+      border: 1px solid #2a2a2a; border-radius: 8px;
+      padding: 0.75rem 1rem; color: #fff;
+      font-size: 0.95rem; font-family: inherit;
+      transition: border-color 0.2s;
+    }
+    .auth-group input:focus { outline: none; border-color: #e01c1c; }
+    .auth-group input::placeholder { color: #444; }
+    .auth-btn {
+      width: 100%; background: #e01c1c;
+      color: #fff; font-weight: 800;
+      font-size: 0.9rem; letter-spacing: 0.08em;
+      padding: 0.85rem; border-radius: 8px;
+      border: none; cursor: pointer;
+      margin-top: 0.5rem; font-family: inherit;
+      transition: background 0.2s;
+    }
+    .auth-btn:hover { background: #b01414; }
+    .auth-error {
+      color: #e01c1c; font-size: 0.8rem;
+      margin-top: 0.5rem; text-align: center;
+      min-height: 1.2rem;
+    }
+    .auth-note {
+      text-align: center; font-size: 0.72rem;
+      color: #444; margin-top: 1.25rem;
+    }
+  </style>
   <link rel="stylesheet" href="./css/style.css" />
   <link rel="stylesheet" href="./css/responsive.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
 <body>
 
+<!-- AUTH SCREEN -->
+<div id="auth-screen">
+  <div class="auth-box">
+    <div class="auth-logo">
+      <span class="auth-logo-icon">💪</span>
+      <div class="auth-logo-title">THE GYM RATS</div>
+      <div class="auth-logo-sub">Train Together. Track Everything. Get Stronger.</div>
+    </div>
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tab-login" onclick="switchAuthTab('login')">LOGIN</button>
+      <button class="auth-tab" id="tab-signup" onclick="switchAuthTab('signup')">SIGN UP</button>
+    </div>
+    <!-- LOGIN -->
+    <div class="auth-form active" id="form-login">
+      <div class="auth-group"><label>Username</label><input type="text" id="login-user" placeholder="Enter your username" autocomplete="username" /></div>
+      <div class="auth-group"><label>Password</label><input type="password" id="login-pass" placeholder="Enter your password" autocomplete="current-password" /></div>
+      <div class="auth-error" id="login-error"></div>
+      <button class="auth-btn" onclick="handleLogin()">LOGIN →</button>
+      <div class="auth-note">Data is stored locally on this device.</div>
+    </div>
+    <!-- SIGNUP -->
+    <div class="auth-form" id="form-signup">
+      <div class="auth-group"><label>Full Name</label><input type="text" id="signup-name" placeholder="e.g. Nikhil" /></div>
+      <div class="auth-group"><label>Username</label><input type="text" id="signup-user" placeholder="Choose a username" autocomplete="username" /></div>
+      <div class="auth-group"><label>Password</label><input type="password" id="signup-pass" placeholder="Create a password" autocomplete="new-password" /></div>
+      <div class="auth-group"><label>Confirm Password</label><input type="password" id="signup-confirm" placeholder="Repeat password" autocomplete="new-password" /></div>
+      <div class="auth-error" id="signup-error"></div>
+      <button class="auth-btn" onclick="handleSignup()">CREATE ACCOUNT →</button>
+      <div class="auth-note">Your account is saved on this device only.</div>
+    </div>
+  </div>
+</div>
+
 <!-- SIDEBAR -->
 <aside class="sidebar" id="sidebar">
   <div class="sidebar-brand">
-    <span class="brand-icon">🐀</span>
+    <span class="brand-icon">💪</span>
     <div>
       <div class="brand-title">THE GYM RATS</div>
       <div class="brand-sub">Train. Track. Dominate.</div>
@@ -369,7 +483,7 @@
       <form id="profile-form">
         <div class="form-row">
           <div class="form-group"><label>Your Name</label><input type="text" id="profile-name" placeholder="e.g. Nikhil" /></div>
-          <div class="form-group"><label>Emoji Avatar</label><input type="text" id="profile-avatar" placeholder="🐀" maxlength="2" /></div>
+          <div class="form-group"><label>Emoji Avatar</label><input type="text" id="profile-avatar" placeholder="💪" maxlength="2" /></div>
         </div>
         <div class="form-group"><label>Fitness Goal</label>
           <select id="profile-goal">
@@ -397,6 +511,16 @@
           <div class="settings-action-title">Clear All Data</div>
           <div class="settings-action-desc">Permanently delete all app data. Cannot be undone.</div>
           <button class="btn-danger" id="btn-clear-data">🗑 Clear All Data</button>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-label">ACCOUNT</div>
+      <div class="settings-actions">
+        <div>
+          <div class="settings-action-title">Logout</div>
+          <div class="settings-action-desc">Sign out of your account on this device.</div>
+          <button class="btn-danger" id="btn-logout">🚪 Logout</button>
         </div>
       </div>
     </div>
