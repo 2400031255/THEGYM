@@ -29,7 +29,7 @@ const _squadListeners = {};
 
 async function squadService_createSquad(name) {
   const uid = getCurrentUid();
-  if (!uid) throw new Error('Not authenticated');
+  if (!uid) throw new Error('Not authenticated — please log in again.');
 
   const ref   = db.collection('squads').doc();
   const code  = _generateSquadCode();
@@ -42,13 +42,19 @@ async function squadService_createSquad(name) {
     members:   [uid]
   };
 
+  /* Core write — must succeed */
   await ref.set(squad);
+
+  /* Subcollection writes — best effort, don't block squad creation */
   await ref.collection('members').doc(uid).set({
     uid,
     joinedAt: new Date().toISOString(),
     role: 'creator'
-  });
-  await squadService_logActivity(squad.id, 'squad_created', `created the squad "${squad.name}"`);
+  }).catch(e => console.warn('members subcollection write failed:', e));
+
+  squadService_logActivity(squad.id, 'squad_created', `created the squad "${squad.name}"`)
+    .catch(e => console.warn('activity log failed:', e));
+
   return squad;
 }
 

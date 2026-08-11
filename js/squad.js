@@ -683,8 +683,16 @@ async function handleCreateSquad() {
     showToast(`Squad "${squad.name}" created! Code: ${squad.code}`, 'success');
     renderSquad();
   } catch (e) {
-    if (err) err.textContent = 'Failed to create squad. Please try again.';
-    console.error('handleCreateSquad:', e);
+    console.error('handleCreateSquad:', e.code, e.message, e);
+    if (err) {
+      if (e.code === 'permission-denied') {
+        err.textContent = 'Permission denied. Make sure you are logged in.';
+      } else if (e.message && e.message.includes('Not authenticated')) {
+        err.textContent = 'You must be logged in to create a squad.';
+      } else {
+        err.textContent = e.message || 'Failed to create squad. Please try again.';
+      }
+    }
   } finally {
     if (btn) { btn.textContent = 'CREATE SQUAD'; btn.disabled = false; }
   }
