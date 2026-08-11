@@ -394,87 +394,10 @@ function handleForgot() {
   }, 4000);
 }
 
-function getUsers() {
-  try { return JSON.parse(localStorage.getItem('gymrats_users') || '{}'); } catch { return {}; }
-}
-function saveUsers(u) { localStorage.setItem('gymrats_users', JSON.stringify(u)); }
-function getSession() { return localStorage.getItem('gymrats_session'); }
+/* getSession / setSession kept for compatibility with other parts of the app */
+function getSession() { return auth.currentUser ? auth.currentUser.uid : localStorage.getItem('gymrats_uid'); }
 function setSession(u) { localStorage.setItem('gymrats_session', u); }
-function clearSession() { localStorage.removeItem('gymrats_session'); }
-
-function handleLogin() {
-  const user = document.getElementById('login-user').value.trim();
-  const pass = document.getElementById('login-pass').value;
-  const err  = document.getElementById('login-error');
-  err.style.color = '';
-  if (!user || !pass) { err.textContent = 'Please fill in all fields.'; return; }
-  const users = getUsers();
-  if (!users[user]) { err.textContent = 'Username not found.'; return; }
-  if (users[user].password !== btoa(pass)) { err.textContent = 'Incorrect password.'; return; }
-
-  // MAINTENANCE MODE CHECK
-  // NOTE: This is a frontend-only check. LocalStorage can be modified via DevTools.
-  // A real backend is required for production-grade access control.
-  if (getMaintenanceMode() && !isCreator(user)) {
-    err.style.color = '#f59e0b';
-    err.textContent = 'THE GYM RATS is currently under maintenance. Please try again later.';
-    return;
-  }
-
-  // Remember me
-  if (document.getElementById('login-remember')?.checked) {
-    localStorage.setItem('gymrats_remember', user);
-  }
-  setSession(user);
-  const data = loadData();
-  if (!data.profile.name) { data.profile.name = users[user].name || user; saveData(data); }
-  // Loading animation on button
-  const btn = document.getElementById('btn-login');
-  btn.classList.add('loading');
-  btn.textContent = 'LOADING...';
-  setTimeout(launchApp, 600);
-}
-
-function handleSignup() {
-  const name    = document.getElementById('signup-name').value.trim();
-  const user    = document.getElementById('signup-user').value.trim();
-  const pass    = document.getElementById('signup-pass').value;
-  const confirm = document.getElementById('signup-confirm').value;
-  const err     = document.getElementById('signup-error');
-  err.style.color = '';
-  if (!name || !user || !pass || !confirm) { err.textContent = 'Please fill in all fields.'; return; }
-  if (pass.length < 4) { err.textContent = 'Password must be at least 4 characters.'; return; }
-  if (pass !== confirm) { err.textContent = 'Passwords do not match.'; return; }
-  if (!/^[a-zA-Z0-9_]+$/.test(user)) { err.textContent = 'Username: letters, numbers, _ only.'; return; }
-  const users = getUsers();
-  if (users[user]) { err.textContent = 'Username already taken.'; return; }
-  users[user] = { name, password: btoa(pass) };
-  saveUsers(users);
-  setSession(user);
-  const data = loadData();
-  data.profile.name = name;
-  data.profile.avatar = 'GR';
-  saveData(data);
-  const btn = document.getElementById('btn-signup');
-  btn.classList.add('loading');
-  btn.textContent = 'CREATING...';
-  setTimeout(launchApp, 600);
-}
-
-function launchApp() {
-  // Close auth modal
-  const overlay = document.getElementById('auth-modal-overlay');
-  if (overlay) overlay.classList.remove('open');
-  // Fade out hero screen
-  const screen = document.getElementById('auth-screen');
-  if (screen) {
-    screen.style.transition = 'opacity 0.5s ease';
-    screen.style.opacity = '0';
-    setTimeout(() => { screen.style.display = 'none'; init(); }, 500);
-  } else {
-    init();
-  }
-}
+function clearSession() { handleLogout(); }
 
 // Enter key support
 ['login-user','login-pass'].forEach(id => {
