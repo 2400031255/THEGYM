@@ -55,8 +55,12 @@ async function _onSignedIn(user) {
 }
 
 function _onSignedOut() {
-  localStorage.removeItem('gymrats_session');
-  localStorage.removeItem('gymrats_uid');
+  /* Only clear session if user explicitly logged out (handleLogout sets this flag) */
+  if (localStorage.getItem('gymrats_explicit_logout') === 'true') {
+    localStorage.removeItem('gymrats_session');
+    localStorage.removeItem('gymrats_uid');
+    localStorage.removeItem('gymrats_explicit_logout');
+  }
   /* Show hero/login screen */
   const screen = document.getElementById('auth-screen');
   if (screen) screen.style.display = '';
@@ -239,6 +243,7 @@ async function handleGoogleLogin() {
 async function handleLogout() {
   const uid = getCurrentUid();
   if (uid) await fs_updateStatus(uid, 'offline', null).catch(() => {});
+  localStorage.setItem('gymrats_explicit_logout', 'true');
   await auth.signOut();
   localStorage.removeItem('gymrats_session');
   localStorage.removeItem('gymrats_uid');
