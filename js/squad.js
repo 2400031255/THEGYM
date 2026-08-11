@@ -548,9 +548,9 @@ function renderMemberProfileModal() {
    ============================================ */
 
 async function openMemberProfile(uid) {
-  const squads = await squadService_getMySquads();
-  if (!squads.length) return;
-  const members = await squadService_getSquadMembers(squads[0].id);
+  const squadId = _activeSquadId;
+  if (!squadId) return;
+  const members = await squadService_getSquadMembers(squadId);
   const m       = members.find(x => x.uid === uid);
   if (!m) return;
 

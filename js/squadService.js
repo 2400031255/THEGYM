@@ -57,11 +57,14 @@ async function squadService_createSquad(name) {
    ============================================================ */
 
 async function squadService_joinSquad(code) {
-  const uid    = getCurrentUid();
-  const squads = await _loadAllSquads();
-  const squad  = squads.find(s => s.code.toUpperCase() === code.toUpperCase().trim());
+  const uid  = getCurrentUid();
+  const norm = code.toUpperCase().trim();
 
-  if (!squad) return { ok: false, msg: 'Squad not found. Check the code and try again.' };
+  /* Query by code field — avoids full collection scan */
+  const snap = await db.collection('squads').where('code', '==', norm).limit(1).get();
+  if (snap.empty) return { ok: false, msg: 'Squad not found. Check the code and try again.' };
+
+  const squad = { id: snap.docs[0].id, ...snap.docs[0].data() };
   if (squad.members && squad.members.includes(uid)) return { ok: false, msg: 'You are already in this squad.' };
 
   /* Add uid to members array */
