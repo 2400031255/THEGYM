@@ -140,26 +140,64 @@ function chartOptions(unit) {
 
 function renderProgressLog(logs) {
   const el = document.getElementById('progress-log-list');
+  el.innerHTML = '';
   if (!logs.length) {
     el.innerHTML = emptyState('📈', 'No progress logged yet.');
     return;
   }
-  el.innerHTML = [...logs].reverse().map(l => `
-    <div class="expense-item">
-      <div class="expense-item-left">
-        <div class="expense-item-desc">${formatDateDisplay(l.date)}</div>
-        <div class="expense-item-meta" style="display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:4px">
-          ${l.weight ? `<span class="tag">⚖️ ${l.weight} kg</span>` : ''}
-          ${l.fat    ? `<span class="tag">🔥 ${l.fat}% fat</span>` : ''}
-          ${l.chest  ? `<span class="tag">Chest ${l.chest}cm</span>` : ''}
-          ${l.waist  ? `<span class="tag">Waist ${l.waist}cm</span>` : ''}
-          ${l.arms   ? `<span class="tag">Arms ${l.arms}cm</span>` : ''}
-          ${l.legs   ? `<span class="tag">Legs ${l.legs}cm</span>` : ''}
-        </div>
-        ${l.notes ? `<div style="font-size:0.75rem;color:var(--text-muted);margin-top:4px">${l.notes}</div>` : ''}
-      </div>
-      <button class="btn-icon" onclick="deleteProgress('${l.id}')">🗑</button>
-    </div>`).join('');
+
+  const metrics = [
+    { key: 'weight', label: v => `⚖️ ${v} kg` },
+    { key: 'fat',    label: v => `🔥 ${v}% fat` },
+    { key: 'chest',  label: v => `Chest ${v}cm` },
+    { key: 'waist',  label: v => `Waist ${v}cm` },
+    { key: 'arms',   label: v => `Arms ${v}cm` },
+    { key: 'legs',   label: v => `Legs ${v}cm` }
+  ];
+
+  [...logs].reverse().forEach(l => {
+    const item = document.createElement('div');
+    item.className = 'expense-item';
+
+    const left = document.createElement('div');
+    left.className = 'expense-item-left';
+
+    const desc = document.createElement('div');
+    desc.className = 'expense-item-desc';
+    desc.textContent = formatDateDisplay(l.date);
+
+    const meta = document.createElement('div');
+    meta.className = 'expense-item-meta';
+    meta.style.cssText = 'display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:4px';
+
+    metrics.forEach(({ key, label }) => {
+      if (l[key]) {
+        const tag = document.createElement('span');
+        tag.className = 'tag';
+        tag.textContent = label(l[key]);
+        meta.appendChild(tag);
+      }
+    });
+
+    left.appendChild(desc);
+    left.appendChild(meta);
+
+    if (l.notes) {
+      const notes = document.createElement('div');
+      notes.style.cssText = 'font-size:0.75rem;color:var(--text-muted);margin-top:4px';
+      notes.textContent = l.notes;
+      left.appendChild(notes);
+    }
+
+    const delBtn = document.createElement('button');
+    delBtn.className = 'btn-icon';
+    delBtn.textContent = '🗑';
+    delBtn.addEventListener('click', () => deleteProgress(l.id));
+
+    item.appendChild(left);
+    item.appendChild(delBtn);
+    el.appendChild(item);
+  });
 }
 
 function deleteProgress(id) {

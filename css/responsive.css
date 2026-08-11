@@ -139,3 +139,29 @@
 .tag-red { background: rgba(224,28,28,0.12); color: var(--accent); border-color: rgba(224,28,28,0.3); }
 .tag-green { background: rgba(34,197,94,0.12); color: var(--success); border-color: rgba(34,197,94,0.3); }
 .tag-orange { background: rgba(249,115,22,0.12); color: var(--warning); border-color: rgba(249,115,22,0.3); }
+
+/* ---- SQUAD RESPONSIVE ---- */
+@media (max-width: 1024px) {
+  .squad-stats-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (max-width: 768px) {
+  .squad-stats-grid { grid-template-columns: repeat(3, 1fr); gap: 0.5rem; }
+  .squad-members-grid { grid-template-columns: 1fr; }
+  .squad-identity-card { flex-direction: column; align-items: flex-start; }
+  .squad-identity-right { width: 100%; }
+  .squad-header-actions { width: 100%; }
+  .squad-lb-tabs { flex-wrap: wrap; }
+  .squad-modal { padding: 1.25rem; }
+  .profile-modal-stats { gap: 0.5rem; }
+  .profile-modal-stat { min-width: 70px; padding: 0.5rem 0.65rem; }
+}
+
+@media (max-width: 480px) {
+  .squad-stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .squad-stat-val { font-size: 1.3rem; }
+  .squad-invite-code { font-size: 1.6rem; letter-spacing: 0.2em; }
+  .squad-empty-actions { flex-direction: column; }
+  .squad-empty-actions button { width: 100%; }
+  .squad-challenge-member-name { width: 60px; font-size: 0.72rem; }
+}

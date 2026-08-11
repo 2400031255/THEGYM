@@ -352,7 +352,19 @@
   </style>
   <link rel="stylesheet" href="./css/style.css" />
   <link rel="stylesheet" href="./css/responsive.css" />
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"
+    integrity="sha384-e6nUZLBkQ86NJ6TVVKAeSaK8jWa3NhkYWZFomE39AvDbQWeie9PlQqM3pmYW5d1g"
+    crossorigin="anonymous"></script>
+  <!-- Firebase CDN (compat mode) -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"
+    integrity="sha384-ajMUFBUFMCyjh8uxJg6bkGcKe9RTolyjwbxB3yES0QQMenP3Oztj/W9vA2SJPcIh"
+    crossorigin="anonymous"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"
+    integrity="sha384-xD1t9dGSVKobUztxDkv6xUI0H4AnFz0NxwlgDJJ7FDlblG9xxr1Z9iauCZuJYj6p"
+    crossorigin="anonymous"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"
+    integrity="sha384-XMIl1b2Ez9tKAM0R5q67/iLdfnlLBl9kfo40X5WMtCPb+3OLplrjnOxZTYCg1SKY"
+    crossorigin="anonymous"></script>
 </head>
 <body>
 
@@ -427,7 +439,15 @@
         <span class="auth-btn-shine"></span>
         LOGIN &rarr;
       </button>
-      <div class="auth-note">Data is stored locally on this device only. No server. No tracking.</div>
+      <div style="display:flex;align-items:center;gap:0.75rem;margin:0.9rem 0">
+        <div style="flex:1;height:1px;background:rgba(255,255,255,0.08)"></div>
+        <span style="font-size:0.65rem;color:rgba(255,255,255,0.25);letter-spacing:0.08em">OR</span>
+        <div style="flex:1;height:1px;background:rgba(255,255,255,0.08)"></div>
+      </div>
+      <button id="btn-google-login" onclick="handleGoogleLogin()" style="width:100%;display:flex;align-items:center;justify-content:center;gap:0.6rem;padding:0.78rem;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:9px;color:#fff;font-size:0.82rem;font-weight:700;letter-spacing:0.06em;cursor:pointer;font-family:inherit;transition:background 0.2s,border-color 0.2s" onmouseover="this.style.background='rgba(255,255,255,0.09)'" onmouseout="this.style.background='rgba(255,255,255,0.05)'">
+        <span style="font-size:1rem">G</span> Continue with Google
+      </button>
+      <div class="auth-note">Data is stored on Firebase. No tracking.</div>
     </div>
 
     <!-- SIGNUP FORM -->
@@ -503,9 +523,9 @@
       <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 010-5H6"/><path d="M18 9h1.5a2.5 2.5 0 000-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0012 0V2z"/></svg></span>
       <span>Challenges</span>
     </a>
-    <a class="nav-item" data-page="friends">
+    <a class="nav-item" data-page="squad">
       <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></span>
-      <span>Friends</span>
+      <span>👥 Gym Squad</span>
     </a>
     <a class="nav-item" data-page="notifications">
       <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg></span>
@@ -568,6 +588,9 @@
     <div class="card">
       <div class="card-label">NOTIFICATIONS</div>
       <div id="dash-notifications-content"></div>
+    </div>
+    <div class="card">
+      <div id="dash-squad-widget"></div>
     </div>
   </section>
 
@@ -809,36 +832,8 @@
     <div id="challenges-grid"></div>
   </section>
 
-  <!-- ===== FRIENDS ===== -->
-  <section class="page" id="page-friends">
-    <div class="page-header">
-      <h1>Friends</h1>
-      <button class="btn-primary" id="btn-new-friend">+ Add Friend</button>
-    </div>
-    <div class="card" id="friend-form-card" style="display:none">
-      <div class="card-label">ADD FRIEND</div>
-      <form id="friend-form">
-        <div class="form-row">
-          <div class="form-group"><label>Name</label><input type="text" id="ff-name" placeholder="e.g. Rahul" required /></div>
-          <div class="form-group"><label>Avatar Initial</label><input type="text" id="ff-avatar" placeholder="R" maxlength="2" /></div>
-        </div>
-        <div class="form-row">
-          <div class="form-group"><label>Workouts This Month</label><input type="number" id="ff-workouts" placeholder="0" min="0" /></div>
-          <div class="form-group"><label>Current Streak</label><input type="number" id="ff-streak" placeholder="0" min="0" /></div>
-        </div>
-        <div class="form-group"><label>Challenge Points</label><input type="number" id="ff-points" placeholder="0" min="0" /></div>
-        <div class="form-actions">
-          <button type="button" class="btn-ghost" id="btn-cancel-friend">Cancel</button>
-          <button type="submit" class="btn-primary">Add Friend</button>
-        </div>
-      </form>
-    </div>
-    <div class="card">
-      <div class="card-label">MONTHLY LEADERBOARD</div>
-      <div id="leaderboard-list"></div>
-    </div>
-    <div id="friends-grid"></div>
-  </section>
+  <!-- ===== GYM SQUAD ===== -->
+  <section class="page" id="page-squad"></section>
 
   <!-- ===== NOTIFICATIONS ===== -->
   <section class="page" id="page-notifications">
@@ -913,6 +908,10 @@
           <button class="btn-danger" id="btn-clear-data">Clear All Data</button>
         </div>
       </div>
+    </div>
+    <div class="card">
+      <div class="card-label">PRIVACY</div>
+      <div id="squad-privacy-settings"></div>
     </div>
     <div class="card">
       <div class="card-label">ACCOUNT</div>
@@ -1120,6 +1119,9 @@
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
 
+<script src="./js/firebase.js"></script>
+<script src="./js/firestore.js"></script>
+<script src="./js/auth.js"></script>
 <script src="./js/storage.js"></script>
 <script src="./js/utils.js"></script>
 <script src="./js/membership.js"></script>
@@ -1129,6 +1131,8 @@
 <script src="./js/progress.js"></script>
 <script src="./js/challenges.js"></script>
 <script src="./js/creator.js"></script>
+<script src="./js/squadService.js"></script>
+<script src="./js/squad.js"></script>
 <script src="./js/app.js"></script>
 
 <script>

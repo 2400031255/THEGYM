@@ -1868,3 +1868,679 @@ canvas { max-height: 220px; }
   color: var(--text-muted);
   margin-top: 0.2rem;
 }
+
+/* ============================================
+   GYM SQUAD — Squad Page Styles
+   ============================================ */
+
+.squad-subtitle {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  letter-spacing: 0.06em;
+  margin-top: 0.2rem;
+}
+
+.squad-header-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.squad-btn-sm {
+  padding: 0.45rem 0.9rem !important;
+  font-size: 0.75rem !important;
+  letter-spacing: 0.06em;
+}
+
+/* ---- Squad Tabs ---- */
+.squad-tabs {
+  display: flex;
+  gap: 0.4rem;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+}
+.squad-tab {
+  padding: 0.45rem 1rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  background: var(--bg-input);
+  border: 1px solid var(--border-light);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition);
+}
+.squad-tab.active {
+  background: var(--accent-glow);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* ---- Squad Identity Card ---- */
+.squad-identity-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  background: linear-gradient(135deg, var(--bg-card) 0%, rgba(224,28,28,0.04) 100%);
+  border-color: rgba(224,28,28,0.2);
+}
+.squad-identity-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.squad-identity-icon {
+  font-size: 2rem;
+  width: 52px; height: 52px;
+  background: rgba(224,28,28,0.1);
+  border: 1px solid rgba(224,28,28,0.2);
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+}
+.squad-identity-name {
+  font-size: 1.1rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  color: #fff;
+}
+.squad-identity-meta {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 0.2rem;
+}
+.squad-code-inline {
+  font-family: monospace;
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--accent);
+  letter-spacing: 0.15em;
+  background: rgba(224,28,28,0.1);
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+}
+.squad-identity-right {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+/* ---- Squad Overview Stats ---- */
+.squad-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+.squad-stat-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem 0.75rem;
+  text-align: center;
+  transition: border-color var(--transition);
+}
+.squad-stat-card:hover { border-color: rgba(224,28,28,0.3); }
+.squad-stat-icon { font-size: 1.2rem; margin-bottom: 0.3rem; }
+.squad-stat-val {
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: var(--accent);
+  line-height: 1;
+}
+.squad-stat-label {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-top: 0.3rem;
+}
+
+/* ---- Who's Training ---- */
+.squad-my-status-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.85rem;
+  background: var(--bg-input);
+  border-radius: var(--radius-sm);
+  margin-bottom: 1rem;
+  gap: 1rem;
+}
+.squad-my-status-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 0.2rem;
+}
+.squad-my-status-val {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--text-secondary);
+}
+.squad-my-status-val.training { color: var(--success); }
+
+.squad-training-list { display: flex; flex-direction: column; gap: 0.5rem; }
+.squad-training-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.65rem 0.85rem;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+}
+.squad-training-dot { font-size: 0.9rem; flex-shrink: 0; }
+.squad-training-info { flex: 1; display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+.squad-training-name { font-size: 0.88rem; font-weight: 700; }
+.squad-training-workout {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  background: var(--bg-input);
+  padding: 0.15rem 0.5rem;
+  border-radius: 99px;
+}
+.squad-training-status { font-size: 0.72rem; color: var(--text-muted); white-space: nowrap; }
+
+/* ---- Member Cards Grid ---- */
+.squad-members-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1rem;
+}
+.squad-member-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.1rem;
+  transition: border-color var(--transition), transform var(--transition);
+}
+.squad-member-card:hover {
+  border-color: rgba(224,28,28,0.3);
+  transform: translateY(-2px);
+}
+.squad-member-card-top {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  margin-bottom: 0.85rem;
+}
+.squad-member-avatar {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(224,28,28,0.2), rgba(224,28,28,0.05));
+  border: 2px solid rgba(224,28,28,0.3);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.9rem; font-weight: 900;
+  color: var(--accent);
+  flex-shrink: 0;
+}
+.squad-member-name {
+  font-size: 0.95rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+.squad-member-status {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin-top: 0.15rem;
+}
+.squad-card-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 0.75rem 0;
+}
+.squad-card-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.3rem 0;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+}
+.squad-card-icon { font-size: 0.85rem; flex-shrink: 0; }
+.squad-card-text { flex: 1; }
+.squad-view-profile-btn {
+  width: 100%;
+  margin-top: 0.85rem;
+  font-size: 0.75rem !important;
+  padding: 0.55rem !important;
+  letter-spacing: 0.1em;
+}
+
+/* ---- Membership Status Badges ---- */
+.squad-ms-badge {
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  padding: 0.18rem 0.5rem;
+  border-radius: 99px;
+  white-space: nowrap;
+}
+.ms-good         { background: rgba(34,197,94,0.12);  color: var(--success); border: 1px solid rgba(34,197,94,0.3); }
+.ms-normal       { background: rgba(59,130,246,0.12); color: var(--info);    border: 1px solid rgba(59,130,246,0.3); }
+.ms-ending-soon  { background: rgba(249,115,22,0.12); color: var(--warning); border: 1px solid rgba(249,115,22,0.3); }
+.ms-expires-soon { background: rgba(224,28,28,0.12);  color: var(--error);   border: 1px solid rgba(224,28,28,0.3); }
+.ms-expired      { background: rgba(80,80,80,0.15);   color: var(--text-muted); border: 1px solid var(--border-light); }
+
+/* ---- Activity Feed ---- */
+.squad-activity-list { display: flex; flex-direction: column; }
+.squad-activity-row {
+  display: flex;
+  gap: 0.85rem;
+  align-items: flex-start;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.squad-activity-row:last-child { border-bottom: none; }
+.squad-activity-icon {
+  font-size: 1rem;
+  width: 32px; height: 32px;
+  background: var(--bg-input);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.squad-activity-body { flex: 1; }
+.squad-activity-text { font-size: 0.85rem; line-height: 1.5; }
+.squad-activity-time { font-size: 0.7rem; color: var(--text-muted); margin-top: 0.2rem; }
+
+/* ---- Leaderboard ---- */
+.squad-lb-tabs {
+  display: flex;
+  gap: 0.4rem;
+  margin-bottom: 1rem;
+}
+.squad-lb-tab {
+  padding: 0.4rem 0.85rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  background: var(--bg-input);
+  border: 1px solid var(--border-light);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all var(--transition);
+}
+.squad-lb-tab.active {
+  background: var(--accent-glow);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.squad-lb-list { display: flex; flex-direction: column; }
+.squad-lb-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.85rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  transition: background var(--transition);
+}
+.squad-lb-row:last-child { border-bottom: none; }
+.squad-lb-row:hover { background: var(--bg-secondary); }
+.squad-lb-row.squad-lb-me {
+  background: rgba(224,28,28,0.04);
+  border-color: rgba(224,28,28,0.15);
+}
+.squad-lb-rank { font-size: 1.2rem; width: 2rem; text-align: center; flex-shrink: 0; }
+.squad-lb-name { flex: 1; font-size: 0.9rem; font-weight: 700; display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap; }
+.squad-lb-val  { font-size: 0.9rem; font-weight: 800; color: var(--accent); white-space: nowrap; }
+
+/* ---- Squad Challenges ---- */
+.card-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+.card-label-row .card-label { margin-bottom: 0; }
+
+.squad-challenge-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem;
+  margin-bottom: 0.85rem;
+}
+.squad-challenge-name { font-size: 0.95rem; font-weight: 800; margin-bottom: 0.2rem; }
+.squad-challenge-goal { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.75rem; }
+.squad-challenge-progress-text {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.35rem;
+}
+.squad-challenge-members { margin-top: 0.85rem; display: flex; flex-direction: column; gap: 0.5rem; }
+.squad-challenge-member-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.8rem;
+}
+.squad-challenge-member-name { width: 80px; font-weight: 600; flex-shrink: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.squad-challenge-member-bar-wrap {
+  flex: 1;
+  height: 6px;
+  background: var(--bg-input);
+  border-radius: 99px;
+  overflow: hidden;
+}
+.squad-challenge-member-bar {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 99px;
+  transition: width 0.4s ease;
+}
+.squad-challenge-member-val { font-size: 0.72rem; color: var(--text-muted); white-space: nowrap; }
+.squad-challenge-end { font-size: 0.7rem; color: var(--text-muted); margin-top: 0.75rem; }
+.squad-challenge-form { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border); }
+
+/* ---- Squad Expenses ---- */
+.squad-expense-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--border);
+  gap: 1rem;
+}
+.squad-expense-row:last-child { border-bottom: none; }
+.squad-expense-desc { font-size: 0.88rem; font-weight: 600; }
+.squad-expense-meta { font-size: 0.72rem; color: var(--text-muted); margin-top: 2px; }
+.squad-expense-amount { font-size: 0.95rem; font-weight: 800; color: var(--accent); white-space: nowrap; }
+
+/* ---- Squad Notifications ---- */
+.squad-notif-row {
+  display: flex;
+  gap: 0.85rem;
+  align-items: flex-start;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.squad-notif-row:last-child { border-bottom: none; }
+.squad-notif-icon {
+  font-size: 1rem;
+  width: 32px; height: 32px;
+  background: var(--bg-input);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.squad-notif-body { flex: 1; }
+.squad-notif-text { font-size: 0.85rem; line-height: 1.5; }
+.squad-notif-time { font-size: 0.7rem; color: var(--text-muted); margin-top: 0.2rem; }
+
+/* ---- Squad Empty States ---- */
+.squad-empty-hero {
+  text-align: center;
+  padding: 3rem 2rem;
+}
+.squad-empty-icon { font-size: 3rem; margin-bottom: 1rem; }
+.squad-empty-title {
+  font-size: 1.2rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  color: #fff;
+  margin-bottom: 0.5rem;
+}
+.squad-empty-sub {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 1.75rem;
+  line-height: 1.6;
+}
+.squad-empty-actions { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; }
+.squad-empty-row {
+  text-align: center;
+  padding: 1.5rem;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+/* ---- Squad Modals ---- */
+.squad-modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.8);
+  backdrop-filter: blur(6px);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  animation: overlayIn 0.2s ease;
+}
+.squad-modal {
+  width: 100%;
+  max-width: 420px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem;
+  box-shadow: var(--shadow);
+  animation: modalIn 0.3s cubic-bezier(0.16,1,0.3,1);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+.squad-modal-wide { max-width: 560px; }
+.squad-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+}
+.squad-modal-title {
+  font-size: 0.9rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.squad-modal-close {
+  width: 28px; height: 28px;
+  background: var(--bg-input);
+  border: 1px solid var(--border-light);
+  border-radius: 50%;
+  color: var(--text-muted);
+  font-size: 1rem;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  transition: background var(--transition), color var(--transition);
+}
+.squad-modal-close:hover { background: rgba(224,28,28,0.15); color: var(--accent); }
+.squad-modal-error {
+  color: var(--error);
+  font-size: 0.78rem;
+  min-height: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+/* ---- Invite Modal ---- */
+.squad-invite-code-display {
+  text-align: center;
+  padding: 1.5rem;
+  background: var(--bg-input);
+  border-radius: var(--radius);
+  margin-bottom: 1.25rem;
+  border: 1px solid rgba(224,28,28,0.2);
+}
+.squad-invite-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+}
+.squad-invite-code {
+  font-size: 2.2rem;
+  font-weight: 900;
+  letter-spacing: 0.3em;
+  color: var(--accent);
+  font-family: monospace;
+  text-shadow: 0 0 20px rgba(224,28,28,0.4);
+}
+.squad-invite-note {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  text-align: center;
+  margin-top: 1rem;
+  line-height: 1.5;
+}
+
+/* ---- Member Profile Modal ---- */
+.profile-modal-hero {
+  text-align: center;
+  padding: 1.25rem 0 1rem;
+}
+.profile-modal-avatar {
+  width: 64px; height: 64px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(224,28,28,0.2), rgba(224,28,28,0.05));
+  border: 2px solid rgba(224,28,28,0.4);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.3rem; font-weight: 900;
+  color: var(--accent);
+  margin: 0 auto 0.75rem;
+}
+.profile-modal-name {
+  font-size: 1.2rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.3rem;
+}
+.profile-modal-status { font-size: 0.8rem; color: var(--text-muted); }
+.profile-modal-stats {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  margin: 1rem 0;
+  flex-wrap: wrap;
+}
+.profile-modal-stat {
+  background: var(--bg-input);
+  border-radius: var(--radius-sm);
+  padding: 0.65rem 1rem;
+  text-align: center;
+  min-width: 80px;
+}
+.profile-modal-stat-val { font-size: 1rem; font-weight: 800; }
+.profile-modal-stat-key {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-top: 0.2rem;
+}
+.profile-modal-section {
+  border-top: 1px solid var(--border);
+  padding-top: 1rem;
+  margin-top: 1rem;
+}
+.profile-modal-activity-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.85rem;
+}
+.profile-modal-activity-row:last-child { border-bottom: none; }
+.profile-modal-activity-icon { font-size: 0.9rem; }
+.profile-modal-activity-date { font-size: 0.72rem; color: var(--text-muted); margin-left: auto; }
+.profile-modal-info-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.85rem;
+  gap: 0.75rem;
+}
+.profile-modal-info-row:last-child { border-bottom: none; }
+
+/* ---- Privacy Settings ---- */
+.privacy-options-list { display: flex; flex-direction: column; gap: 0; }
+.privacy-toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  gap: 1rem;
+}
+.privacy-toggle-row:last-child { border-bottom: none; }
+.privacy-toggle-label { font-size: 0.88rem; font-weight: 500; }
+.privacy-toggle-switch {
+  width: 44px; height: 24px;
+  border-radius: 99px;
+  position: relative;
+  flex-shrink: 0;
+  transition: background 0.2s;
+  cursor: pointer;
+}
+.privacy-toggle-switch.on  { background: var(--accent); }
+.privacy-toggle-switch.off { background: var(--bg-input); border: 1px solid var(--border-light); }
+.privacy-toggle-knob {
+  position: absolute;
+  top: 3px;
+  width: 18px; height: 18px;
+  background: #fff;
+  border-radius: 50%;
+  transition: left 0.2s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+}
+.privacy-toggle-switch.on  .privacy-toggle-knob { left: 23px; }
+.privacy-toggle-switch.off .privacy-toggle-knob { left: 3px; }
+
+/* ---- Dashboard Squad Widget ---- */
+.dash-squad-name {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 0.5rem;
+}
+.dash-squad-training {
+  font-size: 0.8rem;
+  color: var(--success);
+  font-weight: 700;
+  margin-bottom: 0.65rem;
+}
+.dash-squad-members {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 0.65rem;
+}
+.dash-squad-member-chip {
+  background: var(--bg-input);
+  border: 1px solid var(--border-light);
+  border-radius: 99px;
+  padding: 0.2rem 0.65rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+.dash-squad-challenge {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  background: var(--bg-input);
+  border-radius: var(--radius-sm);
+  padding: 0.5rem 0.75rem;
+  margin-bottom: 0.25rem;
+}

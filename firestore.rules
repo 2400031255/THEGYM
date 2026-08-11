@@ -1,0 +1,60 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    /* ── Users: only the owner can read/write their own doc ── */
+    match /users/{uid} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+
+      match /{subcollection}/{docId} {
+        allow read, write: if request.auth != null && request.auth.uid == uid;
+      }
+    }
+
+    /* ── Status: any authenticated user can read (for squad), only owner writes ── */
+    match /status/{uid} {
+      allow read:  if request.auth != null;
+      allow write: if request.auth != null && request.auth.uid == uid;
+    }
+
+    /* ── Squads: any authenticated user can read; members can write ── */
+    match /squads/{squadId} {
+      allow read:   if request.auth != null;
+      allow create: if request.auth != null;
+      allow update: if request.auth != null
+                    && request.auth.uid in resource.data.members;
+      allow delete: if request.auth != null
+                    && request.auth.uid == resource.data.createdBy;
+
+      match /members/{uid} {
+        allow read:   if request.auth != null;
+        allow write:  if request.auth != null && request.auth.uid == uid;
+      }
+
+      match /activity/{docId} {
+        allow read:   if request.auth != null;
+        allow create: if request.auth != null;
+        allow update, delete: if false;
+      }
+
+      match /notifications/{docId} {
+        allow read:   if request.auth != null;
+        allow create: if request.auth != null;
+        allow update, delete: if false;
+      }
+
+      match /challenges/{docId} {
+        allow read:   if request.auth != null;
+        allow create: if request.auth != null;
+        allow update: if request.auth != null;
+        allow delete: if request.auth != null
+                      && request.auth.uid == resource.data.createdBy;
+      }
+    }
+
+    /* ── Deny everything else ── */
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

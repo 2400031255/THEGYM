@@ -66,6 +66,9 @@ function renderDashboard() {
 
   // Notifications
   renderDashNotifications();
+
+  // Squad widget
+  if (typeof renderSquadDashWidget === 'function') renderSquadDashWidget().catch(() => {});
 }
 
 function renderDashMembership() {
@@ -159,6 +162,9 @@ function renderSettings() {
   if (errEl) errEl.textContent = '';
   const fill = document.getElementById('pw-strength-fill');
   if (fill) { fill.style.width = '0%'; fill.style.background = ''; }
+
+  // Privacy settings
+  if (typeof renderPrivacySettings === 'function') renderPrivacySettings();
 }
 
 function updatePwStrength(val) {
@@ -322,12 +328,7 @@ document.getElementById('btn-clear-data').addEventListener('click', () => {
   );
 });
 
-document.getElementById('btn-logout').addEventListener('click', () => {
-  showModal('Logout', 'Are you sure you want to logout?', 'Logout', () => {
-    clearSession();
-    location.reload();
-  });
-});
+/* btn-logout is handled by auth.js */
 
 /* ============================================
    APP INIT
@@ -343,6 +344,9 @@ function init() {
 
   // Build creator sidebar if applicable
   buildCreatorSidebar();
+
+  // Set online status
+  if (typeof squadService_updateStatus === 'function') squadService_updateStatus('online', null).catch(() => {});
 
   // Show maintenance bar if creator + maintenance on
   updateMaintenanceBar();
@@ -489,17 +493,10 @@ if (remembered) {
   if (cb) cb.checked = true;
 }
 
-// Boot — seed creator account, then check session
-(function seedCreator() {
-  const users = getUsers();
-  if (!users['nikhil']) {
-    users['nikhil'] = { name: 'Nikhil Karthik', password: btoa('nikhil123') };
-    saveUsers(users);
-  }
-})();
-
-if (getSession()) {
+// Boot — Firebase auth.js handles session via onAuthStateChanged
+// Legacy local session fallback (for offline/non-Firebase users)
+if (!window.firebase && getSession()) {
   launchApp();
-} else {
+} else if (!window.firebase) {
   applyMaintenanceToLoginScreen();
 }

@@ -31,31 +31,84 @@ function addExerciseRow() {
   const div = document.createElement('div');
   div.className = 'exercise-row';
   div.id = `ex-row-${id}`;
-  div.innerHTML = `
-    <div class="exercise-row-header">
-      <input type="text" placeholder="Exercise name (e.g. Bench Press)" id="ex-name-${id}" style="font-weight:700;max-width:280px" />
-      <button type="button" class="btn-icon" onclick="removeExerciseRow(${id})">✕</button>
-    </div>
-    <div class="sets-grid-header">
-      <span>SET</span><span>WEIGHT (kg)</span><span>REPS</span><span></span>
-    </div>
-    <div id="ex-sets-${id}"></div>
-    <button type="button" class="btn-ghost" style="font-size:0.78rem;padding:0.4rem 0.75rem;margin-top:0.4rem"
-      onclick="addSetRow(${id})">+ Add Set</button>`;
+
+  const header = document.createElement('div');
+  header.className = 'exercise-row-header';
+
+  const nameInput = document.createElement('input');
+  nameInput.type = 'text';
+  nameInput.placeholder = 'Exercise name (e.g. Bench Press)';
+  nameInput.id = `ex-name-${id}`;
+  nameInput.style.cssText = 'font-weight:700;max-width:280px';
+
+  const removeBtn = document.createElement('button');
+  removeBtn.type = 'button';
+  removeBtn.className = 'btn-icon';
+  removeBtn.textContent = '✕';
+  removeBtn.onclick = () => removeExerciseRow(id);
+
+  header.appendChild(nameInput);
+  header.appendChild(removeBtn);
+
+  const setsHeader = document.createElement('div');
+  setsHeader.className = 'sets-grid-header';
+  setsHeader.innerHTML = '<span>SET</span><span>WEIGHT (kg)</span><span>REPS</span><span></span>';
+
+  const setsContainer = document.createElement('div');
+  setsContainer.id = `ex-sets-${id}`;
+
+  const addSetBtn = document.createElement('button');
+  addSetBtn.type = 'button';
+  addSetBtn.className = 'btn-ghost';
+  addSetBtn.style.cssText = 'font-size:0.78rem;padding:0.4rem 0.75rem;margin-top:0.4rem';
+  addSetBtn.textContent = '+ Add Set';
+  addSetBtn.onclick = () => addSetRow(id);
+
+  div.appendChild(header);
+  div.appendChild(setsHeader);
+  div.appendChild(setsContainer);
+  div.appendChild(addSetBtn);
   document.getElementById('exercises-list').appendChild(div);
   addSetRow(id);
 }
 
 function addSetRow(exId) {
   const container = document.getElementById(`ex-sets-${exId}`);
-  const setNum = container.children.length + 1;
-  const row = document.createElement('div');
-  row.className = 'sets-grid';
-  row.innerHTML = `
-    <input type="number" placeholder="${setNum}" value="${setNum}" min="1" style="text-align:center" readonly />
-    <input type="number" placeholder="0" min="0" step="0.5" class="set-weight" />
-    <input type="number" placeholder="0" min="0" class="set-reps" />
-    <button type="button" class="btn-icon" onclick="this.parentElement.remove()">✕</button>`;
+  const setNum    = container.children.length + 1;
+  const row       = document.createElement('div');
+  row.className   = 'sets-grid';
+
+  const numInput = document.createElement('input');
+  numInput.type  = 'number';
+  numInput.placeholder = String(setNum);
+  numInput.value = String(setNum);
+  numInput.min   = '1';
+  numInput.style.textAlign = 'center';
+  numInput.readOnly = true;
+
+  const weightInput = document.createElement('input');
+  weightInput.type  = 'number';
+  weightInput.placeholder = '0';
+  weightInput.min   = '0';
+  weightInput.step  = '0.5';
+  weightInput.className = 'set-weight';
+
+  const repsInput = document.createElement('input');
+  repsInput.type  = 'number';
+  repsInput.placeholder = '0';
+  repsInput.min   = '0';
+  repsInput.className = 'set-reps';
+
+  const removeBtn = document.createElement('button');
+  removeBtn.type  = 'button';
+  removeBtn.className = 'btn-icon';
+  removeBtn.textContent = '✕';
+  removeBtn.addEventListener('click', () => row.remove());
+
+  row.appendChild(numInput);
+  row.appendChild(weightInput);
+  row.appendChild(repsInput);
+  row.appendChild(removeBtn);
   container.appendChild(row);
 }
 
@@ -156,55 +209,114 @@ function renderWorkouts() {
     <div class="stat-card"><div class="stat-value">${thisYear}</div><div class="stat-label">This Year</div></div>`;
 
   const histEl = document.getElementById('workout-history-list');
+  histEl.innerHTML = '';
   if (!workouts.length) {
     histEl.innerHTML = emptyState('', 'No workouts logged yet.');
   } else {
-    histEl.innerHTML = workouts.map(w => `
-      <div class="workout-item">
-        <div class="workout-item-header">
-          <div>
-            <div class="workout-item-name">${w.name}</div>
-            <div style="font-size:0.75rem;color:var(--text-muted);margin-top:2px">${w.muscle}</div>
-          </div>
-          <div style="text-align:right">
-            <div class="workout-item-date">${formatDateDisplay(w.date)}</div>
-            <button class="btn-icon" style="margin-top:4px" onclick="deleteWorkout('${w.id}')">&#128465;</button>
-          </div>
-        </div>
-        <div class="workout-item-meta">
-          ${w.duration ? `<span>${w.duration} min</span>` : ''}
-          <span>${w.exercises.length} exercises</span>
-          ${w.totalVolume ? `<span>${w.totalVolume.toLocaleString()} kg vol</span>` : ''}
-          ${w.prs && w.prs.length ? `<span class="pr-badge">PR &times;${w.prs.length}</span>` : ''}
-        </div>
-        <div style="margin-top:0.65rem">
-          ${w.exercises.map(ex => `
-            <div style="font-size:0.8rem;color:var(--text-secondary);margin-bottom:0.3rem">
-              <strong style="color:var(--text-primary)">${ex.name}</strong>
-              ${ex.sets.map(s => `<span style="margin-left:0.5rem;color:var(--text-muted)">${s.weight}kg×${s.reps}</span>`).join('')}
-            </div>`).join('')}
-        </div>
-      </div>`).join('');
+    workouts.forEach(w => {
+      const item = document.createElement('div');
+      item.className = 'workout-item';
+
+      /* Header */
+      const hdr = document.createElement('div');
+      hdr.className = 'workout-item-header';
+
+      const hdrLeft = document.createElement('div');
+      const nameEl  = document.createElement('div');
+      nameEl.className = 'workout-item-name';
+      nameEl.textContent = w.name;
+      const muscleEl = document.createElement('div');
+      muscleEl.style.cssText = 'font-size:0.75rem;color:var(--text-muted);margin-top:2px';
+      muscleEl.textContent = w.muscle;
+      hdrLeft.appendChild(nameEl);
+      hdrLeft.appendChild(muscleEl);
+
+      const hdrRight = document.createElement('div');
+      hdrRight.style.textAlign = 'right';
+      const dateEl = document.createElement('div');
+      dateEl.className = 'workout-item-date';
+      dateEl.textContent = formatDateDisplay(w.date);
+      const delBtn = document.createElement('button');
+      delBtn.className = 'btn-icon';
+      delBtn.style.marginTop = '4px';
+      delBtn.textContent = '🗑';
+      delBtn.addEventListener('click', () => deleteWorkout(w.id));
+      hdrRight.appendChild(dateEl);
+      hdrRight.appendChild(delBtn);
+
+      hdr.appendChild(hdrLeft);
+      hdr.appendChild(hdrRight);
+
+      /* Meta */
+      const meta = document.createElement('div');
+      meta.className = 'workout-item-meta';
+      if (w.duration) { const s = document.createElement('span'); s.textContent = `${w.duration} min`; meta.appendChild(s); }
+      const exSpan = document.createElement('span'); exSpan.textContent = `${w.exercises.length} exercises`; meta.appendChild(exSpan);
+      if (w.totalVolume) { const s = document.createElement('span'); s.textContent = `${w.totalVolume.toLocaleString()} kg vol`; meta.appendChild(s); }
+      if (w.prs && w.prs.length) { const s = document.createElement('span'); s.className = 'pr-badge'; s.textContent = `PR ×${w.prs.length}`; meta.appendChild(s); }
+
+      /* Exercises */
+      const exList = document.createElement('div');
+      exList.style.marginTop = '0.65rem';
+      w.exercises.forEach(ex => {
+        const exRow = document.createElement('div');
+        exRow.style.cssText = 'font-size:0.8rem;color:var(--text-secondary);margin-bottom:0.3rem';
+        const exName = document.createElement('strong');
+        exName.style.color = 'var(--text-primary)';
+        exName.textContent = ex.name;
+        exRow.appendChild(exName);
+        ex.sets.forEach(s => {
+          const setSpan = document.createElement('span');
+          setSpan.style.cssText = 'margin-left:0.5rem;color:var(--text-muted)';
+          setSpan.textContent = `${s.weight}kg×${s.reps}`;
+          exRow.appendChild(setSpan);
+        });
+        exList.appendChild(exRow);
+      });
+
+      item.appendChild(hdr);
+      item.appendChild(meta);
+      item.appendChild(exList);
+      histEl.appendChild(item);
+    });
   }
 
-  // PRs
+  /* PRs */
   const exercises = getData('exercises');
-  const prEl = document.getElementById('pr-list');
+  const prEl  = document.getElementById('pr-list');
+  prEl.innerHTML = '';
   const prKeys = Object.keys(exercises);
   if (!prKeys.length) {
     prEl.innerHTML = emptyState('', 'No personal records yet. Start logging workouts!');
   } else {
-    prEl.innerHTML = prKeys.map(k => {
-      const pr = exercises[k];
-      return `
-        <div class="expense-item">
-          <div class="expense-item-left">
-            <div class="expense-item-desc" style="text-transform:capitalize">${k}</div>
-            <div class="expense-item-meta">Updated ${formatDateTime(pr.updatedAt)}</div>
-          </div>
-          <div class="pr-badge">PR — ${pr.bestWeight}kg &times; ${pr.bestReps}</div>
-        </div>`;
-    }).join('');
+    prKeys.forEach(k => {
+      const pr   = exercises[k];
+      const item = document.createElement('div');
+      item.className = 'expense-item';
+
+      const left = document.createElement('div');
+      left.className = 'expense-item-left';
+
+      const descEl = document.createElement('div');
+      descEl.className = 'expense-item-desc';
+      descEl.style.textTransform = 'capitalize';
+      descEl.textContent = k;
+
+      const metaEl = document.createElement('div');
+      metaEl.className = 'expense-item-meta';
+      metaEl.textContent = `Updated ${formatDateTime(pr.updatedAt)}`;
+
+      left.appendChild(descEl);
+      left.appendChild(metaEl);
+
+      const badge = document.createElement('div');
+      badge.className = 'pr-badge';
+      badge.textContent = `PR — ${pr.bestWeight}kg × ${pr.bestReps}`;
+
+      item.appendChild(left);
+      item.appendChild(badge);
+      prEl.appendChild(item);
+    });
   }
 }
 
