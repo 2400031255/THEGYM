@@ -683,7 +683,7 @@ async function handleCreateSquad() {
 
   try {
     /* Verify auth before even trying */
-    const uid = getCurrentUid();
+    const uid = await getCurrentUidAsync();
     if (!uid) {
       if (err) err.textContent = 'You are not logged in. Please log in first.';
       return;

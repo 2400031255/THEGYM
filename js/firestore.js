@@ -35,7 +35,27 @@
 
 function getCurrentUid() {
   const user = auth.currentUser;
-  return user ? user.uid : localStorage.getItem('gymrats_uid') || null;
+  if (user) return user.uid;
+  /* Fallback to localStorage — set by onAuthStateChanged */
+  return localStorage.getItem('gymrats_uid') || localStorage.getItem('gymrats_session') || null;
+}
+
+/* Returns a promise that resolves to uid — waits for auth to be ready */
+function getCurrentUidAsync() {
+  return new Promise(resolve => {
+    const user = auth.currentUser;
+    if (user) { resolve(user.uid); return; }
+    /* Wait for auth state — times out after 5s */
+    const unsub = auth.onAuthStateChanged(u => {
+      unsub();
+      if (u) {
+        localStorage.setItem('gymrats_uid', u.uid);
+        resolve(u.uid);
+      } else {
+        resolve(localStorage.getItem('gymrats_uid') || null);
+      }
+    });
+  });
 }
 
 function userCol(sub) {
