@@ -28,30 +28,26 @@ const _squadListeners = {};
    ============================================================ */
 
 async function squadService_createSquad(name) {
-  const uid    = getCurrentUid();
+  const uid = getCurrentUid();
   if (!uid) throw new Error('Not authenticated');
-  const squads = await _loadAllSquads();
-  const code   = _generateSquadCode(squads);
 
-  /* Use Firestore auto-id */
-  const ref = db.collection('squads').doc();
+  const ref   = db.collection('squads').doc();
+  const code  = _generateSquadCode();
   const squad = {
     id:        ref.id,
     name:      name.trim(),
-    code:      code.toUpperCase(),
+    code:      code,
     createdBy: uid,
     createdAt: new Date().toISOString(),
     members:   [uid]
   };
 
   await ref.set(squad);
-
   await ref.collection('members').doc(uid).set({
     uid,
     joinedAt: new Date().toISOString(),
     role: 'creator'
   });
-
   await squadService_logActivity(squad.id, 'squad_created', `created the squad "${squad.name}"`);
   return squad;
 }
@@ -450,14 +446,9 @@ async function _loadAllSquads() {
   } catch (e) { return []; }
 }
 
-function _generateSquadCode(existingSquads) {
+function _generateSquadCode() {
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-  const used  = new Set((existingSquads || []).map(s => s.code));
-  let code;
-  do {
-    code = Array.from({ length: 6 }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
-  } while (used.has(code));
-  return code;
+  return Array.from({ length: 6 }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
 }
 
 function _calcStreak(sortedDatesDesc) {
