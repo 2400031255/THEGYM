@@ -29,6 +29,7 @@ const _squadListeners = {};
 
 async function squadService_createSquad(name) {
   const uid = getCurrentUid();
+  console.log('[createSquad] uid:', uid, '| db:', !!db, '| auth.currentUser:', !!auth.currentUser);
   if (!uid) throw new Error('Not authenticated — please log in again.');
 
   const ref   = db.collection('squads').doc();
