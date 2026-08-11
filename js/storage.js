@@ -3,7 +3,16 @@
    LocalStorage Data Engine
    ============================================ */
 
-const DB_KEY = 'gymrats_v1';
+/* Per-user storage key — prevents data bleed between accounts on same device */
+function _dbKey() {
+  const uid = (typeof auth !== 'undefined' && auth.currentUser)
+    ? auth.currentUser.uid
+    : (localStorage.getItem('gymrats_uid') || 'guest');
+  return 'gymrats_v1_' + uid;
+}
+
+/* Legacy key — used only during migration */
+const DB_KEY_LEGACY = 'gymrats_v1';
 
 const DEFAULT_DATA = {
   profile: { name: '', avatar: 'GR', goal: 'Muscle Gain' },
@@ -21,10 +30,18 @@ const DEFAULT_DATA = {
 
 function loadData() {
   try {
-    const raw = localStorage.getItem(DB_KEY);
+    const key = _dbKey();
+    let raw = localStorage.getItem(key);
+    /* One-time migration: if no per-user data yet, check legacy key */
+    if (!raw && key !== 'gymrats_v1_guest') {
+      const legacy = localStorage.getItem(DB_KEY_LEGACY);
+      if (legacy) {
+        localStorage.setItem(key, legacy);
+        raw = legacy;
+      }
+    }
     if (!raw) return JSON.parse(JSON.stringify(DEFAULT_DATA));
     const parsed = JSON.parse(raw);
-    // merge missing keys from default
     return Object.assign({}, JSON.parse(JSON.stringify(DEFAULT_DATA)), parsed);
   } catch (e) {
     return JSON.parse(JSON.stringify(DEFAULT_DATA));
@@ -33,7 +50,7 @@ function loadData() {
 
 function saveData(data) {
   try {
-    localStorage.setItem(DB_KEY, JSON.stringify(data));
+    localStorage.setItem(_dbKey(), JSON.stringify(data));
     return true;
   } catch (e) {
     console.error('Storage save failed:', e);
@@ -76,7 +93,7 @@ function deleteRecord(key, id) {
 }
 
 function clearAllData() {
-  localStorage.removeItem(DB_KEY);
+  localStorage.removeItem(_dbKey());
 }
 
 function exportData() {

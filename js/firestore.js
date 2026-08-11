@@ -103,8 +103,15 @@ async function fs_getCollection(colName) {
     const snap = await userCol(colName).orderBy('createdAt', 'asc').get();
     return snap.docs.map(d => ({ id: d.id, ...d.data() }));
   } catch (e) {
-    console.error(`fs_getCollection(${colName}):`, e);
-    return getData(colName) || [];
+    /* orderBy may fail if no index — fallback without ordering */
+    try {
+      const snap = await userCol(colName).get();
+      return snap.docs.map(d => ({ id: d.id, ...d.data() }))
+        .sort((a, b) => (a.createdAt || '').localeCompare(b.createdAt || ''));
+    } catch (e2) {
+      console.error(`fs_getCollection(${colName}):`, e2);
+      return getData(colName) || [];
+    }
   }
 }
 

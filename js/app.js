@@ -182,26 +182,7 @@ function updatePwStrength(val) {
   fill.style.background = colors[Math.max(0, score - 1)] || '#e01c1c';
 }
 
-document.getElementById('pw-change-form').addEventListener('submit', function(e) {
-  e.preventDefault();
-  const current = document.getElementById('pw-current').value;
-  const newPw   = document.getElementById('pw-new').value;
-  const confirm = document.getElementById('pw-confirm').value;
-  const errEl   = document.getElementById('pw-change-error');
-  errEl.textContent = '';
-  const username = getSession();
-  const users = getUsers();
-  if (!users[username]) { errEl.textContent = 'Session error. Please log in again.'; return; }
-  if (users[username].password !== btoa(current)) { errEl.textContent = 'Current password is incorrect.'; return; }
-  if (newPw.length < 4) { errEl.textContent = 'New password must be at least 4 characters.'; return; }
-  if (newPw !== confirm) { errEl.textContent = 'Passwords do not match.'; return; }
-  users[username].password = btoa(newPw);
-  saveUsers(users);
-  showToast('Password updated successfully!', 'success');
-  this.reset();
-  const fill = document.getElementById('pw-strength-fill');
-  if (fill) { fill.style.width = '0%'; }
-});
+/* pw-change-form and handleForgot are handled by auth.js (Firebase) */
 
 function renderAbout() {
   const canvas = document.getElementById('about-canvas');
@@ -381,18 +362,7 @@ function togglePw(inputId, btn) {
   btn.textContent = isHidden ? 'HIDE' : 'SHOW';
 }
 
-function handleForgot() {
-  const user = document.getElementById('login-user').value.trim();
-  const users = getUsers();
-  if (!user) { document.getElementById('login-error').textContent = 'Enter your username first.'; return; }
-  if (!users[user]) { document.getElementById('login-error').textContent = 'Username not found.'; return; }
-  document.getElementById('login-error').style.color = '#22c55e';
-  document.getElementById('login-error').textContent = 'Hint: passwords are stored locally. Check your notes!';
-  setTimeout(() => {
-    const el = document.getElementById('login-error');
-    if (el) { el.style.color = ''; el.textContent = ''; }
-  }, 4000);
-}
+/* handleForgot is defined in auth.js (Firebase) — removed duplicate here */
 
 /* getSession / setSession kept for compatibility with other parts of the app */
 function getSession() { return auth.currentUser ? auth.currentUser.uid : localStorage.getItem('gymrats_uid'); }

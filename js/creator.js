@@ -26,11 +26,7 @@ function setMaintenanceMode(on) {
   localStorage.setItem('gymrats_maintenance', on ? 'on' : 'off');
 }
 
-/* ---- Creator check ---- */
-function isCreator(username) {
-  if (!username) username = getSession();
-  return username === CREATOR_USERNAME;
-}
+/* isCreator() is defined in auth.js (Firebase-based) — do not redefine here */
 
 /* ---- Inject creator badge HTML ---- */
 function creatorBadgeHTML() {
@@ -87,26 +83,24 @@ function updateMaintenanceBar() {
 }
 
 function toggleMaintenanceQuick() {
-  setMaintenanceMode(false);
+  fs_setMaintenanceMode(false).catch(e => console.error('toggleMaintenanceQuick:', e));
   updateMaintenanceBar();
   renderCreatorMaintenance();
   showToast('Maintenance mode turned OFF.', 'success');
 }
 
 /* ---- Render: Creator Controls page ---- */
-pageRenderers['creator-controls'] = function renderCreatorControls() {
+pageRenderers['creator-controls'] = async function renderCreatorControls() {
   const el = document.getElementById('page-creator-controls');
   if (!el) return;
-  const users = getUsers();
-  const userCount = Object.keys(users).length;
   const maintOn = getMaintenanceMode();
 
+  /* Show loading state first */
   el.innerHTML = `
     <div class="page-header">
       <h1>Creator Controls</h1>
       <span class="creator-badge" style="font-size:0.8rem;padding:0.35rem 0.9rem"><span class="creator-badge-star">&#9733;</span> CREATOR</span>
     </div>
-
     <div class="creator-identity-card card">
       <div class="creator-id-left">
         <div class="creator-avatar-ring">NK</div>
@@ -117,13 +111,11 @@ pageRenderers['creator-controls'] = function renderCreatorControls() {
         </div>
       </div>
     </div>
-
     <div class="stats-grid" style="margin-bottom:1.25rem">
-      <div class="stat-card"><div class="stat-value">${userCount}</div><div class="stat-label">Total Users</div></div>
+      <div class="stat-card"><div class="stat-value" id="creator-user-count">...</div><div class="stat-label">Total Users</div></div>
       <div class="stat-card"><div class="stat-value" style="color:${maintOn ? '#f59e0b' : 'var(--success)'}">${maintOn ? 'ON' : 'OFF'}</div><div class="stat-label">Maintenance</div></div>
       <div class="stat-card"><div class="stat-value" style="color:var(--success)">LIVE</div><div class="stat-label">App Status</div></div>
     </div>
-
     <div class="card">
       <div class="card-label">MAINTENANCE MODE</div>
       <div class="maintenance-toggle-row">
@@ -136,46 +128,81 @@ pageRenderers['creator-controls'] = function renderCreatorControls() {
         </button>
       </div>
     </div>
-
-    <div class="card">
+    <div class="card" id="creator-users-card">
       <div class="card-label">REGISTERED USERS</div>
-      ${Object.keys(users).length === 0
-        ? '<div style="color:var(--text-muted);font-size:0.88rem">No users registered yet.</div>'
-        : Object.entries(users).map(([uname, udata]) => `
-          <div class="creator-user-row">
-            <div class="creator-user-avatar">${(udata.name || uname).charAt(0).toUpperCase()}</div>
-            <div class="creator-user-info">
-              <div class="creator-user-name">${udata.name || uname} ${isCreator(uname) ? creatorBadgeHTML() : ''}</div>
-              <div class="creator-user-uname">@${uname}</div>
-            </div>
-            <div class="creator-user-role ${isCreator(uname) ? 'role-creator' : 'role-user'}">${isCreator(uname) ? 'CREATOR' : 'USER'}</div>
-          </div>`).join('')
-      }
+      <div style="color:var(--text-muted);font-size:0.88rem">Loading users...</div>
     </div>`;
+
+  /* Load users from Firestore */
+  try {
+    const snap = await db.collection('users').get();
+    const users = snap.docs.map(d => ({ uid: d.id, ...d.data() }));
+    const countEl = document.getElementById('creator-user-count');
+    if (countEl) countEl.textContent = users.length;
+    const usersCard = document.getElementById('creator-users-card');
+    if (usersCard) {
+      usersCard.innerHTML = `
+        <div class="card-label">REGISTERED USERS</div>
+        ${!users.length
+          ? '<div style="color:var(--text-muted);font-size:0.88rem">No users registered yet.</div>'
+          : users.map(u => {
+              const p    = u.profile || {};
+              const name = p.name || p.email || u.uid;
+              const role = p.role || 'user';
+              const isC  = role === 'creator' || isCreatorEmail(p.email);
+              return `
+                <div class="creator-user-row">
+                  <div class="creator-user-avatar">${name.charAt(0).toUpperCase()}</div>
+                  <div class="creator-user-info">
+                    <div class="creator-user-name">${name} ${isC ? creatorBadgeHTML() : ''}</div>
+                    <div class="creator-user-uname">${p.email || u.uid}</div>
+                  </div>
+                  <div class="creator-user-role ${isC ? 'role-creator' : 'role-user'}">${isC ? 'CREATOR' : 'USER'}</div>
+                </div>`;
+            }).join('')
+        }`;
+    }
+  } catch (e) {
+    console.error('renderCreatorControls users:', e);
+    const usersCard = document.getElementById('creator-users-card');
+    if (usersCard) usersCard.innerHTML = '<div class="card-label">REGISTERED USERS</div><div style="color:var(--text-muted);font-size:0.88rem">Could not load users.</div>';
+  }
 };
 
 /* ---- Render: Users page ---- */
-pageRenderers['creator-users'] = function renderCreatorUsers() {
+pageRenderers['creator-users'] = async function renderCreatorUsers() {
   const el = document.getElementById('page-creator-users');
   if (!el) return;
-  const users = getUsers();
-  el.innerHTML = `
-    <div class="page-header"><h1>Users</h1></div>
-    <div class="card">
-      <div class="card-label">ALL REGISTERED USERS</div>
-      ${Object.keys(users).length === 0
-        ? '<div style="color:var(--text-muted);font-size:0.88rem">No users registered yet.</div>'
-        : Object.entries(users).map(([uname, udata]) => `
-          <div class="creator-user-row">
-            <div class="creator-user-avatar">${(udata.name || uname).charAt(0).toUpperCase()}</div>
-            <div class="creator-user-info">
-              <div class="creator-user-name">${udata.name || uname} ${isCreator(uname) ? creatorBadgeHTML() : ''}</div>
-              <div class="creator-user-uname">@${uname}</div>
-            </div>
-            <div class="creator-user-role ${isCreator(uname) ? 'role-creator' : 'role-user'}">${isCreator(uname) ? 'CREATOR' : 'USER'}</div>
-          </div>`).join('')
-      }
-    </div>`;
+  el.innerHTML = `<div class="page-header"><h1>Users</h1></div><div class="card"><div class="card-label">ALL REGISTERED USERS</div><div style="color:var(--text-muted);font-size:0.88rem">Loading...</div></div>`;
+  try {
+    const snap  = await db.collection('users').get();
+    const users = snap.docs.map(d => ({ uid: d.id, ...d.data() }));
+    el.innerHTML = `
+      <div class="page-header"><h1>Users</h1></div>
+      <div class="card">
+        <div class="card-label">ALL REGISTERED USERS (${users.length})</div>
+        ${!users.length
+          ? '<div style="color:var(--text-muted);font-size:0.88rem">No users registered yet.</div>'
+          : users.map(u => {
+              const p    = u.profile || {};
+              const name = p.name || p.email || u.uid;
+              const isC  = (p.role === 'creator') || isCreatorEmail(p.email);
+              return `
+                <div class="creator-user-row">
+                  <div class="creator-user-avatar">${name.charAt(0).toUpperCase()}</div>
+                  <div class="creator-user-info">
+                    <div class="creator-user-name">${name} ${isC ? creatorBadgeHTML() : ''}</div>
+                    <div class="creator-user-uname">${p.email || u.uid}</div>
+                  </div>
+                  <div class="creator-user-role ${isC ? 'role-creator' : 'role-user'}">${isC ? 'CREATOR' : 'USER'}</div>
+                </div>`;
+            }).join('')
+        }
+      </div>`;
+  } catch (e) {
+    console.error('renderCreatorUsers:', e);
+    el.innerHTML = `<div class="page-header"><h1>Users</h1></div><div class="card"><div class="card-label">ALL REGISTERED USERS</div><div style="color:var(--text-muted)">Could not load users.</div></div>`;
+  }
 };
 
 /* ---- Render: Maintenance page ---- */
@@ -212,11 +239,13 @@ function renderCreatorMaintenance() {
 
 function handleToggleMaintenance() {
   const current = getMaintenanceMode();
-  setMaintenanceMode(!current);
+  const next = !current;
+  /* Update Firestore so all devices see the change */
+  fs_setMaintenanceMode(next).catch(e => console.error('handleToggleMaintenance:', e));
   updateMaintenanceBar();
-  if (typeof renderCreatorControls === 'function') pageRenderers['creator-controls']();
+  if (typeof pageRenderers['creator-controls'] === 'function') pageRenderers['creator-controls']();
   renderCreatorMaintenance();
-  showToast(`Maintenance mode ${!current ? 'enabled' : 'disabled'}.`, !current ? 'warning' : 'success');
+  showToast(`Maintenance mode ${next ? 'enabled' : 'disabled'}.`, next ? 'warning' : 'success');
 }
 
 /* ---- Show maintenance overlay on login screen ---- */

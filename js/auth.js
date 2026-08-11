@@ -22,10 +22,15 @@ auth.onAuthStateChanged(async user => {
 });
 
 async function _onSignedIn(user) {
-  /* 1. Store uid as session (replaces localStorage username session) */
+  /* 1. Store uid as session — MUST happen before loadData() is called */
   localStorage.setItem('gymrats_session', user.uid);
   localStorage.setItem('gymrats_uid',     user.uid);
   localStorage.setItem('gymrats_email',   user.email || '');
+
+  /* Store creator UID so isCreatorUid() works immediately */
+  if (isCreatorEmail(user.email)) {
+    localStorage.setItem(CREATOR_UID_KEY, user.uid);
+  }
 
   /* 2. Ensure user document exists in Firestore */
   await _ensureUserDoc(user);
@@ -35,15 +40,25 @@ async function _onSignedIn(user) {
   const creator  = isCreatorUid(user.uid);
 
   if (maintOn && !creator) {
-    /* Show maintenance screen, sign out */
     auth.signOut();
     _showMaintenanceScreen();
     return;
   }
 
-  /* 4. Sync local data to Firestore (first time only) */
+  /* 4. Sync local data to Firestore only if there is meaningful local data
+        AND this user has never synced before — prevents overwriting Firestore
+        with another user's stale localStorage data */
   if (!(await fs_hasSynced())) {
-    await fs_syncLocalToFirestore();
+    const localData = loadData();
+    const hasLocalData = (localData.workouts && localData.workouts.length > 0) ||
+                         (localData.membership && localData.membership.length > 0) ||
+                         (localData.supplements && localData.supplements.length > 0);
+    if (hasLocalData) {
+      await fs_syncLocalToFirestore();
+    } else {
+      /* Mark as synced so we don't attempt again */
+      localStorage.setItem('gymrats_synced_' + user.uid, 'true');
+    }
   }
 
   /* 5. Set online status */
@@ -55,12 +70,11 @@ async function _onSignedIn(user) {
 }
 
 function _onSignedOut() {
-  /* Only clear session if user explicitly logged out (handleLogout sets this flag) */
-  if (localStorage.getItem('gymrats_explicit_logout') === 'true') {
-    localStorage.removeItem('gymrats_session');
-    localStorage.removeItem('gymrats_uid');
-    localStorage.removeItem('gymrats_explicit_logout');
-  }
+  /* Always clear session keys so the next user gets a clean state */
+  localStorage.removeItem('gymrats_session');
+  localStorage.removeItem('gymrats_uid');
+  localStorage.removeItem('gymrats_email');
+  localStorage.removeItem('gymrats_explicit_logout');
   /* Show hero/login screen */
   const screen = document.getElementById('auth-screen');
   if (screen) screen.style.display = '';

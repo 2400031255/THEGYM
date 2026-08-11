@@ -263,6 +263,10 @@ function renderSingleMemberCard(m) {
 
 async function renderActivityFeed(squadId) {
   const activities = await squadService_getSquadActivity(squadId);
+  const members    = await squadService_getSquadMembers(squadId);
+  const uidToName  = {};
+  members.forEach(m => { uidToName[m.uid] = m.name; });
+
   if (!activities.length) return `
     <div class="card">
       <div class="card-label">RECENT SQUAD ACTIVITY</div>
@@ -282,11 +286,12 @@ async function renderActivityFeed(squadId) {
   const rows = activities.map(a => {
     const icon = icons[a.type] || '📢';
     const time = _timeAgo(a.ts?.toDate ? a.ts.toDate().toISOString() : a.ts);
+    const name = uidToName[a.uid] || 'Someone';
     return `
       <div class="squad-activity-row">
         <div class="squad-activity-icon">${icon}</div>
         <div class="squad-activity-body">
-          <div class="squad-activity-text"><strong>${a.uid || 'Someone'}</strong> ${a.text}</div>
+          <div class="squad-activity-text"><strong>${name}</strong> ${a.text}</div>
           <div class="squad-activity-time">${time}</div>
         </div>
       </div>`;

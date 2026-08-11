@@ -379,7 +379,11 @@ async function squadService_createSquadChallenge(squadId, data) {
 
 function squadService_getPrivacy(uid) {
   try {
-    const key = SQUAD_PRIVACY_KEY + '_' + (uid || getCurrentUid());
+    const myUid = getCurrentUid();
+    /* Only read privacy prefs for the current user — other users' prefs
+       live on their own device and can't be read from here */
+    if (uid && uid !== myUid) return Object.assign({}, DEFAULT_PRIVACY);
+    const key = SQUAD_PRIVACY_KEY + '_' + (uid || myUid);
     const raw = localStorage.getItem(key);
     return Object.assign({}, DEFAULT_PRIVACY, raw ? JSON.parse(raw) : {});
   } catch { return Object.assign({}, DEFAULT_PRIVACY); }

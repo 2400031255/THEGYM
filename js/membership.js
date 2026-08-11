@@ -16,7 +16,7 @@ document.getElementById('btn-cancel-membership').addEventListener('click', () =>
   document.getElementById('membership-form').reset();
 });
 
-document.getElementById('membership-form').addEventListener('submit', function(e) {
+document.getElementById('membership-form').addEventListener('submit', async function(e) {
   e.preventDefault();
   const start = document.getElementById('mf-start').value;
   const end   = document.getElementById('mf-end').value;
@@ -34,7 +34,8 @@ document.getElementById('membership-form').addEventListener('submit', function(e
     notes:         document.getElementById('mf-notes').value.trim(),
     paidAt:        new Date().toISOString()
   };
-  addRecord('membership', record);
+  await fs_addRecord('membership', record);
+  addRecord('membership', record); /* keep local cache in sync */
   this.reset();
   document.getElementById('membership-form-card').style.display = 'none';
   showToast('Membership saved!', 'success');
@@ -129,7 +130,8 @@ function renderMembership() {
 }
 
 function deleteMembership(id) {
-  confirmDelete('Membership', () => {
+  confirmDelete('Membership', async () => {
+    await fs_deleteRecord('membership', id);
     deleteRecord('membership', id);
     showToast('Membership deleted.', 'success');
     renderMembership();
