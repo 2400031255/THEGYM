@@ -674,30 +674,21 @@ async function handleCreateSquad() {
   const nameEl = document.getElementById('create-squad-name');
   const err    = document.getElementById('create-squad-error');
   const name   = nameEl?.value.trim();
-
   if (!name) { if (err) err.textContent = 'Please enter a squad name.'; return; }
+  if (err) err.textContent = '';
 
   const btn = document.querySelector('#modal-create-squad .btn-primary');
   if (btn) { btn.textContent = 'Creating...'; btn.disabled = true; }
-  if (err) err.textContent = '';
 
   try {
-    /* Verify auth before even trying */
-    const uid = await getCurrentUidAsync();
-    if (!uid) {
-      if (err) err.textContent = 'You are not logged in. Please log in first.';
-      return;
-    }
-
     const squad = await squadService_createSquad(name);
     closeCreateSquadModal();
     _activeSquadId = squad.id;
     showToast('Squad "' + squad.name + '" created! Code: ' + squad.code, 'success');
     renderSquad();
   } catch (e) {
-    const msg = e.message || e.code || 'Unknown error';
-    console.error('handleCreateSquad FAILED:', e);
-    if (err) err.textContent = msg;
+    console.error('handleCreateSquad:', e);
+    if (err) err.textContent = e.message || 'Failed to create squad.';
   } finally {
     if (btn) { btn.textContent = 'CREATE SQUAD'; btn.disabled = false; }
   }

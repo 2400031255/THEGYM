@@ -28,12 +28,12 @@ const _squadListeners = {};
    ============================================================ */
 
 async function squadService_createSquad(name) {
-  const uid = await getCurrentUidAsync();
-  console.log('[createSquad] uid:', uid, '| auth.currentUser:', !!auth.currentUser);
-  if (!uid) throw new Error('Not authenticated — please log in again.');
+  /* auth.currentUser is always available here — app only runs after onAuthStateChanged */
+  const uid = auth.currentUser ? auth.currentUser.uid : localStorage.getItem('gymrats_uid');
+  if (!uid) throw new Error('Not authenticated');
 
-  const ref   = db.collection('squads').doc();
-  const code  = _generateSquadCode();
+  const ref  = db.collection('squads').doc();
+  const code = _generateSquadCode();
   const squad = {
     id:        ref.id,
     name:      name.trim(),
@@ -43,18 +43,16 @@ async function squadService_createSquad(name) {
     members:   [uid]
   };
 
-  /* Core write — must succeed */
   await ref.set(squad);
 
-  /* Subcollection writes — best effort, don't block squad creation */
-  await ref.collection('members').doc(uid).set({
+  ref.collection('members').doc(uid).set({
     uid,
     joinedAt: new Date().toISOString(),
     role: 'creator'
-  }).catch(e => console.warn('members subcollection write failed:', e));
+  }).catch(e => console.warn('members write:', e));
 
-  squadService_logActivity(squad.id, 'squad_created', `created the squad "${squad.name}"`)
-    .catch(e => console.warn('activity log failed:', e));
+  squadService_logActivity(squad.id, 'squad_created', 'created the squad "' + squad.name + '"')
+    .catch(e => console.warn('activity log:', e));
 
   return squad;
 }
