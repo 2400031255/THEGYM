@@ -35,7 +35,7 @@
 
 function getCurrentUid() {
   const user = auth.currentUser;
-  return user ? user.uid : null;
+  return user ? user.uid : localStorage.getItem('gymrats_uid') || null;
 }
 
 function userCol(sub) {

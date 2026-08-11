@@ -29,11 +29,14 @@ const _squadListeners = {};
 
 async function squadService_createSquad(name) {
   const uid    = getCurrentUid();
+  if (!uid) throw new Error('Not authenticated');
   const squads = await _loadAllSquads();
   const code   = _generateSquadCode(squads);
 
+  /* Use Firestore auto-id */
+  const ref = db.collection('squads').doc();
   const squad = {
-    id:        generateId(),
+    id:        ref.id,
     name:      name.trim(),
     code:      code.toUpperCase(),
     createdBy: uid,
@@ -41,15 +44,13 @@ async function squadService_createSquad(name) {
     members:   [uid]
   };
 
-  await db.collection('squads').doc(squad.id).set(squad);
+  await ref.set(squad);
 
-  /* Add member document */
-  await db.collection('squads').doc(squad.id)
-    .collection('members').doc(uid).set({
-      uid,
-      joinedAt: new Date().toISOString(),
-      role: 'creator'
-    });
+  await ref.collection('members').doc(uid).set({
+    uid,
+    joinedAt: new Date().toISOString(),
+    role: 'creator'
+  });
 
   await squadService_logActivity(squad.id, 'squad_created', `created the squad "${squad.name}"`);
   return squad;
@@ -162,9 +163,17 @@ async function _buildMemberProfile(uid) {
 
     /* Workout data */
     if (privacy.showWorkoutActivity || isMe) {
-      const wSnap = await db.collection('users').doc(uid).collection('workouts')
-        .orderBy('createdAt', 'desc').limit(20).get();
-      const workouts = wSnap.docs.map(d => d.data());
+      let workouts = [];
+      try {
+        const wSnap = await db.collection('users').doc(uid).collection('workouts')
+          .orderBy('date', 'desc').limit(20).get();
+        workouts = wSnap.docs.map(d => d.data());
+      } catch (e) {
+        /* index may not exist yet — fetch without order */
+        const wSnap = await db.collection('users').doc(uid).collection('workouts')
+          .limit(20).get();
+        workouts = wSnap.docs.map(d => d.data()).sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+      }
       const thisMonth = new Date().toISOString().slice(0, 7);
       member.totalWorkouts  = workouts.length;
       member.monthWorkouts  = workouts.filter(w => w.date && w.date.startsWith(thisMonth)).length;
@@ -176,9 +185,13 @@ async function _buildMemberProfile(uid) {
       if (isMe) {
         member.streak = calculateWorkoutStreak();
       } else {
-        const wSnap2 = await db.collection('users').doc(uid).collection('workouts').get();
-        const dates  = [...new Set(wSnap2.docs.map(d => d.data().date))].sort().reverse();
-        member.streak = { current: _calcStreak(dates), longest: _calcStreak(dates) };
+        try {
+          const wSnap2 = await db.collection('users').doc(uid).collection('workouts').get();
+          const dates  = [...new Set(wSnap2.docs.map(d => d.data().date).filter(Boolean))].sort().reverse();
+          member.streak = { current: _calcStreak(dates), longest: _calcStreak(dates) };
+        } catch (e) {
+          member.streak = { current: 0, longest: 0 };
+        }
       }
     }
 

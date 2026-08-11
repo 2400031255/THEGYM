@@ -674,11 +674,20 @@ async function handleCreateSquad() {
   const name = document.getElementById('create-squad-name')?.value.trim();
   const err  = document.getElementById('create-squad-error');
   if (!name) { if (err) err.textContent = 'Please enter a squad name.'; return; }
-  const squad = await squadService_createSquad(name);
-  closeCreateSquadModal();
-  _activeSquadId = squad.id;
-  showToast(`Squad "${squad.name}" created! Code: ${squad.code}`, 'success');
-  renderSquad();
+  const btn = document.querySelector('#modal-create-squad .btn-primary');
+  if (btn) { btn.textContent = 'Creating...'; btn.disabled = true; }
+  try {
+    const squad = await squadService_createSquad(name);
+    closeCreateSquadModal();
+    _activeSquadId = squad.id;
+    showToast(`Squad "${squad.name}" created! Code: ${squad.code}`, 'success');
+    renderSquad();
+  } catch (e) {
+    if (err) err.textContent = 'Failed to create squad. Please try again.';
+    console.error('handleCreateSquad:', e);
+  } finally {
+    if (btn) { btn.textContent = 'CREATE SQUAD'; btn.disabled = false; }
+  }
 }
 
 async function handleJoinSquad() {
@@ -925,7 +934,4 @@ function formatQty(val) {
   return Number(val).toLocaleString('en-IN', { maximumFractionDigits: 1 });
 }
 
-function getCurrentUid() {
-  const user = auth.currentUser;
-  return user ? user.uid : localStorage.getItem('gymrats_uid') || null;
-}
+/* getCurrentUid() is defined in firestore.js — do not redefine here */

@@ -305,13 +305,19 @@ function clearSession() {
    ============================================ */
 
 function _hideAuthScreen() {
+  /* Close auth modal overlay */
   const overlay = document.getElementById('auth-modal-overlay');
   if (overlay) overlay.classList.remove('open');
+  /* Fade out hero screen */
   const screen = document.getElementById('auth-screen');
   if (screen) {
     screen.style.transition = 'opacity 0.5s ease';
     screen.style.opacity    = '0';
-    setTimeout(() => { screen.style.display = 'none'; }, 500);
+    setTimeout(() => {
+      screen.style.display    = 'none';
+      screen.style.opacity    = '';
+      screen.style.transition = '';
+    }, 500);
   }
 }
 
