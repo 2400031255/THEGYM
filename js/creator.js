@@ -76,8 +76,9 @@ function updateMaintenanceBar() {
       bar = document.createElement('div');
       bar.id = 'maintenance-bar';
       bar.className = 'maintenance-bar';
-      bar.innerHTML = `<span class="creator-badge" style="margin-right:0.75rem"><span class="creator-badge-star">&#9733;</span> CREATOR</span><span class="maintenance-active-badge">MAINTENANCE ACTIVE</span><span style="flex:1"></span><button onclick="toggleMaintenanceQuick()" class="maintenance-bar-off-btn">Turn OFF</button>`;
-      document.body.insertBefore(bar, document.getElementById('main-content'));
+      bar.innerHTML = `<span class="creator-badge" style="margin-right:0.5rem"><span class="creator-badge-star">&#9733;</span> CREATOR</span><span class="maintenance-active-badge">MAINTENANCE ACTIVE</span><span style="flex:1"></span><button onclick="toggleMaintenanceQuick()" class="maintenance-bar-off-btn">Turn OFF</button>`;
+      const main = document.getElementById('main-content');
+      main.insertBefore(bar, main.firstChild);
     }
     bar.style.display = 'flex';
   } else if (bar) {
