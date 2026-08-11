@@ -11,12 +11,39 @@
    Decides whether to show login or app.
    ============================================ */
 
+/* ============================================
+   CREATOR DETECTION — by UID or email
+   (declared first so _onSignedIn can use them)
+   ============================================ */
+
+const CREATOR_EMAIL = 'nikhilkarthik@gmail.com';
+const CREATOR_UID_KEY = 'gymrats_creator_uid';
+
+function isCreatorEmail(email) {
+  return email && email.toLowerCase() === CREATOR_EMAIL.toLowerCase();
+}
+
+function isCreatorUid(uid) {
+  const stored = localStorage.getItem(CREATOR_UID_KEY);
+  if (stored && stored === uid) return true;
+  const email = localStorage.getItem('gymrats_email') || '';
+  return isCreatorEmail(email);
+}
+
+function isCreator() {
+  const user = auth.currentUser;
+  if (!user) return false;
+  return isCreatorEmail(user.email) || isCreatorUid(user.uid);
+}
+
+/* ============================================
+   AUTH STATE OBSERVER
+   ============================================ */
+
 auth.onAuthStateChanged(async user => {
   if (user) {
-    /* ---- User is signed in ---- */
     await _onSignedIn(user);
   } else {
-    /* ---- User is signed out ---- */
     _onSignedOut();
   }
 });
@@ -78,7 +105,7 @@ function _onSignedOut() {
   /* Show hero/login screen */
   const screen = document.getElementById('auth-screen');
   if (screen) screen.style.display = '';
-  applyMaintenanceToLoginScreen();
+  if (typeof applyMaintenanceToLoginScreen === 'function') applyMaintenanceToLoginScreen();
 }
 
 /* ============================================
@@ -119,32 +146,8 @@ async function _ensureUserDoc(user) {
   }
 }
 
-/* ============================================
-   CREATOR DETECTION — by UID or email
-   ============================================ */
-
-const CREATOR_EMAIL = 'nikhilkarthik@gmail.com'; // update to your real email
-const CREATOR_UID_KEY = 'gymrats_creator_uid';
-
-function isCreatorEmail(email) {
-  return email && email.toLowerCase() === CREATOR_EMAIL.toLowerCase();
-}
-
-function isCreatorUid(uid) {
-  /* Check stored creator UID */
-  const stored = localStorage.getItem(CREATOR_UID_KEY);
-  if (stored && stored === uid) return true;
-  /* Check by email */
-  const email = localStorage.getItem('gymrats_email') || '';
-  return isCreatorEmail(email);
-}
-
-/* Override the existing isCreator() from creator.js */
-function isCreator(username) {
-  const user = auth.currentUser;
-  if (!user) return false;
-  return isCreatorEmail(user.email) || isCreatorUid(user.uid);
-}
+/* isCreator, isCreatorEmail, isCreatorUid, CREATOR_EMAIL, CREATOR_UID_KEY
+   are declared at the top of this file */
 
 /* ============================================
    EMAIL / PASSWORD LOGIN
