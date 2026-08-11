@@ -6,7 +6,7 @@
 const DB_KEY = 'gymrats_v1';
 
 const DEFAULT_DATA = {
-  profile: { name: '', avatar: '🐀', goal: 'Muscle Gain' },
+  profile: { name: '', avatar: 'GR', goal: 'Muscle Gain' },
   membership: [],
   workouts: [],
   exercises: {},       // { exerciseName: { bestWeight, bestReps, history[] } }
@@ -148,11 +148,11 @@ function calculateEstimatedDays(suppId) {
 }
 
 function getSupplementStatus(remaining, servingSize) {
-  if (remaining <= 0)                        return { label: 'FINISHED',     cls: 'status-finished', icon: '❌' };
-  if (remaining < servingSize)               return { label: 'LAST SERVING', cls: 'status-last',     icon: '🔴' };
-  if (remaining <= servingSize * 3)          return { label: 'VERY LOW',     cls: 'status-verylow',  icon: '🟠' };
-  if (remaining <= servingSize * 10)         return { label: 'LOW',          cls: 'status-low',      icon: '🟡' };
-  return                                            { label: 'GOOD',         cls: 'status-good',     icon: '🟢' };
+  if (remaining <= 0)                        return { label: 'FINISHED',     cls: 'status-finished', icon: '&#10005;' };
+  if (remaining < servingSize)               return { label: 'LAST SERVING', cls: 'status-last',     icon: '&#9679;' };
+  if (remaining <= servingSize * 3)          return { label: 'VERY LOW',     cls: 'status-verylow',  icon: '&#9679;' };
+  if (remaining <= servingSize * 10)         return { label: 'LOW',          cls: 'status-low',      icon: '&#9679;' };
+  return                                            { label: 'GOOD',         cls: 'status-good',     icon: '&#9679;' };
 }
 
 function hasTakenTodayScoop(suppId) {

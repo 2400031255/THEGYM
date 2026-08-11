@@ -396,9 +396,12 @@
       <div class="aml-logo-sub">Train Together. Get Stronger.</div>
     </div>
 
-    <div class="auth-tabs" style="display:none"></div>
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tab-login" onclick="switchAuthTab('login')">LOGIN</button>
+      <button class="auth-tab" id="tab-signup" onclick="switchAuthTab('signup')">SIGN UP</button>
+    </div>
 
-    <!-- LOGIN FORM (only form — no signup) -->
+    <!-- LOGIN FORM -->
     <div class="auth-form active" id="form-login">
       <div class="auth-group">
         <label>Username</label>
@@ -427,8 +430,8 @@
       <div class="auth-note">Data is stored locally on this device only. No server. No tracking.</div>
     </div>
 
-    <!-- SIGNUP FORM (hidden — accounts managed by creator) -->
-    <div class="auth-form" id="form-signup" style="display:none">
+    <!-- SIGNUP FORM -->
+    <div class="auth-form" id="form-signup">
       <div class="auth-group">
         <label>Full Name</label>
         <input type="text" id="signup-name" placeholder="Your full name" autocomplete="name" />
@@ -472,17 +475,50 @@
     </div>
   </div>
   <nav class="sidebar-nav">
-    <a class="nav-item active" data-page="dashboard"><span class="nav-icon nav-svg">&#9632;</span><span>Dashboard</span></a>
-    <a class="nav-item" data-page="workouts"><span class="nav-icon nav-svg">&#9651;</span><span>Workouts</span></a>
-    <a class="nav-item" data-page="supplements"><span class="nav-icon nav-svg">&#9670;</span><span>Supplements</span></a>
-    <a class="nav-item" data-page="membership"><span class="nav-icon nav-svg">&#9633;</span><span>Membership</span></a>
-    <a class="nav-item" data-page="expenses"><span class="nav-icon nav-svg">&#9650;</span><span>Expenses</span></a>
-    <a class="nav-item" data-page="progress"><span class="nav-icon nav-svg">&#9656;</span><span>Progress</span></a>
-    <a class="nav-item" data-page="challenges"><span class="nav-icon nav-svg">&#9733;</span><span>Challenges</span></a>
-    <a class="nav-item" data-page="friends"><span class="nav-icon nav-svg">&#9671;</span><span>Friends</span></a>
-    <a class="nav-item" data-page="notifications"><span class="nav-icon nav-svg">&#9711;</span><span id="notif-badge-nav">Notifications</span></a>
-    <a class="nav-item" data-page="settings"><span class="nav-icon nav-svg">&#9881;</span><span>Settings</span></a>
-    <a class="nav-item" data-page="about"><span class="nav-icon nav-svg">&#9432;</span><span>About</span></a>
+    <a class="nav-item active" data-page="dashboard">
+      <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></span>
+      <span>Dashboard</span>
+    </a>
+    <a class="nav-item" data-page="workouts">
+      <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4v16M18 4v16M3 8h3M18 8h3M3 16h3M18 16h3M6 12h12"/></svg></span>
+      <span>Workouts</span>
+    </a>
+    <a class="nav-item" data-page="supplements">
+      <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6l1 4H8L9 3z"/><path d="M8 7v13a1 1 0 001 1h6a1 1 0 001-1V7"/><path d="M8 11h8"/></svg></span>
+      <span>Supplements</span>
+    </a>
+    <a class="nav-item" data-page="membership">
+      <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/><path d="M6 15h4"/></svg></span>
+      <span>Membership</span>
+    </a>
+    <a class="nav-item" data-page="expenses">
+      <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></span>
+      <span>Expenses</span>
+    </a>
+    <a class="nav-item" data-page="progress">
+      <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg></span>
+      <span>Progress</span>
+    </a>
+    <a class="nav-item" data-page="challenges">
+      <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 010-5H6"/><path d="M18 9h1.5a2.5 2.5 0 000-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0012 0V2z"/></svg></span>
+      <span>Challenges</span>
+    </a>
+    <a class="nav-item" data-page="friends">
+      <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></span>
+      <span>Friends</span>
+    </a>
+    <a class="nav-item" data-page="notifications">
+      <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg></span>
+      <span id="notif-badge-nav">Notifications</span>
+    </a>
+    <a class="nav-item" data-page="settings">
+      <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg></span>
+      <span>Settings</span>
+    </a>
+    <a class="nav-item" data-page="about">
+      <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></span>
+      <span>About</span>
+    </a>
   </nav>
 </aside>
 
@@ -894,72 +930,124 @@
   <section class="page" id="page-about">
     <div class="about-page-wrap">
 
-      <!-- HERO CANVAS BANNER -->
-      <div class="about-canvas-wrap">
+      <!-- HERO BANNER -->
+      <div class="about-hero">
         <canvas id="about-canvas"></canvas>
-        <div class="about-canvas-content">
-          <div class="about-canvas-logo">GR</div>
-          <div class="about-canvas-title">THE GYM RATS</div>
-          <div class="about-canvas-tagline">Train Together &middot; Track Everything &middot; Get Stronger</div>
-          <span class="about-version-pill">v 1.0</span>
+        <div class="about-hero-content">
+          <div class="about-hero-logo">GR</div>
+          <h1 class="about-hero-title">THE GYM RATS</h1>
+          <p class="about-hero-sub">Your personal fitness command center</p>
+          <span class="about-version-pill">Version 1.0</span>
         </div>
       </div>
 
-      <!-- STATS ROW -->
-      <div class="about-stats-row">
-        <div class="about-stat-box">
-          <div class="about-stat-num" data-target="6">0</div>
-          <div class="about-stat-lbl">Core Modules</div>
-        </div>
-        <div class="about-stat-box">
-          <div class="about-stat-num" data-target="100">0</div>
-          <div class="about-stat-lbl">% Frontend</div>
-        </div>
-        <div class="about-stat-box">
-          <div class="about-stat-num" data-target="0">0</div>
-          <div class="about-stat-lbl">Servers</div>
-        </div>
-        <div class="about-stat-box">
-          <div class="about-stat-num" data-target="1">0</div>
-          <div class="about-stat-lbl">Creator</div>
+      <!-- THE IDEA -->
+      <div class="about-section-block">
+        <div class="about-section-eyebrow">The Idea</div>
+        <h2 class="about-section-heading">Built for people who take fitness seriously.</h2>
+        <p class="about-section-body">Most fitness apps are bloated, subscription-locked, or require an internet connection just to log a workout. The Gym Rats was built differently — a single, fast, offline-first web app that lives in your browser. No accounts sent to servers. No monthly fees. No distractions. Just you and your data.</p>
+        <p class="about-section-body">The idea started simple: one place to track workouts, supplements, gym membership, expenses, body progress, and challenges with your gym crew — all without leaving your device.</p>
+      </div>
+
+      <!-- HOW IT WORKS -->
+      <div class="about-section-block">
+        <div class="about-section-eyebrow">How It Works</div>
+        <h2 class="about-section-heading">Everything runs in your browser. Nothing leaves your device.</h2>
+        <div class="about-how-grid">
+          <div class="about-how-item">
+            <div class="about-how-num">01</div>
+            <div class="about-how-text">
+              <div class="about-how-title">Sign up &amp; log in</div>
+              <div class="about-how-desc">Create an account with a username and password. Your credentials are stored only on this device using browser localStorage — no server ever sees them.</div>
+            </div>
+          </div>
+          <div class="about-how-item">
+            <div class="about-how-num">02</div>
+            <div class="about-how-text">
+              <div class="about-how-title">All data stays local</div>
+              <div class="about-how-desc">Every workout, supplement, expense, and progress entry is saved to your browser's localStorage under a single key. It persists across sessions until you clear it.</div>
+            </div>
+          </div>
+          <div class="about-how-item">
+            <div class="about-how-num">03</div>
+            <div class="about-how-text">
+              <div class="about-how-title">Export &amp; import backups</div>
+              <div class="about-how-desc">Use Settings &rarr; Export to download a full JSON backup of your data. Import it back anytime on any device to restore everything instantly.</div>
+            </div>
+          </div>
+          <div class="about-how-item">
+            <div class="about-how-num">04</div>
+            <div class="about-how-text">
+              <div class="about-how-title">Creator controls</div>
+              <div class="about-how-desc">The creator account has access to a special dashboard — manage all registered users, toggle maintenance mode, and control app availability.</div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <!-- FEATURES GRID -->
-      <div class="about-features-grid">
-        <div class="about-feature-item" style="--i:0">
-          <div class="about-feature-icon">&#9651;</div>
-          <div class="about-feature-label">Workouts</div>
-          <div class="about-feature-desc">Log sessions, track PRs &amp; streaks</div>
-        </div>
-        <div class="about-feature-item" style="--i:1">
-          <div class="about-feature-icon">&#9670;</div>
-          <div class="about-feature-label">Supplements</div>
-          <div class="about-feature-desc">Track inventory &amp; daily scoops</div>
-        </div>
-        <div class="about-feature-item" style="--i:2">
-          <div class="about-feature-icon">&#9633;</div>
-          <div class="about-feature-label">Membership</div>
-          <div class="about-feature-desc">Monitor gym fees &amp; expiry</div>
-        </div>
-        <div class="about-feature-item" style="--i:3">
-          <div class="about-feature-icon">&#9650;</div>
-          <div class="about-feature-label">Expenses</div>
-          <div class="about-feature-desc">Split costs with gym partners</div>
-        </div>
-        <div class="about-feature-item" style="--i:4">
-          <div class="about-feature-icon">&#9656;</div>
-          <div class="about-feature-label">Progress</div>
-          <div class="about-feature-desc">Chart body metrics over time</div>
-        </div>
-        <div class="about-feature-item" style="--i:5">
-          <div class="about-feature-icon">&#9733;</div>
-          <div class="about-feature-label">Challenges</div>
-          <div class="about-feature-desc">Compete with friends &amp; win</div>
+      <!-- HOW TO USE -->
+      <div class="about-section-block">
+        <div class="about-section-eyebrow">How to Use</div>
+        <h2 class="about-section-heading">Six modules. One dashboard.</h2>
+        <div class="about-modules-list">
+          <div class="about-module-row">
+            <div class="about-module-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4v16M18 4v16M3 8h3M18 8h3M3 16h3M18 16h3M6 12h12"/></svg>
+            </div>
+            <div class="about-module-body">
+              <div class="about-module-name">Workouts</div>
+              <div class="about-module-desc">Log every session with exercises, sets, reps, and weight. The app automatically detects personal records and tracks your streak. View full history and PRs anytime.</div>
+            </div>
+          </div>
+          <div class="about-module-row">
+            <div class="about-module-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6l1 4H8L9 3z"/><path d="M8 7v13a1 1 0 001 1h6a1 1 0 001-1V7"/><path d="M8 11h8"/></svg>
+            </div>
+            <div class="about-module-body">
+              <div class="about-module-name">Supplements</div>
+              <div class="about-module-desc">Add your supplements with quantity, serving size, and daily dose. Hit "Take Scoop" each day and the app tracks remaining inventory, estimates days left, and alerts you when running low.</div>
+            </div>
+          </div>
+          <div class="about-module-row">
+            <div class="about-module-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/><path d="M6 15h4"/></svg>
+            </div>
+            <div class="about-module-body">
+              <div class="about-module-name">Membership</div>
+              <div class="about-module-desc">Save your gym membership details — gym name, fee, start and end dates. The dashboard shows days remaining with a live progress bar and alerts you before it expires.</div>
+            </div>
+          </div>
+          <div class="about-module-row">
+            <div class="about-module-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+            </div>
+            <div class="about-module-body">
+              <div class="about-module-name">Expenses</div>
+              <div class="about-module-desc">Log every fitness-related expense — gym fees, supplements, equipment. Split costs with gym partners and track who has paid and who owes. Monthly totals shown on the dashboard.</div>
+            </div>
+          </div>
+          <div class="about-module-row">
+            <div class="about-module-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+            </div>
+            <div class="about-module-body">
+              <div class="about-module-name">Progress</div>
+              <div class="about-module-desc">Log body metrics — weight, body fat, chest, waist, arms, legs. Charts visualize your transformation over time. Every entry is timestamped and stored in your progress log.</div>
+            </div>
+          </div>
+          <div class="about-module-row">
+            <div class="about-module-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 010-5H6"/><path d="M18 9h1.5a2.5 2.5 0 000-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0012 0V2z"/></svg>
+            </div>
+            <div class="about-module-body">
+              <div class="about-module-name">Challenges</div>
+              <div class="about-module-desc">Create fitness challenges — workout count goals, streak targets, or weight goals. Set a deadline and track progress. Add friends and run a leaderboard to compete and stay motivated.</div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <!-- CREATOR CARD -->
+      <!-- CREATOR -->
       <div class="about-creator-card">
         <div class="about-creator-glow"></div>
         <div class="about-creator-avatar">NK</div>
@@ -969,24 +1057,28 @@
             Nikhil Karthik
             <span class="creator-badge" style="font-size:0.62rem;vertical-align:middle"><span class="creator-badge-star">&#9733;</span> CREATOR</span>
           </div>
-          <div class="about-creator-desc">Built with passion for fitness and clean code. A personal fitness command center for tracking every rep, every scoop, and every rupee.</div>
-          <div class="about-tech-row">
-            <span class="about-tech-pill">HTML5</span>
-            <span class="about-tech-pill">CSS3</span>
-            <span class="about-tech-pill">Vanilla JS</span>
-            <span class="about-tech-pill">LocalStorage</span>
-            <span class="about-tech-pill">Chart.js</span>
-            <span class="about-tech-pill">GitHub Pages</span>
+          <div class="about-creator-desc">A fitness enthusiast and developer who wanted one clean app to run his entire gym life — so he built it. The Gym Rats is a passion project: no frameworks, no backend, no compromise on design.</div>
+          <div class="about-creator-links">
+            <a class="about-creator-link" href="https://github.com/2400031255/THEGYM" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/></svg>
+              View on GitHub
+            </a>
+            <a class="about-creator-link" href="https://2400031255.github.io/THEGYM" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              Live App
+            </a>
           </div>
         </div>
       </div>
 
-      <!-- PRIVACY CARD -->
+      <!-- PRIVACY -->
       <div class="about-privacy-card">
-        <div class="about-privacy-icon">&#9632;</div>
+        <div class="about-privacy-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
         <div class="about-privacy-text">
           <div class="about-privacy-title">Your Data. Your Device. Always.</div>
-          <div class="about-privacy-desc">All data is stored locally in your browser using LocalStorage. No servers, no tracking, no accounts sent anywhere. 100% private.</div>
+          <div class="about-privacy-desc">Everything is stored locally in your browser. No servers, no tracking, no data ever leaves your device. Export a backup anytime from Settings.</div>
         </div>
       </div>
 
@@ -1006,11 +1098,11 @@
 
 <!-- MOBILE BOTTOM NAV -->
 <nav class="bottom-nav">
-  <a class="bnav-item active" data-page="dashboard"><span>&#9632;</span><span>Home</span></a>
-  <a class="bnav-item" data-page="workouts"><span>&#9651;</span><span>Workouts</span></a>
-  <a class="bnav-item" data-page="supplements"><span>&#9670;</span><span>Supps</span></a>
-  <a class="bnav-item" data-page="expenses"><span>&#9650;</span><span>Expenses</span></a>
-  <a class="bnav-item" data-page="progress"><span>&#9656;</span><span>Progress</span></a>
+  <a class="bnav-item active" data-page="dashboard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span>Home</span></a>
+  <a class="bnav-item" data-page="workouts"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M6 4v16M18 4v16M3 8h3M18 8h3M3 16h3M18 16h3M6 12h12"/></svg><span>Workouts</span></a>
+  <a class="bnav-item" data-page="supplements"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M9 3h6l1 4H8L9 3z"/><path d="M8 7v13a1 1 0 001 1h6a1 1 0 001-1V7"/><path d="M8 11h8"/></svg><span>Supps</span></a>
+  <a class="bnav-item" data-page="expenses"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg><span>Expenses</span></a>
+  <a class="bnav-item" data-page="progress"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg><span>Progress</span></a>
 </nav>
 
 <!-- MODAL -->

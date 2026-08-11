@@ -168,7 +168,7 @@ function renderWorkouts() {
           </div>
           <div style="text-align:right">
             <div class="workout-item-date">${formatDateDisplay(w.date)}</div>
-            <button class="btn-icon" style="margin-top:4px" onclick="deleteWorkout('${w.id}')">🗑</button>
+            <button class="btn-icon" style="margin-top:4px" onclick="deleteWorkout('${w.id}')">&#128465;</button>
           </div>
         </div>
         <div class="workout-item-meta">

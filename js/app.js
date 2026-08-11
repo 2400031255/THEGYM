@@ -131,7 +131,7 @@ function renderDashNotifications() {
   const notifs = generateNotifications();
   const el = document.getElementById('dash-notifications-content');
   if (!notifs.length) {
-    el.innerHTML = `<div style="color:var(--text-muted);font-size:0.88rem">✅ All good! No alerts.</div>`;
+    el.innerHTML = `<div style="color:var(--text-muted);font-size:0.88rem">All good! No alerts.</div>`;
     return;
   }
   el.innerHTML = notifs.slice(0, 5).map(n => `
@@ -198,22 +198,6 @@ document.getElementById('pw-change-form').addEventListener('submit', function(e)
 });
 
 function renderAbout() {
-  // Animate stat counters
-  setTimeout(() => {
-    document.querySelectorAll('.about-stat-num').forEach(el => {
-      const target = parseInt(el.dataset.target);
-      if (isNaN(target)) return;
-      let current = 0;
-      const step = Math.max(1, Math.ceil(target / 40));
-      const timer = setInterval(() => {
-        current = Math.min(current + step, target);
-        el.textContent = current;
-        if (current >= target) clearInterval(timer);
-      }, 30);
-    });
-  }, 200);
-
-  // Canvas particle animation
   const canvas = document.getElementById('about-canvas');
   if (!canvas || canvas._initialized) return;
   canvas._initialized = true;
@@ -242,11 +226,8 @@ function renderAbout() {
 
   function draw() {
     t++;
-    // Background
     ctx.fillStyle = '#080808';
     ctx.fillRect(0, 0, W, H);
-
-    // Red floor glow
     const gy = H * 0.8 + Math.sin(t * 0.01) * 15;
     const g = ctx.createRadialGradient(W/2, gy, 0, W/2, gy, W * 0.65);
     g.addColorStop(0, 'rgba(224,28,28,0.22)');
@@ -254,73 +235,38 @@ function renderAbout() {
     g.addColorStop(1, 'transparent');
     ctx.fillStyle = g;
     ctx.fillRect(0, 0, W, H);
-
-    // Perspective grid
     ctx.save();
     ctx.globalAlpha = 0.06 + Math.sin(t * 0.012) * 0.02;
     ctx.strokeStyle = '#e01c1c';
     ctx.lineWidth = 0.5;
-    const hz = H * 0.55;
-    const vp = W / 2;
+    const hz = H * 0.55, vp = W / 2;
     for (let i = -10; i <= 10; i++) {
-      ctx.beginPath();
-      ctx.moveTo(vp, hz);
-      ctx.lineTo(vp + i * (W / 10), H + 10);
-      ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(vp, hz); ctx.lineTo(vp + i * (W / 10), H + 10); ctx.stroke();
     }
     for (let j = 0; j <= 8; j++) {
-      const p = j / 8;
-      const y = hz + (H - hz + 10) * (p * p);
-      const hw = (W / 2 + 40) * p;
-      ctx.beginPath();
-      ctx.moveTo(vp - hw, y);
-      ctx.lineTo(vp + hw, y);
-      ctx.stroke();
+      const p = j / 8, y = hz + (H - hz + 10) * (p * p), hw = (W / 2 + 40) * p;
+      ctx.beginPath(); ctx.moveTo(vp - hw, y); ctx.lineTo(vp + hw, y); ctx.stroke();
     }
     ctx.restore();
-
-    // Particles
     pts.forEach(p => {
       p.x += p.vx; p.y += p.vy; p.life += 0.004;
-      if (p.y < -5 || p.life > 1) {
-        p.x = Math.random() * W; p.y = H + 5;
-        p.life = 0; p.a = Math.random() * 0.4 + 0.1;
-      }
+      if (p.y < -5 || p.life > 1) { p.x = Math.random() * W; p.y = H + 5; p.life = 0; p.a = Math.random() * 0.4 + 0.1; }
       const fade = Math.sin(p.life * Math.PI);
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(224,28,28,${p.a * fade})`;
-      ctx.fill();
+      ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(224,28,28,${p.a * fade})`; ctx.fill();
     });
-
-    // Top vignette
     const tv = ctx.createLinearGradient(0, 0, 0, H * 0.35);
-    tv.addColorStop(0, 'rgba(8,8,8,0.8)');
-    tv.addColorStop(1, 'transparent');
-    ctx.fillStyle = tv;
-    ctx.fillRect(0, 0, W, H);
-
-    // Scanlines
-    ctx.save();
-    ctx.globalAlpha = 0.02;
-    for (let y = 0; y < H; y += 3) { ctx.fillStyle = '#000'; ctx.fillRect(0, y, W, 1); }
-    ctx.restore();
-
+    tv.addColorStop(0, 'rgba(8,8,8,0.8)'); tv.addColorStop(1, 'transparent');
+    ctx.fillStyle = tv; ctx.fillRect(0, 0, W, H);
     raf = requestAnimationFrame(draw);
   }
 
-  resize();
-  initPts();
-  draw();
+  resize(); initPts(); draw();
   window.addEventListener('resize', () => { resize(); initPts(); });
-
-  // Stop when page hidden
   const obs = new MutationObserver(() => {
     const pg = document.getElementById('page-about');
     if (pg && !pg.classList.contains('active')) {
-      cancelAnimationFrame(raf);
-      canvas._initialized = false;
-      obs.disconnect();
+      cancelAnimationFrame(raf); canvas._initialized = false; obs.disconnect();
     }
   });
   const pg = document.getElementById('page-about');
@@ -421,6 +367,7 @@ function switchAuthTab(tab) {
   document.getElementById('login-error').textContent = '';
   document.getElementById('signup-error').textContent = '';
 }
+
 
 function togglePw(inputId, btn) {
   const inp = document.getElementById(inputId);
@@ -541,375 +488,6 @@ if (remembered) {
   const cb = document.getElementById('login-remember');
   if (cb) cb.checked = true;
 }
-
-/* ============================================
-   CANVAS BODYBUILDER ANIMATION
-   ============================================ */
-
-(function initAuthCanvas() {
-  const canvas = document.getElementById('auth-canvas');
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-  let W, H, raf;
-  let t = 0;
-
-  // Particles
-  const PARTICLE_COUNT = 60;
-  const particles = [];
-
-  function resize() {
-    W = canvas.width  = canvas.offsetWidth;
-    H = canvas.height = canvas.offsetHeight;
-  }
-
-  function initParticles() {
-    particles.length = 0;
-    for (let i = 0; i < PARTICLE_COUNT; i++) {
-      particles.push({
-        x: Math.random() * W,
-        y: Math.random() * H,
-        r: Math.random() * 1.8 + 0.3,
-        vx: (Math.random() - 0.5) * 0.3,
-        vy: -(Math.random() * 0.4 + 0.1),
-        alpha: Math.random() * 0.5 + 0.1,
-        life: Math.random()
-      });
-    }
-  }
-
-  function drawBackground() {
-    // Deep black base
-    ctx.fillStyle = '#020202';
-    ctx.fillRect(0, 0, W, H);
-
-    // Animated red floor glow
-    const glowY = H * 0.75 + Math.sin(t * 0.008) * 20;
-    const grd = ctx.createRadialGradient(W * 0.5, glowY, 0, W * 0.5, glowY, W * 0.7);
-    grd.addColorStop(0, 'rgba(224,28,28,0.18)');
-    grd.addColorStop(0.5, 'rgba(180,10,10,0.06)');
-    grd.addColorStop(1, 'transparent');
-    ctx.fillStyle = grd;
-    ctx.fillRect(0, 0, W, H);
-
-    // Top vignette
-    const topGrd = ctx.createLinearGradient(0, 0, 0, H * 0.4);
-    topGrd.addColorStop(0, 'rgba(2,2,2,0.7)');
-    topGrd.addColorStop(1, 'transparent');
-    ctx.fillStyle = topGrd;
-    ctx.fillRect(0, 0, W, H);
-  }
-
-  function drawGrid() {
-    // Perspective floor grid
-    ctx.save();
-    ctx.globalAlpha = 0.07 + Math.sin(t * 0.01) * 0.02;
-    ctx.strokeStyle = '#e01c1c';
-    ctx.lineWidth = 0.5;
-    const horizon = H * 0.62;
-    const vp = { x: W * 0.5, y: horizon };
-    const cols = 14;
-    for (let i = -cols; i <= cols; i++) {
-      const bx = W * 0.5 + i * (W / cols);
-      ctx.beginPath();
-      ctx.moveTo(vp.x, vp.y);
-      ctx.lineTo(bx, H + 20);
-      ctx.stroke();
-    }
-    const rows = 10;
-    for (let j = 0; j <= rows; j++) {
-      const prog = j / rows;
-      const y = horizon + (H - horizon + 20) * (prog * prog);
-      const halfW = (W * 0.5 + 60) * prog;
-      ctx.beginPath();
-      ctx.moveTo(vp.x - halfW, y);
-      ctx.lineTo(vp.x + halfW, y);
-      ctx.stroke();
-    }
-    ctx.restore();
-  }
-
-  function drawBodybuilder() {
-    const cx = W * 0.5;
-    const cy = H * 0.5;
-    const scale = Math.min(W, H) / 520;
-
-    // Breathing: subtle scale pulse
-    const breathe = 1 + Math.sin(t * 0.025) * 0.012;
-    // Subtle sway
-    const sway = Math.sin(t * 0.018) * 3;
-
-    ctx.save();
-    ctx.translate(cx + sway, cy);
-    ctx.scale(scale * breathe, scale * breathe);
-
-    // --- RIM LIGHT (back glow) ---
-    const rimAlpha = 0.55 + Math.sin(t * 0.02) * 0.15;
-    const rimGrd = ctx.createRadialGradient(0, -60, 20, 0, -60, 200);
-    rimGrd.addColorStop(0, `rgba(224,28,28,${rimAlpha})`);
-    rimGrd.addColorStop(0.4, `rgba(180,10,10,${rimAlpha * 0.3})`);
-    rimGrd.addColorStop(1, 'transparent');
-    ctx.fillStyle = rimGrd;
-    ctx.beginPath();
-    ctx.ellipse(0, -60, 160, 220, 0, 0, Math.PI * 2);
-    ctx.fill();
-
-    // Shadow on floor
-    ctx.save();
-    ctx.globalAlpha = 0.35;
-    const shadowGrd = ctx.createRadialGradient(0, 200, 0, 0, 200, 120);
-    shadowGrd.addColorStop(0, 'rgba(0,0,0,0.8)');
-    shadowGrd.addColorStop(1, 'transparent');
-    ctx.fillStyle = shadowGrd;
-    ctx.beginPath();
-    ctx.ellipse(0, 200, 100, 20, 0, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.restore();
-
-    // ---- FIGURE DRAWING ----
-    const bodyColor = '#1a1a1a';
-    const muscleColor = '#2a2a2a';
-    const rimColor = `rgba(224,28,28,${0.7 + Math.sin(t * 0.02) * 0.2})`;
-    const rimW = 2.5;
-
-    function rimStroke(color, width) {
-      ctx.strokeStyle = color;
-      ctx.lineWidth = width;
-      ctx.stroke();
-    }
-
-    // LEGS
-    // Left leg
-    ctx.beginPath();
-    ctx.moveTo(-28, 80);
-    ctx.bezierCurveTo(-45, 120, -50, 160, -42, 200);
-    ctx.bezierCurveTo(-38, 210, -20, 212, -18, 200);
-    ctx.bezierCurveTo(-16, 160, -18, 120, -10, 80);
-    ctx.closePath();
-    ctx.fillStyle = muscleColor;
-    ctx.fill();
-    rimStroke(rimColor, rimW);
-
-    // Right leg
-    ctx.beginPath();
-    ctx.moveTo(28, 80);
-    ctx.bezierCurveTo(45, 120, 50, 160, 42, 200);
-    ctx.bezierCurveTo(38, 210, 20, 212, 18, 200);
-    ctx.bezierCurveTo(16, 160, 18, 120, 10, 80);
-    ctx.closePath();
-    ctx.fillStyle = muscleColor;
-    ctx.fill();
-    rimStroke(rimColor, rimW);
-
-    // TORSO
-    ctx.beginPath();
-    ctx.moveTo(-55, -40);
-    ctx.bezierCurveTo(-65, 0, -60, 50, -30, 80);
-    ctx.lineTo(30, 80);
-    ctx.bezierCurveTo(60, 50, 65, 0, 55, -40);
-    ctx.bezierCurveTo(40, -60, -40, -60, -55, -40);
-    ctx.closePath();
-    ctx.fillStyle = bodyColor;
-    ctx.fill();
-    rimStroke(rimColor, rimW);
-
-    // Chest definition
-    ctx.beginPath();
-    ctx.moveTo(-40, -30);
-    ctx.bezierCurveTo(-50, -10, -45, 10, -20, 20);
-    ctx.bezierCurveTo(-5, 25, 5, 25, 20, 20);
-    ctx.bezierCurveTo(45, 10, 50, -10, 40, -30);
-    ctx.strokeStyle = `rgba(224,28,28,${0.25 + Math.sin(t * 0.02) * 0.08})`;
-    ctx.lineWidth = 1.5;
-    ctx.stroke();
-
-    // Abs lines
-    for (let i = 0; i < 3; i++) {
-      const ay = 10 + i * 22;
-      ctx.beginPath();
-      ctx.moveTo(-18, ay);
-      ctx.lineTo(18, ay);
-      ctx.strokeStyle = `rgba(224,28,28,${0.2 - i * 0.04})`;
-      ctx.lineWidth = 1;
-      ctx.stroke();
-    }
-    ctx.beginPath();
-    ctx.moveTo(0, 10);
-    ctx.lineTo(0, 75);
-    ctx.strokeStyle = 'rgba(224,28,28,0.15)';
-    ctx.lineWidth = 1;
-    ctx.stroke();
-
-    // LEFT ARM (raised pose)
-    const armAngle = Math.sin(t * 0.018) * 0.06;
-    ctx.save();
-    ctx.translate(-55, -30);
-    ctx.rotate(-0.3 + armAngle);
-    // Upper arm
-    ctx.beginPath();
-    ctx.moveTo(0, 0);
-    ctx.bezierCurveTo(-25, 10, -35, 40, -30, 70);
-    ctx.bezierCurveTo(-25, 80, -5, 80, 0, 70);
-    ctx.bezierCurveTo(5, 40, 5, 10, 0, 0);
-    ctx.closePath();
-    ctx.fillStyle = muscleColor;
-    ctx.fill();
-    rimStroke(rimColor, rimW);
-    // Bicep peak
-    ctx.beginPath();
-    ctx.moveTo(-20, 20);
-    ctx.bezierCurveTo(-30, 30, -32, 50, -20, 55);
-    ctx.strokeStyle = `rgba(224,28,28,${0.3 + Math.sin(t * 0.02) * 0.1})`;
-    ctx.lineWidth = 1.5;
-    ctx.stroke();
-    // Forearm
-    ctx.translate(-28, 72);
-    ctx.rotate(0.4);
-    ctx.beginPath();
-    ctx.moveTo(0, 0);
-    ctx.bezierCurveTo(-15, 5, -18, 35, -12, 60);
-    ctx.bezierCurveTo(-8, 68, 8, 68, 10, 60);
-    ctx.bezierCurveTo(14, 35, 12, 5, 0, 0);
-    ctx.closePath();
-    ctx.fillStyle = muscleColor;
-    ctx.fill();
-    rimStroke(rimColor, rimW);
-    ctx.restore();
-
-    // RIGHT ARM
-    ctx.save();
-    ctx.translate(55, -30);
-    ctx.rotate(0.3 - armAngle);
-    ctx.beginPath();
-    ctx.moveTo(0, 0);
-    ctx.bezierCurveTo(25, 10, 35, 40, 30, 70);
-    ctx.bezierCurveTo(25, 80, 5, 80, 0, 70);
-    ctx.bezierCurveTo(-5, 40, -5, 10, 0, 0);
-    ctx.closePath();
-    ctx.fillStyle = muscleColor;
-    ctx.fill();
-    rimStroke(rimColor, rimW);
-    ctx.beginPath();
-    ctx.moveTo(20, 20);
-    ctx.bezierCurveTo(30, 30, 32, 50, 20, 55);
-    ctx.strokeStyle = `rgba(224,28,28,${0.3 + Math.sin(t * 0.02) * 0.1})`;
-    ctx.lineWidth = 1.5;
-    ctx.stroke();
-    ctx.translate(28, 72);
-    ctx.rotate(-0.4);
-    ctx.beginPath();
-    ctx.moveTo(0, 0);
-    ctx.bezierCurveTo(15, 5, 18, 35, 12, 60);
-    ctx.bezierCurveTo(8, 68, -8, 68, -10, 60);
-    ctx.bezierCurveTo(-14, 35, -12, 5, 0, 0);
-    ctx.closePath();
-    ctx.fillStyle = muscleColor;
-    ctx.fill();
-    rimStroke(rimColor, rimW);
-    ctx.restore();
-
-    // NECK
-    ctx.beginPath();
-    ctx.moveTo(-14, -60);
-    ctx.bezierCurveTo(-16, -50, -16, -44, -14, -40);
-    ctx.lineTo(14, -40);
-    ctx.bezierCurveTo(16, -44, 16, -50, 14, -60);
-    ctx.closePath();
-    ctx.fillStyle = bodyColor;
-    ctx.fill();
-    rimStroke(rimColor, 1.5);
-
-    // HEAD
-    const headBob = Math.sin(t * 0.025) * 2;
-    ctx.beginPath();
-    ctx.ellipse(0, -90 + headBob, 28, 32, 0, 0, Math.PI * 2);
-    ctx.fillStyle = bodyColor;
-    ctx.fill();
-    rimStroke(rimColor, rimW);
-
-    // SHOULDERS
-    [-1, 1].forEach(side => {
-      ctx.beginPath();
-      ctx.ellipse(side * 58, -38, 18, 14, side * 0.3, 0, Math.PI * 2);
-      ctx.fillStyle = muscleColor;
-      ctx.fill();
-      rimStroke(rimColor, rimW);
-    });
-
-    ctx.restore();
-  }
-
-  function drawParticles() {
-    particles.forEach(p => {
-      p.x += p.vx;
-      p.y += p.vy;
-      p.life += 0.003;
-      if (p.y < -10 || p.life > 1) {
-        p.x = Math.random() * W;
-        p.y = H + 10;
-        p.life = 0;
-        p.alpha = Math.random() * 0.4 + 0.1;
-      }
-      const fade = Math.sin(p.life * Math.PI);
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(224,28,28,${p.alpha * fade})`;
-      ctx.fill();
-    });
-  }
-
-  function drawScanlines() {
-    ctx.save();
-    ctx.globalAlpha = 0.025;
-    for (let y = 0; y < H; y += 3) {
-      ctx.fillStyle = '#000';
-      ctx.fillRect(0, y, W, 1);
-    }
-    ctx.restore();
-  }
-
-  function drawVignette() {
-    const vgrd = ctx.createRadialGradient(W/2, H/2, H*0.3, W/2, H/2, H*0.85);
-    vgrd.addColorStop(0, 'transparent');
-    vgrd.addColorStop(1, 'rgba(0,0,0,0.55)');
-    ctx.fillStyle = vgrd;
-    ctx.fillRect(0, 0, W, H);
-  }
-
-  function loop() {
-    t++;
-    drawBackground();
-    drawGrid();
-    drawBodybuilder();
-    drawParticles();
-    drawScanlines();
-    drawVignette();
-    raf = requestAnimationFrame(loop);
-  }
-
-  function start() {
-    resize();
-    initParticles();
-    loop();
-  }
-
-  window.addEventListener('resize', () => {
-    resize();
-    initParticles();
-  });
-
-  // Stop animation when auth screen is hidden
-  const observer = new MutationObserver(() => {
-    const screen = document.getElementById('auth-screen');
-    if (screen && screen.style.display === 'none') {
-      cancelAnimationFrame(raf);
-      observer.disconnect();
-    }
-  });
-  const authScreen = document.getElementById('auth-screen');
-  if (authScreen) observer.observe(authScreen, { attributes: true, attributeFilter: ['style'] });
-
-  start();
-})();
 
 // Boot — seed creator account, then check session
 (function seedCreator() {
