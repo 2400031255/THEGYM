@@ -671,28 +671,33 @@ function closeInviteModal() {
 }
 
 async function handleCreateSquad() {
-  const name = document.getElementById('create-squad-name')?.value.trim();
-  const err  = document.getElementById('create-squad-error');
+  const nameEl = document.getElementById('create-squad-name');
+  const err    = document.getElementById('create-squad-error');
+  const name   = nameEl?.value.trim();
+
   if (!name) { if (err) err.textContent = 'Please enter a squad name.'; return; }
+
   const btn = document.querySelector('#modal-create-squad .btn-primary');
   if (btn) { btn.textContent = 'Creating...'; btn.disabled = true; }
+  if (err) err.textContent = '';
+
   try {
+    /* Verify auth before even trying */
+    const uid = getCurrentUid();
+    if (!uid) {
+      if (err) err.textContent = 'You are not logged in. Please log in first.';
+      return;
+    }
+
     const squad = await squadService_createSquad(name);
     closeCreateSquadModal();
     _activeSquadId = squad.id;
-    showToast(`Squad "${squad.name}" created! Code: ${squad.code}`, 'success');
+    showToast('Squad "' + squad.name + '" created! Code: ' + squad.code, 'success');
     renderSquad();
   } catch (e) {
-    console.error('handleCreateSquad ERROR:', e.code, e.message, e);
-    if (err) {
-      if (e.code === 'permission-denied') {
-        err.textContent = 'Permission denied — are you logged in?';
-      } else if (e.message && e.message.includes('Not authenticated')) {
-        err.textContent = 'Not logged in. Please log in and try again.';
-      } else {
-        err.textContent = (e.message || e.code || 'Unknown error') + ' — check console';
-      }
-    }
+    const msg = e.message || e.code || 'Unknown error';
+    console.error('handleCreateSquad FAILED:', e);
+    if (err) err.textContent = msg;
   } finally {
     if (btn) { btn.textContent = 'CREATE SQUAD'; btn.disabled = false; }
   }
