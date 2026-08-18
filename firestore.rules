@@ -5,50 +5,63 @@ service cloud.firestore {
     /* ── Users: only the owner can read/write their own doc ── */
     match /users/{uid} {
       allow read, write: if request.auth != null && request.auth.uid == uid;
-
       match /{subcollection}/{docId} {
         allow read, write: if request.auth != null && request.auth.uid == uid;
       }
     }
 
-    /* ── Status: any authenticated user can read (for squad), only owner writes ── */
+    /* ── Status: any authenticated user can read, only owner writes ── */
     match /status/{uid} {
       allow read:  if request.auth != null;
       allow write: if request.auth != null && request.auth.uid == uid;
     }
 
-    /* ── Squads: any authenticated user can read; members can write ── */
+    /* ── Squads ── */
     match /squads/{squadId} {
       allow read, list: if request.auth != null;
       allow create:     if request.auth != null;
-      allow update:     if request.auth != null
-                        && request.auth.uid in resource.data.members;
-      allow delete:     if request.auth != null
-                        && request.auth.uid == resource.data.createdBy;
-
+      allow update:     if request.auth != null && request.auth.uid in resource.data.members;
+      allow delete:     if request.auth != null && request.auth.uid == resource.data.createdBy;
       match /members/{uid} {
-        allow read:   if request.auth != null;
-        allow write:  if request.auth != null && request.auth.uid == uid;
+        allow read:  if request.auth != null;
+        allow write: if request.auth != null && request.auth.uid == uid;
       }
-
       match /activity/{docId} {
         allow read:   if request.auth != null;
         allow create: if request.auth != null;
         allow update, delete: if false;
       }
-
       match /notifications/{docId} {
         allow read:   if request.auth != null;
         allow create: if request.auth != null;
         allow update, delete: if false;
       }
-
       match /challenges/{docId} {
         allow read:   if request.auth != null;
         allow create: if request.auth != null;
         allow update: if request.auth != null;
-        allow delete: if request.auth != null
-                      && request.auth.uid == resource.data.createdBy;
+        allow delete: if request.auth != null && request.auth.uid == resource.data.createdBy;
+      }
+    }
+
+    /* ── Maintenance ── */
+    match /maintenance/{docId} {
+      allow read:  if request.auth != null;
+      allow write: if request.auth != null;
+    }
+
+    /* ── Public enquiries: anyone can create, only auth can read ── */
+    match /enquiries/{docId} {
+      allow create: if true;
+      allow read, update: if request.auth != null;
+      allow delete: if request.auth != null;
+    }
+
+    /* ── Gyms: staff can read/write their own gym data ── */
+    match /gyms/{gymId} {
+      allow read, write: if request.auth != null;
+      match /{subcollection}/{docId} {
+        allow read, write: if request.auth != null;
       }
     }
 

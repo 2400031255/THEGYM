@@ -228,7 +228,7 @@ function renderCreatorMaintenance() {
     <div class="card">
       <div class="card-label">WHAT USERS SEE</div>
       <div class="maintenance-preview">
-        <div class="mp-title">THE GYM RATS</div>
+        <div class="mp-title"><span style="color:#e01c1c">OG</span> FITNESS</div>
         <div class="mp-icon">&#9881;</div>
         <div class="mp-heading">MAINTENANCE MODE</div>
         <div class="mp-text">We're currently making improvements.<br>The application is temporarily unavailable for normal users.</div>
@@ -259,7 +259,7 @@ function applyMaintenanceToLoginScreen() {
   overlay.className = 'maintenance-login-overlay';
   overlay.innerHTML = `
     <div class="mlo-box">
-      <div class="mlo-brand">THE GYM RATS</div>
+      <div class="mlo-brand"><span style="color:#e01c1c">OG</span> FITNESS</div>
       <div class="mlo-icon">&#9881;</div>
       <div class="mlo-title">MAINTENANCE MODE</div>
       <div class="mlo-text">We're currently making improvements.<br>The application is temporarily unavailable for normal users.</div>

@@ -16,7 +16,7 @@
    (declared first so _onSignedIn can use them)
    ============================================ */
 
-const CREATOR_EMAIL = 'nikhilkarthik@gmail.com';
+const CREATOR_EMAIL = 'nikhilkarthik@gmail.com'; /* creator identity */
 const CREATOR_UID_KEY = 'gymrats_creator_uid';
 
 function isCreatorEmail(email) {
@@ -93,6 +93,13 @@ async function _onSignedIn(user) {
 
   /* 6. Launch app */
   _hideAuthScreen();
+
+  /* Check if gym staff (owner/receptionist) — if so, launch gym dashboard */
+  if (typeof launchGymRole === 'function') {
+    const isStaff = await launchGymRole(user);
+    if (isStaff) return;
+  }
+
   init();
 }
 

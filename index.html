@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-  <title>THE GYM RATS</title>
+  <title>OG FITNESS</title>
   <style>
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     /* =============================================
        HERO LANDING SCREEN
@@ -17,47 +17,75 @@
       overflow: hidden;
     }
 
-    /* Full-screen hero image */
     #hero-bg {
       position: absolute; inset: 0;
       background: url('./assets/images/hero-bg.png') center center / cover no-repeat;
     }
 
-    /* Dark overlay so text is readable */
     #hero-overlay {
       position: absolute; inset: 0;
       background: linear-gradient(
         to bottom,
-        rgba(2,2,2,0.45) 0%,
-        rgba(2,2,2,0.25) 40%,
-        rgba(2,2,2,0.70) 75%,
-        rgba(2,2,2,0.92) 100%
+        rgba(2,2,2,0.55) 0%,
+        rgba(2,2,2,0.30) 35%,
+        rgba(2,2,2,0.72) 70%,
+        rgba(2,2,2,0.95) 100%
       );
     }
 
     /* Top-left brand */
     #hero-brand {
       position: absolute;
-      top: 2.2rem; left: 2.5rem;
+      top: 2rem; left: 2.5rem;
       z-index: 2;
       animation: fadeUp 0.9s ease 0.2s both;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
     }
-    #hero-brand-name {
-      font-size: 1.35rem;
+    #hero-brand-logo {
+      width: 44px; height: 44px;
+      border-radius: 10px;
+      background: rgba(224,28,28,0.15);
+      border: 1px solid rgba(224,28,28,0.4);
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    #hero-brand-logo .logo-og {
+      font-size: 0.95rem;
       font-weight: 900;
-      letter-spacing: 0.22em;
       color: #e01c1c;
-      text-shadow: 0 0 28px rgba(224,28,28,0.7);
-      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      line-height: 1;
     }
-    #hero-brand-line {
-      width: 36px; height: 2px;
-      background: #e01c1c;
-      margin-top: 6px;
-      box-shadow: 0 0 8px rgba(224,28,28,0.6);
+    #hero-brand-logo .logo-fit {
+      font-size: 0.42rem;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: 0.18em;
+      line-height: 1;
+      margin-top: 1px;
+    }
+    #hero-brand-text {}
+    #hero-brand-name {
+      font-size: 1.1rem;
+      font-weight: 900;
+      letter-spacing: 0.2em;
+      color: #fff;
+      text-transform: uppercase;
+      line-height: 1;
+    }
+    #hero-brand-name span { color: #e01c1c; }
+    #hero-brand-sub {
+      font-size: 0.58rem;
+      letter-spacing: 0.14em;
+      color: rgba(255,255,255,0.35);
+      text-transform: uppercase;
+      margin-top: 3px;
     }
 
-    /* Bottom hero text */
+    /* Bottom hero content */
     #hero-content {
       position: absolute;
       bottom: 0; left: 0; right: 0;
@@ -65,41 +93,41 @@
       z-index: 2;
       animation: fadeUp 0.9s ease 0.4s both;
     }
+
     #hero-tagline {
-      font-size: clamp(2.4rem, 5.5vw, 4rem);
+      font-size: clamp(2.6rem, 6vw, 4.2rem);
       font-weight: 900;
       line-height: 1.0;
-      letter-spacing: 0.03em;
+      letter-spacing: 0.02em;
       color: #ffffff;
       text-transform: uppercase;
       text-shadow: 0 4px 40px rgba(0,0,0,0.9);
     }
-    #hero-tagline span {
-      color: #e01c1c;
-      text-shadow: 0 0 30px rgba(224,28,28,0.5);
-    }
+    #hero-tagline span { color: #e01c1c; }
     #hero-sub {
-      margin-top: 0.75rem;
-      font-size: 0.82rem;
-      letter-spacing: 0.14em;
+      margin-top: 0.65rem;
+      font-size: 0.8rem;
+      letter-spacing: 0.16em;
       text-transform: uppercase;
-      color: rgba(255,255,255,0.45);
+      color: rgba(255,255,255,0.4);
     }
-    #hero-sub span {
-      color: rgba(224,28,28,0.7);
-      margin: 0 0.4rem;
+    #hero-sub span { color: rgba(224,28,28,0.65); margin: 0 0.35rem; }
+
+    .hero-btns {
+      display: flex;
+      gap: 0.85rem;
+      margin-top: 2rem;
+      flex-wrap: wrap;
     }
 
-    /* LOGIN button on hero */
     #hero-login-btn {
-      margin-top: 2rem;
       display: inline-flex;
       align-items: center;
-      gap: 0.6rem;
-      padding: 0.9rem 2.4rem;
+      gap: 0.55rem;
+      padding: 0.88rem 2.2rem;
       background: #e01c1c;
       color: #fff;
-      font-size: 0.88rem;
+      font-size: 0.85rem;
       font-weight: 800;
       letter-spacing: 0.16em;
       text-transform: uppercase;
@@ -110,7 +138,7 @@
       overflow: hidden;
       transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
       box-shadow: 0 4px 24px rgba(224,28,28,0.45);
-      clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 100%, 12px 100%);
+      clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 100%, 10px 100%);
     }
     #hero-login-btn:hover {
       background: #c81818;
@@ -126,37 +154,57 @@
       animation: shine 3s ease infinite;
     }
 
+    #hero-enquire-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      padding: 0.88rem 2rem;
+      background: transparent;
+      color: #fff;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      border: 1px solid rgba(255,255,255,0.3);
+      cursor: pointer;
+      font-family: inherit;
+      transition: border-color 0.2s, background 0.2s;
+      clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 100%, 10px 100%);
+    }
+    #hero-enquire-btn:hover {
+      border-color: rgba(255,255,255,0.7);
+      background: rgba(255,255,255,0.06);
+    }
+
     /* =============================================
-       AUTH MODAL OVERLAY (opens on LOGIN click)
+       AUTH MODAL OVERLAY
        ============================================= */
     #auth-modal-overlay {
       position: fixed; inset: 0;
-      background: rgba(0,0,0,0.75);
-      backdrop-filter: blur(6px);
+      background: rgba(0,0,0,0.78);
+      backdrop-filter: blur(8px);
       z-index: 1000;
       display: none;
       align-items: center;
       justify-content: center;
       padding: 1rem;
-      animation: overlayIn 0.25s ease;
     }
     #auth-modal-overlay.open { display: flex; }
 
     #auth-modal {
       width: 100%;
       max-width: 420px;
-      background: rgba(10,10,10,0.97);
-      border: 1px solid rgba(224,28,28,0.18);
+      background: rgba(10,10,10,0.98);
+      border: 1px solid rgba(224,28,28,0.2);
       border-radius: 16px;
       padding: 2.25rem 2rem;
       position: relative;
-      box-shadow: 0 24px 80px rgba(0,0,0,0.8), 0 0 0 1px rgba(224,28,28,0.08);
+      box-shadow: 0 24px 80px rgba(0,0,0,0.85), 0 0 0 1px rgba(224,28,28,0.06);
       animation: modalIn 0.35s cubic-bezier(0.16,1,0.3,1);
       max-height: 90vh;
       overflow-y: auto;
     }
 
-    /* Close button */
     #auth-modal-close {
       position: absolute; top: 1rem; right: 1rem;
       width: 30px; height: 30px;
@@ -164,7 +212,7 @@
       border: 1px solid rgba(255,255,255,0.1);
       border-radius: 50%;
       color: rgba(255,255,255,0.5);
-      font-size: 1rem; line-height: 1;
+      font-size: 1rem;
       cursor: pointer;
       display: flex; align-items: center; justify-content: center;
       transition: background 0.2s, color 0.2s;
@@ -174,24 +222,31 @@
     /* Modal logo */
     .aml-logo { text-align: center; margin-bottom: 1.75rem; }
     .aml-logo-icon {
-      width: 52px; height: 52px;
-      background: rgba(224,28,28,0.12);
-      border: 1px solid rgba(224,28,28,0.3);
-      border-radius: 12px;
+      width: 56px; height: 56px;
+      background: rgba(224,28,28,0.1);
+      border: 1px solid rgba(224,28,28,0.35);
+      border-radius: 14px;
       display: flex; align-items: center; justify-content: center;
-      font-size: 1rem; font-weight: 900;
-      letter-spacing: 0.05em;
-      color: #e01c1c;
+      flex-direction: column;
       margin: 0 auto 0.65rem;
-      box-shadow: 0 0 20px rgba(224,28,28,0.2);
+      box-shadow: 0 0 24px rgba(224,28,28,0.2);
+    }
+    .aml-logo-icon .logo-og {
+      font-size: 1.1rem; font-weight: 900;
+      color: #e01c1c; letter-spacing: 0.04em; line-height: 1;
+    }
+    .aml-logo-icon .logo-fit {
+      font-size: 0.48rem; font-weight: 800;
+      color: #fff; letter-spacing: 0.2em; line-height: 1; margin-top: 2px;
     }
     .aml-logo-title {
       font-size: 1rem; font-weight: 900;
       letter-spacing: 0.18em; color: #fff;
       text-transform: uppercase;
     }
+    .aml-logo-title span { color: #e01c1c; }
     .aml-logo-sub {
-      font-size: 0.65rem; color: rgba(255,255,255,0.28);
+      font-size: 0.62rem; color: rgba(255,255,255,0.25);
       letter-spacing: 0.08em; margin-top: 3px;
     }
 
@@ -287,7 +342,6 @@
       margin-bottom: 0.7rem; min-height: 1rem;
     }
 
-    /* Submit button inside modal */
     .auth-btn {
       width: 100%;
       background: linear-gradient(135deg, #e01c1c 0%, #b01010 100%);
@@ -301,10 +355,7 @@
       transition: transform 0.15s, box-shadow 0.2s;
       box-shadow: 0 4px 20px rgba(224,28,28,0.35);
     }
-    .auth-btn:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 6px 28px rgba(224,28,28,0.5);
-    }
+    .auth-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 28px rgba(224,28,28,0.5); }
     .auth-btn:active { transform: translateY(0); }
     .auth-btn-shine {
       position: absolute; top: 0; left: -100%;
@@ -314,20 +365,34 @@
     }
     .auth-btn.loading { pointer-events: none; opacity: 0.8; }
 
-    .auth-note {
-      text-align: center; font-size: 0.65rem;
-      color: rgba(255,255,255,0.18);
-      margin-top: 1.1rem; line-height: 1.6;
+    /* Enquiry modal */
+    #enquiry-modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.78);
+      backdrop-filter: blur(8px);
+      z-index: 1001;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    #enquiry-modal-overlay.open { display: flex; }
+    #enquiry-modal {
+      width: 100%; max-width: 420px;
+      background: rgba(10,10,10,0.98);
+      border: 1px solid rgba(224,28,28,0.2);
+      border-radius: 16px;
+      padding: 2rem;
+      position: relative;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.85);
+      animation: modalIn 0.35s cubic-bezier(0.16,1,0.3,1);
+      max-height: 90vh; overflow-y: auto;
     }
 
-    /* ---- KEYFRAMES ---- */
+    /* Keyframes */
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(14px); }
       to   { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes overlayIn {
-      from { opacity: 0; }
-      to   { opacity: 1; }
     }
     @keyframes modalIn {
       from { opacity: 0; transform: translateY(30px) scale(0.97); }
@@ -339,12 +404,13 @@
       100% { left: 120%; }
     }
 
-    /* ---- MOBILE ---- */
     @media (max-width: 480px) {
       #hero-content { padding: 2rem 1.25rem; }
-      #hero-tagline { font-size: 2rem; }
+      #hero-tagline { font-size: 2.1rem; }
       #hero-brand { top: 1.25rem; left: 1.25rem; }
       #auth-modal { padding: 1.75rem 1.25rem; border-radius: 12px; }
+      .hero-btns { flex-direction: column; }
+      #hero-login-btn, #hero-enquire-btn { width: 100%; justify-content: center; }
     }
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { animation: none !important; transition: none !important; }
@@ -352,10 +418,10 @@
   </style>
   <link rel="stylesheet" href="./css/style.css" />
   <link rel="stylesheet" href="./css/responsive.css" />
+
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"
     integrity="sha384-e6nUZLBkQ86NJ6TVVKAeSaK8jWa3NhkYWZFomE39AvDbQWeie9PlQqM3pmYW5d1g"
     crossorigin="anonymous"></script>
-  <!-- Firebase CDN (compat mode) -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"
     integrity="sha384-ajMUFBUFMCyjh8uxJg6bkGcKe9RTolyjwbxB3yES0QQMenP3Oztj/W9vA2SJPcIh"
     crossorigin="anonymous"></script>
@@ -377,35 +443,86 @@
 
   <!-- Top-left brand -->
   <div id="hero-brand">
-    <div id="hero-brand-name">THE GYM RATS</div>
-    <div id="hero-brand-line"></div>
+    <div id="hero-brand-logo">
+      <span class="logo-og">OG</span>
+      <span class="logo-fit">FITNESS</span>
+    </div>
+    <div id="hero-brand-text">
+      <div id="hero-brand-name"><span>OG</span> FITNESS</div>
+      <div id="hero-brand-sub">Train Hard. Stay Consistent.</div>
+    </div>
   </div>
 
   <!-- Bottom content -->
   <div id="hero-content">
     <div id="hero-tagline">
-      TRAIN TOGETHER.<br><span>GET STRONGER.</span>
+      TRAIN HARD.<br><span>STAY CONSISTENT.</span>
     </div>
     <div id="hero-sub">
-      Workouts <span>&middot;</span> Supplements <span>&middot;</span> Membership <span>&middot;</span> Expenses
+      Workouts <span>&middot;</span> Supplements <span>&middot;</span> Membership <span>&middot;</span> Progress
     </div>
-    <button id="hero-login-btn" onclick="openAuthModal()">
-      LOGIN &nbsp;&rarr;
-    </button>
+    <div class="hero-btns">
+      <button id="hero-login-btn" onclick="openAuthModal()">
+        LOGIN &nbsp;&rarr;
+      </button>
+      <button id="hero-enquire-btn" onclick="openEnquiryModal()">
+        ENQUIRE NOW
+      </button>
+    </div>
   </div>
 </div>
 
 <!-- =============================================
-     AUTH MODAL (opens on LOGIN click)
+     ENQUIRY MODAL
+     ============================================= -->
+<div id="enquiry-modal-overlay" onclick="handleEnquiryOverlayClick(event)">
+  <div id="enquiry-modal">
+    <button style="position:absolute;top:1rem;right:1rem;width:30px;height:30px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:50%;color:rgba(255,255,255,0.5);font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;" onclick="closeEnquiryModal()">&times;</button>
+    <div style="text-align:center;margin-bottom:1.5rem;">
+      <div style="font-size:0.65rem;font-weight:700;letter-spacing:0.14em;color:rgba(224,28,28,0.7);text-transform:uppercase;margin-bottom:0.4rem;">OG FITNESS</div>
+      <div style="font-size:1rem;font-weight:900;color:#fff;letter-spacing:0.06em;">INTERESTED IN JOINING?</div>
+      <div style="font-size:0.75rem;color:rgba(255,255,255,0.3);margin-top:0.3rem;">Our team will contact you shortly.</div>
+    </div>
+    <form id="enquiry-form" onsubmit="handleEnquirySubmit(event)">
+      <div class="auth-group">
+        <label>Full Name</label>
+        <input type="text" id="enq-name" placeholder="Your full name" required />
+      </div>
+      <div class="auth-group">
+        <label>Phone Number</label>
+        <input type="tel" id="enq-phone" placeholder="Your phone number" required />
+      </div>
+      <div class="auth-group">
+        <label>Message / Requirement</label>
+        <textarea id="enq-message" placeholder="Tell us what you're looking for..." rows="3"
+          style="width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:9px;padding:0.78rem 1rem;color:#fff;font-size:0.9rem;font-family:inherit;resize:vertical;"></textarea>
+      </div>
+      <div class="auth-error" id="enq-error"></div>
+      <div id="enq-success" style="display:none;color:#22c55e;font-size:0.82rem;text-align:center;padding:0.75rem;background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.2);border-radius:8px;margin-bottom:0.75rem;">
+        Thank you. Our gym team will contact you shortly.
+      </div>
+      <button type="submit" class="auth-btn" id="btn-enq-submit">
+        <span class="auth-btn-shine"></span>
+        SUBMIT ENQUIRY &rarr;
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- =============================================
+     AUTH MODAL
      ============================================= -->
 <div id="auth-modal-overlay" onclick="handleOverlayClick(event)">
   <div id="auth-modal">
     <button id="auth-modal-close" onclick="closeAuthModal()" title="Close">&times;</button>
 
     <div class="aml-logo">
-      <div class="aml-logo-icon">GR</div>
-      <div class="aml-logo-title">THE GYM RATS</div>
-      <div class="aml-logo-sub">Train Together. Get Stronger.</div>
+      <div class="aml-logo-icon">
+        <span class="logo-og">OG</span>
+        <span class="logo-fit">FITNESS</span>
+      </div>
+      <div class="aml-logo-title"><span>OG</span> FITNESS</div>
+      <div class="aml-logo-sub">Train Hard. Stay Consistent.</div>
     </div>
 
     <div class="auth-tabs">
@@ -444,17 +561,18 @@
         <span style="font-size:0.65rem;color:rgba(255,255,255,0.25);letter-spacing:0.08em">OR</span>
         <div style="flex:1;height:1px;background:rgba(255,255,255,0.08)"></div>
       </div>
-      <button id="btn-google-login" onclick="handleGoogleLogin()" style="width:100%;display:flex;align-items:center;justify-content:center;gap:0.75rem;padding:0.72rem 1rem;background:#fff;border:1px solid #dadce0;border-radius:24px;color:#3c4043;font-size:0.9rem;font-weight:600;letter-spacing:0.01em;cursor:pointer;font-family:'Roboto',sans-serif;transition:box-shadow 0.2s,background 0.2s;box-shadow:0 1px 3px rgba(0,0,0,0.12)" onmouseover="this.style.boxShadow='0 2px 8px rgba(0,0,0,0.2)';this.style.background='#f8f8f8'" onmouseout="this.style.boxShadow='0 1px 3px rgba(0,0,0,0.12)';this.style.background='#fff'">
+      <button id="btn-google-login" onclick="handleGoogleLogin()"
+        style="width:100%;display:flex;align-items:center;justify-content:center;gap:0.75rem;padding:0.72rem 1rem;background:#fff;border:1px solid #dadce0;border-radius:24px;color:#3c4043;font-size:0.9rem;font-weight:600;letter-spacing:0.01em;cursor:pointer;font-family:'Roboto',sans-serif;transition:box-shadow 0.2s,background 0.2s;box-shadow:0 1px 3px rgba(0,0,0,0.12)"
+        onmouseover="this.style.boxShadow='0 2px 8px rgba(0,0,0,0.2)';this.style.background='#f8f8f8'"
+        onmouseout="this.style.boxShadow='0 1px 3px rgba(0,0,0,0.12)';this.style.background='#fff'">
         <svg width="20" height="20" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
           <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.08 17.74 9.5 24 9.5z"/>
           <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
           <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
           <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-3.59-13.46-8.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
-          <path fill="none" d="M0 0h48v48H0z"/>
         </svg>
         <span>Continue with Google</span>
       </button>
-
     </div>
 
     <!-- SIGNUP FORM -->
@@ -486,7 +604,6 @@
         <span class="auth-btn-shine"></span>
         CREATE ACCOUNT &rarr;
       </button>
-
     </div>
 
   </div>
@@ -495,13 +612,16 @@
 <!-- SIDEBAR -->
 <aside class="sidebar" id="sidebar">
   <div class="sidebar-brand">
-    <span class="brand-icon">GR</span>
+    <div class="brand-icon-og">
+      <span class="brand-og">OG</span>
+      <span class="brand-fit">FITNESS</span>
+    </div>
     <div>
-      <div class="brand-title">THE GYM RATS</div>
-      <div class="brand-sub">Train. Track. Dominate.</div>
+      <div class="brand-title"><span style="color:#e01c1c">OG</span> FITNESS</div>
+      <div class="brand-sub">Train Hard. Stay Consistent.</div>
     </div>
   </div>
-  <nav class="sidebar-nav">
+  <nav class="sidebar-nav" id="sidebar-nav">
     <a class="nav-item active" data-page="dashboard">
       <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></span>
       <span>Dashboard</span>
@@ -517,10 +637,6 @@
     <a class="nav-item" data-page="membership">
       <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/><path d="M6 15h4"/></svg></span>
       <span>Membership</span>
-    </a>
-    <a class="nav-item" data-page="expenses">
-      <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></span>
-      <span>Expenses</span>
     </a>
     <a class="nav-item" data-page="progress">
       <span class="nav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg></span>
@@ -552,7 +668,7 @@
 <!-- MOBILE HEADER -->
 <header class="mobile-header">
   <button class="hamburger" id="hamburger">&#9776;</button>
-  <div class="mobile-brand">THE GYM RATS</div>
+  <div class="mobile-brand"><span style="color:#e01c1c">OG</span> FITNESS</div>
   <button class="notif-btn" data-page="notifications">&#9711;<span class="notif-dot" id="notif-dot" style="display:none"></span></button>
 </header>
 
@@ -584,8 +700,8 @@
         <button class="qa-btn" id="qa-scoop">+ TAKE SCOOP</button>
         <button class="qa-btn" data-page="membership" data-action="new">+ ADD MEMBERSHIP</button>
         <button class="qa-btn" data-page="supplements" data-action="new">+ ADD SUPPLEMENT</button>
-        <button class="qa-btn" data-page="expenses" data-action="new">+ ADD EXPENSE</button>
         <button class="qa-btn" data-page="progress" data-action="new">+ LOG PROGRESS</button>
+        <button class="qa-btn" data-page="squad">GYM SQUAD</button>
       </div>
     </div>
     <div class="card">
@@ -661,12 +777,9 @@
           <div class="form-group"><label>Initial Quantity</label><input type="number" id="sf-qty" placeholder="500" min="0.1" step="0.1" required /></div>
           <div class="form-group"><label>Unit</label>
             <select id="sf-unit">
-              <option value="g">grams (g)</option>
-              <option value="kg">kilograms (kg)</option>
-              <option value="mg">milligrams (mg)</option>
-              <option value="tablets">tablets</option>
-              <option value="capsules">capsules</option>
-              <option value="servings">servings</option>
+              <option value="g">grams (g)</option><option value="kg">kilograms (kg)</option>
+              <option value="mg">milligrams (mg)</option><option value="tablets">tablets</option>
+              <option value="capsules">capsules</option><option value="servings">servings</option>
             </select>
           </div>
         </div>
@@ -698,7 +811,7 @@
       <div class="card-label">GYM MEMBERSHIP DETAILS</div>
       <form id="membership-form">
         <div class="form-row">
-          <div class="form-group"><label>Gym Name</label><input type="text" id="mf-gym" placeholder="e.g. Gold's Gym" required /></div>
+          <div class="form-group"><label>Gym Name</label><input type="text" id="mf-gym" placeholder="e.g. OG FITNESS" required /></div>
           <div class="form-group"><label>Membership Type</label>
             <select id="mf-type">
               <option>Monthly</option><option>Quarterly</option><option>Half-Yearly</option><option>Annual</option><option>Custom</option>
@@ -710,7 +823,7 @@
           <div class="form-group"><label>End Date</label><input type="date" id="mf-end" required /></div>
         </div>
         <div class="form-row">
-          <div class="form-group"><label>Fee (&#8377;)</label><input type="number" id="mf-fee" placeholder="1500" min="0" required /></div>
+          <div class="form-group"><label>Fee (&#8377;)</label><input type="number" id="mf-fee" placeholder="2000" min="0" required /></div>
           <div class="form-group"><label>Payment Method</label>
             <select id="mf-payment">
               <option>Cash</option><option>UPI</option><option>Card</option><option>Net Banking</option><option>Other</option>
@@ -729,41 +842,6 @@
       <div class="card-label">MEMBERSHIP HISTORY</div>
       <div id="membership-history"></div>
     </div>
-  </section>
-
-  <!-- ===== EXPENSES ===== -->
-  <section class="page" id="page-expenses">
-    <div class="page-header">
-      <h1>Expenses</h1>
-      <button class="btn-primary" id="btn-new-expense">+ Add Expense</button>
-    </div>
-    <div class="stats-grid" id="expense-stats"></div>
-    <div class="card" id="expense-form-card" style="display:none">
-      <div class="card-label">ADD EXPENSE</div>
-      <form id="expense-form">
-        <div class="form-row">
-          <div class="form-group"><label>Description</label><input type="text" id="ef-desc" placeholder="e.g. Creatine Purchase" required /></div>
-          <div class="form-group"><label>Category</label>
-            <select id="ef-cat">
-              <option>Gym Fee</option><option>Supplement</option><option>Equipment</option><option>Food</option><option>Other</option>
-            </select>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group"><label>Amount (&#8377;)</label><input type="number" id="ef-amount" placeholder="4800" min="0" required /></div>
-          <div class="form-group"><label>Date</label><input type="date" id="ef-date" required /></div>
-        </div>
-        <div class="form-group">
-          <label>Split With (select members)</label>
-          <div id="ef-split-members" class="split-members-grid"></div>
-        </div>
-        <div class="form-actions">
-          <button type="button" class="btn-ghost" id="btn-cancel-expense">Cancel</button>
-          <button type="submit" class="btn-primary">Save Expense</button>
-        </div>
-      </form>
-    </div>
-    <div id="expenses-list-container"></div>
   </section>
 
   <!-- ===== PROGRESS ===== -->
@@ -818,10 +896,8 @@
           <div class="form-group"><label>Challenge Name</label><input type="text" id="cf-name" placeholder="e.g. 30 Day Consistency" required /></div>
           <div class="form-group"><label>Type</label>
             <select id="cf-type">
-              <option value="workouts">Workout Count</option>
-              <option value="streak">Streak Days</option>
-              <option value="weight">Weight Goal (kg)</option>
-              <option value="custom">Custom</option>
+              <option value="workouts">Workout Count</option><option value="streak">Streak Days</option>
+              <option value="weight">Weight Goal (kg)</option><option value="custom">Custom</option>
             </select>
           </div>
         </div>
@@ -856,7 +932,7 @@
       <form id="profile-form">
         <div class="form-row">
           <div class="form-group"><label>Your Name</label><input type="text" id="profile-name" placeholder="Your full name" /></div>
-          <div class="form-group"><label>Avatar Initial</label><input type="text" id="profile-avatar" placeholder="GR" maxlength="2" /></div>
+          <div class="form-group"><label>Avatar Initial</label><input type="text" id="profile-avatar" placeholder="OG" maxlength="2" /></div>
         </div>
         <div class="form-group"><label>Fitness Goal</label>
           <select id="profile-goal">
@@ -935,125 +1011,18 @@
   <!-- ===== ABOUT ===== -->
   <section class="page" id="page-about">
     <div class="about-page-wrap">
-
-      <!-- HERO BANNER -->
       <div class="about-hero">
         <canvas id="about-canvas"></canvas>
         <div class="about-hero-content">
-          <div class="about-hero-logo">GR</div>
-          <h1 class="about-hero-title">THE GYM RATS</h1>
+          <div class="about-hero-logo">
+            <span style="font-size:0.9rem;font-weight:900;color:#e01c1c;line-height:1">OG</span>
+            <span style="font-size:0.38rem;font-weight:800;color:#fff;letter-spacing:0.2em;line-height:1;margin-top:1px">FITNESS</span>
+          </div>
+          <h1 class="about-hero-title">OG FITNESS</h1>
           <p class="about-hero-sub">Your personal fitness command center</p>
-          <span class="about-version-pill">Version 1.0</span>
+          <span class="about-version-pill">Version 2.0</span>
         </div>
       </div>
-
-      <!-- THE IDEA -->
-      <div class="about-section-block">
-        <div class="about-section-eyebrow">The Idea</div>
-        <h2 class="about-section-heading">Built for people who take fitness seriously.</h2>
-        <p class="about-section-body">Most fitness apps are bloated, subscription-locked, or require an internet connection just to log a workout. The Gym Rats was built differently — a single, fast, offline-first web app that lives in your browser. No accounts sent to servers. No monthly fees. No distractions. Just you and your data.</p>
-        <p class="about-section-body">The idea started simple: one place to track workouts, supplements, gym membership, expenses, body progress, and challenges with your gym crew — all without leaving your device.</p>
-      </div>
-
-      <!-- HOW IT WORKS -->
-      <div class="about-section-block">
-        <div class="about-section-eyebrow">How It Works</div>
-        <h2 class="about-section-heading">Everything runs in your browser. Nothing leaves your device.</h2>
-        <div class="about-how-grid">
-          <div class="about-how-item">
-            <div class="about-how-num">01</div>
-            <div class="about-how-text">
-              <div class="about-how-title">Sign up &amp; log in</div>
-              <div class="about-how-desc">Create an account with a username and password. Your data is securely stored in the cloud.</div>
-            </div>
-          </div>
-          <div class="about-how-item">
-            <div class="about-how-num">02</div>
-            <div class="about-how-text">
-              <div class="about-how-title">All data stays local</div>
-              <div class="about-how-desc">Every workout, supplement, expense, and progress entry is saved to your browser's localStorage under a single key. It persists across sessions until you clear it.</div>
-            </div>
-          </div>
-          <div class="about-how-item">
-            <div class="about-how-num">03</div>
-            <div class="about-how-text">
-              <div class="about-how-title">Export &amp; import backups</div>
-              <div class="about-how-desc">Use Settings &rarr; Export to download a full JSON backup of your data. Import it back anytime on any device to restore everything instantly.</div>
-            </div>
-          </div>
-          <div class="about-how-item">
-            <div class="about-how-num">04</div>
-            <div class="about-how-text">
-              <div class="about-how-title">Creator controls</div>
-              <div class="about-how-desc">The creator account has access to a special dashboard — manage all registered users, toggle maintenance mode, and control app availability.</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- HOW TO USE -->
-      <div class="about-section-block">
-        <div class="about-section-eyebrow">How to Use</div>
-        <h2 class="about-section-heading">Six modules. One dashboard.</h2>
-        <div class="about-modules-list">
-          <div class="about-module-row">
-            <div class="about-module-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4v16M18 4v16M3 8h3M18 8h3M3 16h3M18 16h3M6 12h12"/></svg>
-            </div>
-            <div class="about-module-body">
-              <div class="about-module-name">Workouts</div>
-              <div class="about-module-desc">Log every session with exercises, sets, reps, and weight. The app automatically detects personal records and tracks your streak. View full history and PRs anytime.</div>
-            </div>
-          </div>
-          <div class="about-module-row">
-            <div class="about-module-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6l1 4H8L9 3z"/><path d="M8 7v13a1 1 0 001 1h6a1 1 0 001-1V7"/><path d="M8 11h8"/></svg>
-            </div>
-            <div class="about-module-body">
-              <div class="about-module-name">Supplements</div>
-              <div class="about-module-desc">Add your supplements with quantity, serving size, and daily dose. Hit "Take Scoop" each day and the app tracks remaining inventory, estimates days left, and alerts you when running low.</div>
-            </div>
-          </div>
-          <div class="about-module-row">
-            <div class="about-module-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/><path d="M6 15h4"/></svg>
-            </div>
-            <div class="about-module-body">
-              <div class="about-module-name">Membership</div>
-              <div class="about-module-desc">Save your gym membership details — gym name, fee, start and end dates. The dashboard shows days remaining with a live progress bar and alerts you before it expires.</div>
-            </div>
-          </div>
-          <div class="about-module-row">
-            <div class="about-module-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
-            </div>
-            <div class="about-module-body">
-              <div class="about-module-name">Expenses</div>
-              <div class="about-module-desc">Log every fitness-related expense — gym fees, supplements, equipment. Split costs with gym partners and track who has paid and who owes. Monthly totals shown on the dashboard.</div>
-            </div>
-          </div>
-          <div class="about-module-row">
-            <div class="about-module-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
-            </div>
-            <div class="about-module-body">
-              <div class="about-module-name">Progress</div>
-              <div class="about-module-desc">Log body metrics — weight, body fat, chest, waist, arms, legs. Charts visualize your transformation over time. Every entry is timestamped and stored in your progress log.</div>
-            </div>
-          </div>
-          <div class="about-module-row">
-            <div class="about-module-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 010-5H6"/><path d="M18 9h1.5a2.5 2.5 0 000-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0012 0V2z"/></svg>
-            </div>
-            <div class="about-module-body">
-              <div class="about-module-name">Challenges</div>
-              <div class="about-module-desc">Create fitness challenges — workout count goals, streak targets, or weight goals. Set a deadline and track progress. Add friends and run a leaderboard to compete and stay motivated.</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- CREATOR -->
       <div class="about-creator-card">
         <div class="about-creator-glow"></div>
         <div class="about-creator-avatar">NK</div>
@@ -1063,41 +1032,15 @@
             Nikhil Karthik
             <span class="creator-badge" style="font-size:0.62rem;vertical-align:middle"><span class="creator-badge-star">&#9733;</span> CREATOR</span>
           </div>
-          <div class="about-creator-desc">A fitness enthusiast and developer who wanted one clean app to run his entire gym life — so he built it. The Gym Rats is a passion project: no frameworks, no backend, no compromise on design.</div>
-          <div class="about-creator-links">
-            <a class="about-creator-link" href="https://github.com/2400031255/THEGYM" target="_blank" rel="noopener">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/></svg>
-              View on GitHub
-            </a>
-            <a class="about-creator-link" href="https://2400031255.github.io/THEGYM" target="_blank" rel="noopener">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-              Live App
-            </a>
-          </div>
+          <div class="about-creator-desc">Built OG FITNESS — a professional gym management + client fitness tracking platform. Fast, clean, and built for real gyms.</div>
         </div>
       </div>
-
-      <!-- PRIVACY -->
-      <div class="about-privacy-card">
-        <div class="about-privacy-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        </div>
-        <div class="about-privacy-text">
-          <div class="about-privacy-title">Your Data. Your Device. Always.</div>
-          <div class="about-privacy-desc">Your data is securely stored in the cloud and synced across your devices. Export a backup anytime from Settings.</div>
-        </div>
-      </div>
-
     </div>
   </section>
 
-  <!-- ===== CREATOR CONTROLS ===== -->
+  <!-- ===== CREATOR PAGES ===== -->
   <section class="page" id="page-creator-controls"></section>
-
-  <!-- ===== CREATOR USERS ===== -->
   <section class="page" id="page-creator-users"></section>
-
-  <!-- ===== CREATOR MAINTENANCE ===== -->
   <section class="page" id="page-creator-maintenance"></section>
 
 </main>
@@ -1107,7 +1050,7 @@
   <a class="bnav-item active" data-page="dashboard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span>Home</span></a>
   <a class="bnav-item" data-page="workouts"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M6 4v16M18 4v16M3 8h3M18 8h3M3 16h3M18 16h3M6 12h12"/></svg><span>Workouts</span></a>
   <a class="bnav-item" data-page="supplements"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M9 3h6l1 4H8L9 3z"/><path d="M8 7v13a1 1 0 001 1h6a1 1 0 001-1V7"/><path d="M8 11h8"/></svg><span>Supps</span></a>
-  <a class="bnav-item" data-page="expenses"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg><span>Expenses</span></a>
+  <a class="bnav-item" data-page="membership"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/><path d="M6 15h4"/></svg><span>Member</span></a>
   <a class="bnav-item" data-page="progress"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg><span>Progress</span></a>
 </nav>
 
@@ -1126,45 +1069,76 @@
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
 
-<script src="./js/firebase.js?v=6"></script>
-<script src="./js/firestore.js?v=6"></script>
-<script src="./js/auth.js?v=6"></script>
-<script src="./js/storage.js?v=6"></script>
-<script src="./js/utils.js?v=6"></script>
-<script src="./js/membership.js?v=6"></script>
-<script src="./js/supplements.js?v=6"></script>
-<script src="./js/workouts.js?v=6"></script>
-<script src="./js/expenses.js?v=6"></script>
-<script src="./js/progress.js?v=6"></script>
-<script src="./js/challenges.js?v=6"></script>
-<script src="./js/creator.js?v=6"></script>
-<script src="./js/squadService.js?v=6"></script>
-<script src="./js/squad.js?v=6"></script>
-<script src="./js/app.js?v=6"></script>
+<!-- SCRIPTS -->
+<script src="./js/firebase.js?v=7"></script>
+<script src="./js/firestore.js?v=7"></script>
+<script src="./js/auth.js?v=7"></script>
+<script src="./js/storage.js?v=7"></script>
+<script src="./js/utils.js?v=7"></script>
+<script src="./js/membership.js?v=7"></script>
+<script src="./js/supplements.js?v=7"></script>
+<script src="./js/workouts.js?v=7"></script>
+<script src="./js/expenses.js?v=7"></script>
+<script src="./js/progress.js?v=7"></script>
+<script src="./js/challenges.js?v=7"></script>
+<script src="./js/creator.js?v=7"></script>
+<script src="./js/squadService.js?v=7"></script>
+<script src="./js/squad.js?v=7"></script>
+<script src="./js/gym-management.js?v=7"></script>
+<script src="./js/app.js?v=7"></script>
 
 <script>
-  /* Auth modal open / close */
+  /* ---- Auth modal ---- */
   function openAuthModal() {
-    const overlay = document.getElementById('auth-modal-overlay');
-    overlay.classList.add('open');
-    setTimeout(() => {
-      const inp = document.getElementById('login-user');
-      if (inp) inp.focus();
-    }, 350);
+    document.getElementById('auth-modal-overlay').classList.add('open');
+    setTimeout(() => { const i = document.getElementById('login-user'); if (i) i.focus(); }, 350);
   }
-
   function closeAuthModal() {
     document.getElementById('auth-modal-overlay').classList.remove('open');
   }
-
   function handleOverlayClick(e) {
     if (e.target === document.getElementById('auth-modal-overlay')) closeAuthModal();
   }
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeAuthModal(); closeEnquiryModal(); } });
 
-  /* Close modal on Escape key */
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') closeAuthModal();
-  });
+  /* ---- Enquiry modal ---- */
+  function openEnquiryModal() {
+    document.getElementById('enquiry-modal-overlay').classList.add('open');
+  }
+  function closeEnquiryModal() {
+    document.getElementById('enquiry-modal-overlay').classList.remove('open');
+  }
+  function handleEnquiryOverlayClick(e) {
+    if (e.target === document.getElementById('enquiry-modal-overlay')) closeEnquiryModal();
+  }
+
+  async function handleEnquirySubmit(e) {
+    e.preventDefault();
+    const name    = document.getElementById('enq-name').value.trim();
+    const phone   = document.getElementById('enq-phone').value.trim();
+    const message = document.getElementById('enq-message').value.trim();
+    const errEl   = document.getElementById('enq-error');
+    const sucEl   = document.getElementById('enq-success');
+    const btn     = document.getElementById('btn-enq-submit');
+    errEl.textContent = '';
+    sucEl.style.display = 'none';
+    if (!name || !phone) { errEl.textContent = 'Name and phone number are required.'; return; }
+    btn.disabled = true; btn.textContent = 'SUBMITTING...';
+    try {
+      await db.collection('enquiries').add({
+        name, phone, message,
+        status: 'NEW',
+        date: new Date().toISOString(),
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+      sucEl.style.display = 'block';
+      document.getElementById('enquiry-form').reset();
+    } catch (err) {
+      errEl.textContent = 'Unable to submit. Please try again.';
+    }
+    btn.disabled = false;
+    btn.innerHTML = '<span class="auth-btn-shine"></span>SUBMIT ENQUIRY &rarr;';
+  }
 </script>
 </body>
 </html>
