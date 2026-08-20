@@ -915,6 +915,41 @@
     <div id="challenges-grid"></div>
   </section>
 
+  <!-- ===== EXPENSES ===== -->
+  <section class="page" id="page-expenses">
+    <div class="page-header">
+      <h1>Expenses</h1>
+      <button class="btn-primary" id="btn-new-expense">+ Add Expense</button>
+    </div>
+    <div class="stats-grid" id="expense-stats"></div>
+    <div class="card" id="expense-form-card" style="display:none">
+      <div class="card-label">ADD EXPENSE</div>
+      <form id="expense-form">
+        <div class="form-row">
+          <div class="form-group"><label>Description</label><input type="text" id="ef-desc" placeholder="e.g. Creatine Purchase" required /></div>
+          <div class="form-group"><label>Category</label>
+            <select id="ef-cat">
+              <option>Gym Fee</option><option>Supplement</option><option>Equipment</option><option>Food</option><option>Other</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Amount (&#8377;)</label><input type="number" id="ef-amount" placeholder="4800" min="0" required /></div>
+          <div class="form-group"><label>Date</label><input type="date" id="ef-date" required /></div>
+        </div>
+        <div class="form-group">
+          <label>Split With (select members)</label>
+          <div id="ef-split-members" class="split-members-grid"></div>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn-ghost" id="btn-cancel-expense">Cancel</button>
+          <button type="submit" class="btn-primary">Save Expense</button>
+        </div>
+      </form>
+    </div>
+    <div id="expenses-list-container"></div>
+  </section>
+
   <!-- ===== GYM SQUAD ===== -->
   <section class="page" id="page-squad"></section>
 

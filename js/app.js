@@ -260,54 +260,48 @@ function renderAbout() {
   if (pg) obs.observe(pg, { attributes: true, attributeFilter: ['class'] });
 }
 
-document.getElementById('profile-form').addEventListener('submit', function(e) {
-  e.preventDefault();
-  setData('profile', {
-    name:   document.getElementById('profile-name').value.trim(),
-    avatar: document.getElementById('profile-avatar').value.trim() || 'GR',
-    goal:   document.getElementById('profile-goal').value
+/* All settings listeners bound safely after DOM ready */
+function _bindSettingsListeners() {
+  const pf = document.getElementById('profile-form');
+  if (pf) pf.addEventListener('submit', function(e) {
+    e.preventDefault();
+    setData('profile', {
+      name:   document.getElementById('profile-name').value.trim(),
+      avatar: document.getElementById('profile-avatar').value.trim() || 'OG',
+      goal:   document.getElementById('profile-goal').value
+    });
+    showToast('Profile saved!', 'success');
   });
-  showToast('Profile saved!', 'success');
-});
 
-document.getElementById('btn-export').addEventListener('click', () => {
-  exportData();
-  showToast('Data exported!', 'success');
-});
+  const btnExp = document.getElementById('btn-export');
+  if (btnExp) btnExp.addEventListener('click', () => { exportData(); showToast('Data exported!', 'success'); });
 
-document.getElementById('btn-import-trigger').addEventListener('click', () => {
-  document.getElementById('btn-import').click();
-});
+  const btnImpTrig = document.getElementById('btn-import-trigger');
+  if (btnImpTrig) btnImpTrig.addEventListener('click', () => { document.getElementById('btn-import')?.click(); });
 
-document.getElementById('btn-import').addEventListener('change', function() {
-  const file = this.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = e => {
-    const ok = importData(e.target.result);
-    if (ok) {
-      showToast('Data imported successfully!', 'success');
-      setTimeout(() => location.reload(), 1000);
-    } else {
-      showToast('Invalid backup file.', 'error');
-    }
-  };
-  reader.readAsText(file);
-  this.value = '';
-});
+  const btnImp = document.getElementById('btn-import');
+  if (btnImp) btnImp.addEventListener('change', function() {
+    const file = this.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      const ok = importData(e.target.result);
+      if (ok) { showToast('Data imported successfully!', 'success'); setTimeout(() => location.reload(), 1000); }
+      else showToast('Invalid backup file.', 'error');
+    };
+    reader.readAsText(file);
+    this.value = '';
+  });
 
-document.getElementById('btn-clear-data').addEventListener('click', () => {
-  showModal(
-    'Clear All Data',
-    'This will permanently delete ALL your data including workouts, supplements, membership, and expenses. This cannot be undone.',
-    'Delete Everything',
-    () => {
-      clearAllData();
-      showToast('All data cleared.', 'success');
-      setTimeout(() => location.reload(), 800);
-    }
-  );
-});
+  const btnClr = document.getElementById('btn-clear-data');
+  if (btnClr) btnClr.addEventListener('click', () => {
+    showModal('Clear All Data',
+      'This will permanently delete ALL your data. This cannot be undone.',
+      'Delete Everything',
+      () => { clearAllData(); showToast('All data cleared.', 'success'); setTimeout(() => location.reload(), 800); }
+    );
+  });
+}
 
 /* btn-logout is handled by auth.js */
 
@@ -316,6 +310,9 @@ document.getElementById('btn-clear-data').addEventListener('click', () => {
    ============================================ */
 
 function init() {
+  // Bind settings listeners safely
+  _bindSettingsListeners();
+
   // Set default dates on forms
   const today = formatDateISO(new Date());
   ['wf-date', 'ef-date', 'pf-date'].forEach(id => {
@@ -369,27 +366,23 @@ function getSession() { return auth.currentUser ? auth.currentUser.uid : localSt
 function setSession(u) { localStorage.setItem('gymrats_session', u); }
 function clearSession() { handleLogout(); }
 
-// Enter key support
-['login-user','login-pass'].forEach(id => {
-  document.getElementById(id)?.addEventListener('keydown', e => { if (e.key === 'Enter') handleLogin(); });
+// Enter key support — bound after DOM ready
+document.addEventListener('DOMContentLoaded', () => {
+  ['login-user','login-pass'].forEach(id => {
+    document.getElementById(id)?.addEventListener('keydown', e => { if (e.key === 'Enter') handleLogin(); });
+  });
+  ['signup-name','signup-user','signup-pass','signup-confirm'].forEach(id => {
+    document.getElementById(id)?.addEventListener('keydown', e => { if (e.key === 'Enter') handleSignup(); });
+  });
+  // Pre-fill remembered username
+  const remembered = localStorage.getItem('gymrats_remember');
+  if (remembered) {
+    const el = document.getElementById('login-user');
+    if (el) el.value = remembered;
+    const cb = document.getElementById('login-remember');
+    if (cb) cb.checked = true;
+  }
 });
-['signup-name','signup-user','signup-pass','signup-confirm'].forEach(id => {
-  document.getElementById(id)?.addEventListener('keydown', e => { if (e.key === 'Enter') handleSignup(); });
-});
-
-// Pre-fill remembered username
-const remembered = localStorage.getItem('gymrats_remember');
-if (remembered) {
-  const el = document.getElementById('login-user');
-  if (el) { el.value = remembered; }
-  const cb = document.getElementById('login-remember');
-  if (cb) cb.checked = true;
-}
 
 // Boot — Firebase auth.js handles session via onAuthStateChanged
-// Legacy local session fallback (for offline/non-Firebase users)
-if (!window.firebase && getSession()) {
-  launchApp();
-} else if (!window.firebase) {
-  applyMaintenanceToLoginScreen();
-}
+// Legacy fallback removed — Firebase handles all auth
